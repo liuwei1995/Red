@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.liuwei1995.red">
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- 震动权限 -->
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <!-- 闪光灯权限 -->
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- 悬浮窗口 -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <!-- 获取步数权限 -->
+    <uses-permission android:name="android.permission.BODY_SENSORS"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <!-- 获取设备MAC地址 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!--获取手机号的信息-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+
+    <!-- 虚拟点击权限 -->
+    <permission android:name="android.permission.INJECT_EVENTS"/>
+    <permission
+        android:name="android.permission.BIND_VPN_SERVICE"
+        android:label="string resource"
+        android:permissionGroup="string"
+        android:protectionLevel="signatureOrSystem"/>
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.READ_PROFILE"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+
+    <application
+        android:name=".BaseApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/red_logo"
+        android:label="@string/app_name"
+        android:persistent="true"
+        android:roundIcon="@mipmap/red_logo"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTask">
+        </activity>
+        <activity
+            android:name=".activity.Main2Activity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".util.permission.PermissionActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden">
+        </activity>
+
+        <!-- <service -->
+        <!-- android:name=".HongbaoService" -->
+        <!-- android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.accessibilityservice.AccessibilityService"/> -->
+        <!-- </intent-filter> -->
+
+
+        <!-- <meta-data -->
+        <!-- android:name="android.accessibilityservice" -->
+        <!-- android:resource="@xml/accessible_service_config"/> -->
+        <!-- </service> -->
+        <!-- <service -->
+        <!-- android:name=".NotificationCollectorService" -->
+        <!-- android:label="@string/app_name" -->
+        <!-- android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.service.notification.NotificationListenerService"/> -->
+        <!-- </intent-filter> -->
+        <!-- </service> -->
+
+
+        <!-- 悬浮窗口 -->
+        <service android:name=".service.FloatWindowService"/>
+
+        <receiver android:name="layout.NewAppWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="layout.NewAppWidget"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="setOnClickPendingIntent"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/new_app_widget_info"/>
+        </receiver>
+        <!-- 微信抢红包 -->
+        <service
+            android:name=".service.WeChatAccessibilityService"
+            android:label="微信抢红包"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            >
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/wechat_accessibilityservice"/>
+        </service>
+        <!-- QQ抢红包 -->
+        <service
+            android:name=".service.QQAccessibilityService"
+            android:label="QQ抢红包"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            >
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/qq_accessibilityservice"/>
+        </service>
+        <!-- OFO 内容监听 -->
+        <service
+            android:name=".service.OFOAccessibilityService"
+            android:label="OFO内容监听"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            >
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/ofo_accessibilityservice"/>
+        </service>
+        <!-- 钉钉抢红包 -->
+        <service
+            android:name=".service.DingDingAccessibilityService"
+            android:label="钉钉抢红包"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            >
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/ding_accessibilityservice"/>
+        </service>
+        <!-- 通知栏监听 -->
+        <service
+            android:name=".service.NotificationService"
+            android:label="通知栏监听"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService"/>
+            </intent-filter>
+        </service>
+        <service
+            android:name=".service.sensor.SensorService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
+        <service
+            android:name=".service.OFOEntitySaveIntentService"
+            android:exported="false">
+        </service>
+
+        <activity
+            android:name=".activity.LoginActivity"
+            android:label="@string/title_activity_login">
+        </activity>
+        <activity
+            android:name=".activity.EyeActivity"
+            android:label="@string/title_activity_eye"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+    </application>
+
+</manifest>

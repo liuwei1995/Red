@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="color_navigation_line">#ff7a61</color><!--导航栏背景-->
+    <color name="background_navigationbar">#f6f5f4</color><!--导航栏灰色字-->
+    <color name="color_navigationbar_text">#222222</color><!--导航栏字体选中颜色-->
+    <color name="color_navigationbar_selected_text">#ff7a61</color>
+
+</resources>
