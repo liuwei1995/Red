@@ -1,5 +1,6 @@
 package com.liuwei1995.red.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,11 +8,15 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blankj.utilcode.util.DeviceUtils;
@@ -48,7 +53,8 @@ public class EyeFragment extends BaseFragment implements TextWatcher{
      * The fragment argument representing the section number for this
      * fragment.
      */
-    private static final String TYPE = "type";
+    public static final String ACCOUNT = "account";
+    public static final String TYPE = "type";
 
     public EyeFragment() {
     }
@@ -57,15 +63,18 @@ public class EyeFragment extends BaseFragment implements TextWatcher{
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static EyeFragment newInstance(int type,boolean isPrepared) {
+    public static EyeFragment newInstance(int type,String account,boolean isPrepared) {
         EyeFragment fragment = new EyeFragment();
         Bundle args = new Bundle();
         args.putInt(TYPE, type);
+        if(account != null)
+        args.putString(ACCOUNT,account);
         args.putBoolean("isPrepared",isPrepared);
         fragment.setArguments(args);
         return fragment;
     }
     int type = 0;
+    private String acc = null;
     private Context mContext;
     @Override
     public void onAttach(Context context) {
@@ -74,6 +83,7 @@ public class EyeFragment extends BaseFragment implements TextWatcher{
         Bundle arguments = getArguments();
         if(arguments != null){
            type = arguments.getInt(TYPE, 0);
+            acc = arguments.getString(ACCOUNT);
         }
     }
     private RecyclerView rv_content;
@@ -82,11 +92,14 @@ public class EyeFragment extends BaseFragment implements TextWatcher{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_eye, container, false);
+        list = new ArrayList<>();
+        list_quanbu = new ArrayList<>();
          rv_content = $(rootView,R.id.rv_frg_eye_content);
-        actv_license_plate_number = $(rootView, R.id.actv_license_plate_number);
-        $(rootView,R.id.btn_Search).setOnClickListener(this);
+        actv_license_plate_number = $(rootView,R.id.actv_license_plate_number);
         actv_license_plate_number.addTextChangedListener(this);
-         rv_content.setLayoutManager(new LinearLayoutManager(mContext));
+        watchSearch();
+        $(rootView,R.id.btn_Search).setOnClickListener(this);
+        rv_content.setLayoutManager(new LinearLayoutManager(mContext));
         if (!isPrepared){
             initData();
         }
@@ -105,63 +118,83 @@ public class EyeFragment extends BaseFragment implements TextWatcher{
                 }
             }
         }
-        synchronized (this){
-            List<OFOEntity> ofoEntities = null;
-            if(acc == null || TextUtils.isEmpty(acc)){
-                ofoEntities = impl.rawQuery("SELECT *FROM "+OFOEntity.class.getSimpleName()+" ORDER BY account");
-            }else {
-                ofoEntities = impl.rawQuery("SELECT *FROM "+OFOEntity.class.getSimpleName()+" WHERE account LIKE '%"+acc+"%' LIMIT 0,30");
-            }
-            if(ofoEntities != null){
-                if (pageIndex == 1){
-                    list.clear();
+        if (type == 0 || type == 2){
+            synchronized (this){
+                List<OFOEntity> ofoEntities = null;
+                if (type == 0) {
+                    if(acc == null || TextUtils.isEmpty(acc)){
+                         ofoEntities = impl.rawQuery("SELECT *FROM "+OFOEntity.class.getSimpleName()+" ORDER BY createTime DESC LIMIT 0,30");
+                    }else {
+                        ofoEntities = impl.rawQuery("SELECT *FROM "+OFOEntity.class.getSimpleName()+" WHERE account LIKE '%"+acc+"%' ORDER BY createTime DESC LIMIT 0,30");
+                    }
+                }else if (type == 2){
+                    if(acc == null || TextUtils.isEmpty(acc)){
+                        ofoEntities = impl.rawQuery("SELECT *FROM "+OFOEntity.class.getSimpleName()+" WHERE submitState = 0 ORDER BY createTime DESC");
+                    }else {
+                        ofoEntities = impl.rawQuery("SELECT *FROM "+OFOEntity.class.getSimpleName()+" WHERE submitState = 0 AND account LIKE '%"+acc+"%' ORDER BY createTime DESC");
+                    }
                 }
-                for (int i = 0; i < ofoEntities.size(); i++) {
-                    list.add(ofoEntities.get(i));
+                if(ofoEntities != null){
+                    if (pageIndex == 1){
+                        list.clear();
+                    }
+                    for (int i = 0; i < ofoEntities.size(); i++) {
+                        list.add(ofoEntities.get(i));
+                    }
+                    setAdapter();
                 }
-                setAdapter();
             }
         }
     }
     @Override
     protected void initData() {
-        if (type == 0){
-            getNativeData("");
+        if (type == 0 || type == 2){
+            getNativeData(acc);
         }else if(type == 1){
-            Map<String, Object> map = new HashMap<>();
-            map.put("pageNumber",pageNumber);
-            map.put("pageIndex",pageIndex);
-            HttpUtils.ofoGetAccountPassword(map, new HttpCallback<JSONObject>() {
-                @Override
-                public void onResponse(Boolean isSuccess, JSONObject result) {
-                    if (isSuccess){
-                        int code_time = UserJSON.getInt(result, "code_time");
-                        if (code_time == 1){
-                            int code_success = UserJSON.getInt(result, "code_success");
-                            if(code_success == 1){
-                                JSONArray content = UserJSON.getJSONArray(result, "content");
-                                List<OFOEntity> ofoEntities = UserJSON.parsUser(OFOEntity.class, content);
-                                if (pageIndex == 1){
-                                    list.clear();
-                                }
-                                if(ofoEntities != null){
-                                    for (int i = 0; i < ofoEntities.size(); i++) {
-                                        list.add(ofoEntities.get(i));
-                                    }
-                                    list_quanbu.clear();
-                                    list_quanbu.addAll(list);
-                                }
-                                setAdapter();
-                            }else {
-                                Toast.makeText(mContext, UserJSON.getString(result,"message"), Toast.LENGTH_SHORT).show();
+            if (acc != null && !TextUtils.isEmpty(acc)){
+                actv_license_plate_number.setText(acc);
+                actv_license_plate_number.setSelection(acc.length());//将光标移至文字末尾
+                search();
+            }else {
+                ofoGetAccountPassword();
+            }
+        }
+    }
+
+    private void ofoGetAccountPassword() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("pageNumber",pageNumber);
+        map.put("pageIndex",pageIndex);
+        HttpUtils.ofoGetAccountPassword(map, new HttpCallback<JSONObject>() {
+            @Override
+            public void onResponse(Boolean isSuccess, JSONObject result) {
+                if (isSuccess){
+                    int code_time = UserJSON.getInt(result, "code_time");
+                    if (code_time == 1){
+                        int code_success = UserJSON.getInt(result, "code_success");
+                        if(code_success == 1){
+                            JSONArray content = UserJSON.getJSONArray(result, "content");
+                            List<OFOEntity> ofoEntities = UserJSON.parsUser(OFOEntity.class, content);
+                            if (pageIndex == 1){
+                                list.clear();
                             }
+                            if(ofoEntities != null){
+                                for (int i = 0; i < ofoEntities.size(); i++) {
+                                    list.add(ofoEntities.get(i));
+                                }
+                                list_quanbu.clear();
+                                list_quanbu.addAll(list);
+                            }
+                            setAdapter();
                         }else {
                             Toast.makeText(mContext, UserJSON.getString(result,"message"), Toast.LENGTH_SHORT).show();
                         }
-                    }else Toast.makeText(mContext, "网络开小差啦", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
+                    }else {
+                        Toast.makeText(mContext, UserJSON.getString(result,"message"), Toast.LENGTH_SHORT).show();
+                    }
+                }else Toast.makeText(mContext, "网络开小差啦", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -169,9 +202,10 @@ public class EyeFragment extends BaseFragment implements TextWatcher{
 
     }
 
-    private List<OFOEntity> list = new ArrayList<>();
-    private List<OFOEntity> list_quanbu = new ArrayList<>();
-    private RedAdapter<OFOEntity> adapter;
+    private List<OFOEntity> list = null;
+    private List<OFOEntity> list_quanbu = null;
+
+    private  RedAdapter<OFOEntity> adapter;
     public void setAdapter(){
         if(adapter == null){
             adapter = new RedAdapter<OFOEntity>(list,R.layout.item_fragment_eye) {
@@ -305,43 +339,50 @@ public class EyeFragment extends BaseFragment implements TextWatcher{
     public void onClick(View v) {
         if (v.getId() == R.id.btn_Search){
             if(type == 1){
-                Map<String, Object> map = new HashMap<>();
-
-                String trim = actv_license_plate_number.getText().toString().trim();
-                if(TextUtils.isEmpty(trim))return;
-                map.put("account",trim);
-                map.put("pageNumber",pageNumber);
-                map.put("pageIndex",pageIndex);
-                HttpUtils.ofoSearchAccountPassword(map, new HttpCallback<JSONObject>() {
-                    @Override
-                    public void onResponse(Boolean isSuccess, JSONObject result) {
-                        if (isSuccess){
-                            int code_time = UserJSON.getInt(result, "code_time");
-                            if (code_time == 1){
-                                int code_success = UserJSON.getInt(result, "code_success");
-                                if(code_success == 1){
-                                    JSONArray content = UserJSON.getJSONArray(result, "content");
-                                    List<OFOEntity> ofoEntities = UserJSON.parsUser(OFOEntity.class, content);
-                                    if (pageIndex == 1){
-                                        list.clear();
-                                    }
-                                    if(ofoEntities != null){
-                                        for (int i = 0; i < ofoEntities.size(); i++) {
-                                            list.add(ofoEntities.get(i));
-                                        }
-                                    }
-                                    setAdapter();
-                                }else {
-                                    Toast.makeText(mContext, UserJSON.getString(result,"message"), Toast.LENGTH_SHORT).show();
-                                }
-                            }else {
-                                Toast.makeText(mContext, UserJSON.getString(result,"message"), Toast.LENGTH_SHORT).show();
-                            }
-                        }else Toast.makeText(mContext, "网络开小差啦", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                search();
             }
         }
+    }
+
+    private void search() {
+        String trim = actv_license_plate_number.getText().toString().trim();
+        if(TextUtils.isEmpty(trim)){
+            actv_license_plate_number.setError("空");
+            return;
+        }
+        Map<String, Object> map = new HashMap<>();
+        if(TextUtils.isEmpty(trim))return;
+        map.put("account",trim);
+        map.put("pageNumber",pageNumber);
+        map.put("pageIndex",pageIndex);
+        HttpUtils.ofoSearchAccountPassword(map, new HttpCallback<JSONObject>() {
+            @Override
+            public void onResponse(Boolean isSuccess, JSONObject result) {
+                if (isSuccess){
+                    int code_time = UserJSON.getInt(result, "code_time");
+                    if (code_time == 1){
+                        int code_success = UserJSON.getInt(result, "code_success");
+                        if(code_success == 1){
+                            JSONArray content = UserJSON.getJSONArray(result, "content");
+                            List<OFOEntity> ofoEntities = UserJSON.parsUser(OFOEntity.class, content);
+                            if (pageIndex == 1){
+                                list.clear();
+                            }
+                            if(ofoEntities != null){
+                                for (int i = 0; i < ofoEntities.size(); i++) {
+                                    list.add(ofoEntities.get(i));
+                                }
+                            }
+                            setAdapter();
+                        }else {
+                            Toast.makeText(mContext, UserJSON.getString(result,"message"), Toast.LENGTH_SHORT).show();
+                        }
+                    }else {
+                        Toast.makeText(mContext, UserJSON.getString(result,"message"), Toast.LENGTH_SHORT).show();
+                    }
+                }else Toast.makeText(mContext, "网络开小差啦", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -356,14 +397,66 @@ public class EyeFragment extends BaseFragment implements TextWatcher{
 
     @Override
     public void afterTextChanged(Editable s) {
-        if(type == 0){
+        if(type == 0 || type == 2){
             getNativeData(s.toString());
         }else if (type == 1){
-            list.clear();
-            for (int i = 0; i < list_quanbu.size(); i++) {
-                list.add(list_quanbu.get(i));
+            if(TextUtils.isEmpty(s.toString())){
+                list.clear();
+                if(list_quanbu.size() == 0){
+                    ofoGetAccountPassword();
+                }else {
+                    for (int i = 0; i < list_quanbu.size(); i++) {
+                        list.add(list_quanbu.get(i));
+                    }
+                    setAdapter();
+                }
             }
-            setAdapter();
         }
+    }
+    /**
+     * 方法说明:监控软键盘的的搜索按钮
+     */
+    public void watchSearch() {
+        if (type == 1)
+        actv_license_plate_number.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId,KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    // 先隐藏键盘
+                    ((InputMethodManager) actv_license_plate_number.getContext()
+                            .getSystemService(Context.INPUT_METHOD_SERVICE))
+                            .hideSoftInputFromWindow(((Activity)mContext).getCurrentFocus().getWindowToken(),
+                                    InputMethodManager.HIDE_NOT_ALWAYS);
+                    // 搜索，进行自己要的操作...
+                    search();
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    @Override
+    public void onDetach() {
+        list = null;
+        list_quanbu = null;
+        adapter = null;
+        super.onDetach();
+    }
+
+    @Override
+    public void onDestroyView() {
+        list = null;
+        list_quanbu = null;
+        adapter = null;
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        list = null;
+        list_quanbu = null;
+        adapter = null;
+        super.onDestroy();
     }
 }

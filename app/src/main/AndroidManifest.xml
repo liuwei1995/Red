@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.liuwei1995.red">
+          package="com.liuwei1995.red">
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
@@ -190,6 +190,13 @@
             android:name=".activity.EyeActivity"
             android:label="@string/title_activity_eye"
             android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".zxing.activity.CaptureActivity"
+            android:clearTaskOnLaunch="true"
+            android:stateNotNeeded="true"
+
+            android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
     </application>
 

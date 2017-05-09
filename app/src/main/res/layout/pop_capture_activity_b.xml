@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:text="@string/tv_text_hint"
+        android:textColor="@color/text_color_red"
+        tools:ignore="InefficientWeight"/>
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:minHeight="100dp"
+        android:padding="4dp"
+        android:text="@string/tv_text_content"
+        android:textColor="@color/color_navigation_line"
+        android:textIsSelectable="true"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        >
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@color/color_navigation_line"
+            android:text="@string/text_cancel"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/text_color_white"/>
+
+        <Button
+            android:id="@+id/btn_open_app"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:background="@color/color_navigation_line"
+            android:text="@string/open_the_other_app"
+            android:textColor="@color/text_color_white"/>
+    </LinearLayout>
+</LinearLayout>

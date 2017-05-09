@@ -3,13 +3,13 @@ package com.liuwei1995.red.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.text.TextUtils;
 
 import com.liuwei1995.red.R;
 import com.liuwei1995.red.adapter.TabFragmentAdapter;
@@ -18,13 +18,19 @@ import com.liuwei1995.red.fragment.EyeFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.liuwei1995.red.fragment.EyeFragment.ACCOUNT;
+import static com.liuwei1995.red.fragment.EyeFragment.TYPE;
+
 
 public class EyeActivity extends AppCompatActivity {
 
     private TabLayout tablayout;
 
-    public static void newStartActivity(@NonNull Context c) {
+
+    public static void newStartActivity(@NonNull Context c, @IntRange(from = 0,to = 3) int type, String account) {
         Intent intent = new Intent(c, EyeActivity.class);
+        intent.putExtra(TYPE,type);
+        intent.putExtra(ACCOUNT,account);
         c.startActivity(intent);
     }
 
@@ -32,6 +38,7 @@ public class EyeActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private int item = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,16 +52,39 @@ public class EyeActivity extends AppCompatActivity {
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        List<Fragment> fragments = new ArrayList<>();
-        fragments.add(EyeFragment.newInstance(0,false));
-        fragments.add(EyeFragment.newInstance(1,true));
         List<String> lists = new ArrayList<>();
         lists.add("本地");
         lists.add("网络");
+        lists.add("未提交");
+
+        List<Fragment> fragments = new ArrayList<>();
+        Intent intent = getIntent();
+        if(intent != null){
+            int type = intent.getIntExtra(TYPE, -1);
+            if(type > -1 && type <= lists.size()){
+                item = type;
+            }
+            String account = intent.getStringExtra(ACCOUNT);
+            if(account != null && !TextUtils.isEmpty(account)){
+                fragments.add(EyeFragment.newInstance(0,null,true));
+                fragments.add(EyeFragment.newInstance(1,account,false));
+                fragments.add(EyeFragment.newInstance(2,null,true));
+            }else {
+                fragments.add(EyeFragment.newInstance(0,null,false));
+                fragments.add(EyeFragment.newInstance(1,null,true));
+                fragments.add(EyeFragment.newInstance(2,null,true));
+            }
+        }else {
+            fragments.add(EyeFragment.newInstance(0,null,false));
+            fragments.add(EyeFragment.newInstance(1,null,true));
+            fragments.add(EyeFragment.newInstance(2,null,true));
+        }
+
 
         TabFragmentAdapter adapter = new TabFragmentAdapter(fragments, lists, getSupportFragmentManager(), this);
-
+        mViewPager.setOffscreenPageLimit(lists.size());
         mViewPager.setAdapter(adapter);
+        mViewPager.setCurrentItem(item);
 // 将ViewPager和TabLayout绑定
         tablayout.setupWithViewPager(mViewPager);
         tablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -74,28 +104,5 @@ public class EyeActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_eye, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

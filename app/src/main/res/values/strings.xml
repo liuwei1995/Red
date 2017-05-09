@@ -41,4 +41,12 @@
     <string name="submit">提交</string>
     <string name="License_plate_number">车牌号:</string>
     <string name="password">密码:</string>
+    <string name="text_open">打开</string>
+    <string name="text_scan_qr_code">扫码页</string>
+    <string name="text_go_back">返回</string>
+    <string name="text_cancel">取消</string>
+    <string name="tv_text_hint">提示</string>
+    <string name="tv_text_content">内容</string>
+    <string name="open_the_other_app">打开其他app</string>
+    <string name="text_photo">相册</string>
 </resources>

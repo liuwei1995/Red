@@ -25,7 +25,6 @@ import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.accessibility.AccessibilityManager;
@@ -47,6 +46,7 @@ import com.liuwei1995.red.service.util.wechat.presenter.WechatPresenter;
 import com.liuwei1995.red.util.permission.AndPermission;
 import com.liuwei1995.red.util.permission.PermissionListener;
 import com.liuwei1995.red.util.permission.RationaleListener;
+import com.liuwei1995.red.zxing.activity.CaptureActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -110,28 +110,6 @@ public class Main2Activity extends Activity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main2, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -139,35 +117,15 @@ public class Main2Activity extends Activity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            AndPermission.with(this).setPermission(Manifest.permission.CAMERA)
+                    .setCallback(new mPermissionListener(this, CaptureActivity.class))
+                    .start();
         }
         else if (id == R.id.nav_look) {
-            AndPermission.with(this).setPermission(
-                    Manifest.permission.READ_PHONE_STATE
-//                   ,Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-                    .setCallback(new PermissionListener() {
-                        @Override
-                        protected void onSucceed(Context context, int requestCode, @NonNull List<String> grantPermissions) {
-                            EyeActivity.newStartActivity(Main2Activity.this);
-                        }
-                        @Override
-                        protected void onFailed(@NonNull Context context, int requestCode, @NonNull List<String> deniedPermissionsList, @NonNull List<String> deniedDontRemindList, @NonNull
-                                RationaleListener rationale) {
-                            if(!deniedDontRemindList.isEmpty()){
-                                rationale.showSettingDialog(context,rationale);
-                            }else {
-                                Toast.makeText(context, "拒绝权限不能进入", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        protected void onCancel(Context context, int requestCode, @NonNull List<String> deniedPermissionsList, List<String> deniedDontRemindList) {
-                            Toast.makeText(context, "拒绝权限不能进入", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .start();
-
+//            AndPermission.with(this).setPermission(Manifest.permission.READ_PHONE_STATE)
+//                    .setCallback(new mPermissionListener(this,EyeActivity.class))
+//                    .start();
+            EyeActivity.newStartActivity(this,0,null);
         }
         else if (id == R.id.nav_search) {
 
@@ -213,6 +171,34 @@ public class Main2Activity extends Activity
                     }
                 })
                 .start();
+    }
+     class mPermissionListener extends PermissionListener{
+
+            private Context packageContext;
+            private Class cls;
+
+            protected mPermissionListener(Context packageContext, Class<?> cls){
+                this.packageContext = packageContext;
+                this.cls = cls;
+            }
+            @Override
+            protected void onSucceed(Context context, int requestCode, @NonNull List<String> grantPermissions) {
+                startActivityForResult(new Intent(packageContext,cls),requestCode);
+            }
+            @Override
+            protected void onFailed(@NonNull Context context, int requestCode, @NonNull List<String> deniedPermissionsList, @NonNull List<String> deniedDontRemindList, @NonNull
+            RationaleListener rationale) {
+                if(!deniedDontRemindList.isEmpty()){
+                    rationale.showSettingDialog(context,rationale);
+                }else {
+                    Toast.makeText(context, "拒绝权限不能进入", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            protected void onCancel(Context context, int requestCode, @NonNull List<String> deniedPermissionsList, List<String> deniedDontRemindList) {
+                Toast.makeText(context, "拒绝权限不能进入", Toast.LENGTH_SHORT).show();
+            }
     }
 
     /**
