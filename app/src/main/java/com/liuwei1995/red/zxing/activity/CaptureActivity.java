@@ -202,6 +202,7 @@ public class CaptureActivity extends Activity implements Callback {
 
             @Override
             public void onClick(View v) {
+                dismiss();
                 if (v.getId() == R.id.btn_cancel){
 
                 }else {
@@ -212,22 +213,20 @@ public class CaptureActivity extends Activity implements Callback {
                             int i = s.lastIndexOf("/");
                             if(i != -1 && i < s.length()){
                                 s = s.substring(i+1);
-                                dismiss();
                                 EyeActivity.newStartActivity(CaptureActivity.this,1,s);
                                 finish();
-                                return;
                             }else {
                                 Toast.makeText(CaptureActivity.this, "没有支持的应用", Toast.LENGTH_SHORT).show();
                             }
                         }else {
                             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(resultString));
                             startActivity(intent);
+                            finish();
                         }
                     }else {
                         Toast.makeText(CaptureActivity.this, "没有支持的应用", Toast.LENGTH_SHORT).show();
                     }
                 }
-                dismiss();
             }
             @Override
             public void onDismiss(DialogInterface dialog) {

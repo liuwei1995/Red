@@ -30,7 +30,6 @@ import java.util.concurrent.CountDownLatch;
 
 /**
  * This thread does all the heavy lifting of decoding the images.
- * 锟斤拷锟斤拷锟竭筹拷
  */
 final class DecodeThread extends Thread {
 
