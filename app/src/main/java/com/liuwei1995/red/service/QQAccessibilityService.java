@@ -22,9 +22,8 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
-
-import com.liuwei1995.red.MainActivity;
 import com.liuwei1995.red.R;
+import com.liuwei1995.red.activity.MainActivity;
 import com.liuwei1995.red.service.util.qq.presenter.QQPresenter;
 
 import java.lang.reflect.Field;

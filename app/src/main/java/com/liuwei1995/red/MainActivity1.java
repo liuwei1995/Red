@@ -48,7 +48,7 @@ import static android.content.ContentValues.TAG;
 import static com.liuwei1995.red.BaseApplication.QQ_map;
 import static com.liuwei1995.red.BaseApplication.WeChat_map;
 
-public class MainActivity extends Activity {
+public class MainActivity1 extends Activity {
     private final Intent mAccessibleIntent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
     private TextView text_WeChat_accessible;
     private TextView text_QQ_accessible;
@@ -220,7 +220,7 @@ public class MainActivity extends Activity {
                     Intent intent = new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
                     startActivity(intent);
                 } else {
-                    Toast.makeText(MainActivity.this, "手机的系统不支持此功能", Toast.LENGTH_SHORT)
+                    Toast.makeText(MainActivity1.this, "手机的系统不支持此功能", Toast.LENGTH_SHORT)
                             .show();
                 }
                 break;
@@ -252,10 +252,10 @@ public class MainActivity extends Activity {
                         Uri.parse("package:" + getPackageName()));
                 startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
             } else {
-                startService(new Intent(MainActivity.this, FloatWindowService.class));
+                startService(new Intent(MainActivity1.this, FloatWindowService.class));
             }
         }else {
-            startService(new Intent(MainActivity.this, FloatWindowService.class));
+            startService(new Intent(MainActivity1.this, FloatWindowService.class));
         }
     }
 
@@ -274,7 +274,7 @@ public class MainActivity extends Activity {
                 } else {
                     Toast.makeText(this, "权限授予成功！", Toast.LENGTH_SHORT).show();
                     //启动FxService
-                    startService(new Intent(MainActivity.this, FloatWindowService.class));
+                    startService(new Intent(MainActivity1.this, FloatWindowService.class));
                 }
             }
 

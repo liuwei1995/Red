@@ -331,6 +331,7 @@ public class EyeFragment extends BaseFragment implements TextWatcher{
                         }
                     }else {
                         Toast.makeText(mContext, UserJSON.getString(result,"message"), Toast.LENGTH_SHORT).show();
+                        LoginActivity.newStartActivity(mContext);
                     }
                 }else ToastUtils.showShortToast("网络开小差啦");
             }

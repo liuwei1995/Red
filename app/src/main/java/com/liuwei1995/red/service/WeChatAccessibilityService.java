@@ -7,13 +7,10 @@ import android.content.pm.PackageManager;
 import android.text.TextUtils;
 import android.view.accessibility.AccessibilityEvent;
 
-
 import com.liuwei1995.red.BaseApplication;
 import com.liuwei1995.red.entity.AppEntity;
 import com.liuwei1995.red.service.util.wechat.presenter.WechatPresenter;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import com.liuwei1995.red.service.util.wechat.presenter.Wechat_6_5_7_Presenter;
 
 
 public class WeChatAccessibilityService extends AccessibilityService {
@@ -33,30 +30,30 @@ public class WeChatAccessibilityService extends AccessibilityService {
         super.onServiceConnected();
         String s = queryAppInfo();
         if(isStart && s != null && !TextUtils.isEmpty(s)){
-            if(presenter == null){
-                try {
-                    String[] split = s.split("\\.");
-                    String code = "_";
-                    for (int i = 0; i < split.length; i++) {
-                        code += split[i]+"_";
-                    }
-                    Class<?> aClass = Class.forName("com.liuwei1995.redNew.service.util.wechat.presenter.Wechat" + code + "Presenter");
-                    Constructor<?> constructor = aClass.getConstructor(AccessibilityService.class);
-                    constructor.setAccessible(true);
-                    presenter = (WechatPresenter) constructor.newInstance(this);
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                }
-            }
-//            presenter = new Wechat_6_5_7_Presenter(this);
+//            if(presenter == null){
+//                try {
+//                    String[] split = s.split("\\.");
+//                    String code = "_";
+//                    for (int i = 0; i < split.length; i++) {
+//                        code += split[i]+"_";
+//                    }
+//                    Class<?> aClass = Class.forName(getPackageName()+".service.util.wechat.presenter.Wechat" + code + "Presenter");
+//                    Constructor<?> constructor = aClass.getConstructor(AccessibilityService.class);
+//                    constructor.setAccessible(true);
+//                    presenter = (WechatPresenter) constructor.newInstance(this);
+//                } catch (ClassNotFoundException e) {
+//                    e.printStackTrace();
+//                } catch (NoSuchMethodException e) {
+//                    e.printStackTrace();
+//                } catch (IllegalAccessException e) {
+//                    e.printStackTrace();
+//                } catch (InstantiationException e) {
+//                    e.printStackTrace();
+//                } catch (InvocationTargetException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+            presenter = new Wechat_6_5_7_Presenter(this);
             if(presenter != null)
                 presenter.onServiceConnected();
         }

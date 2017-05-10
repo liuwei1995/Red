@@ -328,7 +328,7 @@ public class HongbaoService extends AccessibilityService {
     public void setNotification() {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         long when = System.currentTimeMillis();
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, MainActivity1.class);
         PendingIntent contextIntent = PendingIntent.getActivity(this, 0, intent, 0);
         Notification notification = new Notification.Builder(getApplicationContext()).setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("刘伟").setContentText("红包功能已经打开").setTicker("Ticker").setWhen(when)

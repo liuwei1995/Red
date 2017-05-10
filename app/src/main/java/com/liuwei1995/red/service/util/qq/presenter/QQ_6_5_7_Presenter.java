@@ -21,7 +21,7 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 
 
-import com.liuwei1995.red.MainActivity;
+import com.liuwei1995.red.MainActivity1;
 import com.liuwei1995.red.R;
 
 import java.lang.reflect.Field;
@@ -487,7 +487,7 @@ public class QQ_6_5_7_Presenter extends QQPresenter {
 
     //自定义通知
     protected void setSelfNotification() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), MainActivity1.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),
                 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews = new RemoteViews(getPackageName(), R.layout.remote_view);
