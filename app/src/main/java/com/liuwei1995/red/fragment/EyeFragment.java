@@ -24,6 +24,7 @@ import com.blankj.utilcode.util.PhoneUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.liuwei1995.red.BaseApplication;
 import com.liuwei1995.red.R;
+import com.liuwei1995.red.activity.LoginActivity;
 import com.liuwei1995.red.adapter.RedAdapter;
 import com.liuwei1995.red.adapter.RedViewHolder;
 import com.liuwei1995.red.db.impl.OFOEntityEntityDaoImpl;
@@ -191,6 +192,7 @@ public class EyeFragment extends BaseFragment implements TextWatcher{
                         }
                     }else {
                         Toast.makeText(mContext, UserJSON.getString(result,"message"), Toast.LENGTH_SHORT).show();
+                        LoginActivity.newStartActivity(mContext);
                     }
                 }else Toast.makeText(mContext, "网络开小差啦", Toast.LENGTH_SHORT).show();
             }
@@ -379,6 +381,7 @@ public class EyeFragment extends BaseFragment implements TextWatcher{
                         }
                     }else {
                         Toast.makeText(mContext, UserJSON.getString(result,"message"), Toast.LENGTH_SHORT).show();
+                        LoginActivity.newStartActivity(mContext);
                     }
                 }else Toast.makeText(mContext, "网络开小差啦", Toast.LENGTH_SHORT).show();
             }

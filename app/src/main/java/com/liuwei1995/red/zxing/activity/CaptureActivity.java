@@ -1,6 +1,7 @@
 package com.liuwei1995.red.zxing.activity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -34,6 +36,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.liuwei1995.red.R;
 import com.liuwei1995.red.activity.EyeActivity;
+import com.liuwei1995.red.async.RedAsyncTask;
 import com.liuwei1995.red.view.RedAlertDialogV7;
 import com.liuwei1995.red.zxing.camera.CameraManager;
 import com.liuwei1995.red.zxing.decoding.CaptureActivityHandler;
@@ -41,8 +44,6 @@ import com.liuwei1995.red.zxing.decoding.InactivityTimer;
 import com.liuwei1995.red.zxing.view.ViewfinderView;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Vector;
 
@@ -64,7 +65,6 @@ public class CaptureActivity extends Activity implements Callback {
     private static final float BEEP_VOLUME = 0.10f;
     private boolean vibrate;
     private Button cancelScanButton;
-    private TextView tv_camera_switch;
     private Camera camera;
     private Parameters parameter;
     private android.view.View parent;
@@ -95,22 +95,12 @@ public class CaptureActivity extends Activity implements Callback {
         this.findViewById(R.id.btn_photo).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                   /* 开启Pictures画面Type设定为image */
-//                Intent intent = new Intent();
-//                intent.setType("image/*");
-//                /* 使用Intent.ACTION_GET_CONTENT这个Action */
-//                intent.setAction(Intent.ACTION_GET_CONTENT);
                 Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, RESULT);
-//                Bitmap qrImage = QRCodeUtil.createQRImage("http://m.blog.csdn.net/article/details?id=52223638", 200, 200, null);
-//                Result result = QRCodeUtil.scanningImage(qrImage);
-//                if(result != null){
-//                    Toast.makeText(CaptureActivity.this, result.getText(), Toast.LENGTH_SHORT).show();
-//                }
             }
         });
         hasSurface = false;
-        tv_camera_switch = (TextView) this.findViewById(R.id.tv_camera_switch);
+
         inactivityTimer = new InactivityTimer(this);
     }
 
@@ -141,12 +131,13 @@ public class CaptureActivity extends Activity implements Callback {
         }
         initBeepSound();
         vibrate = true;
+        final TextView tv_camera_switch = (TextView) this.findViewById(R.id.tv_camera_switch);
         //电筒开关
         tv_camera_switch.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 String trim = tv_camera_switch.getText().toString().trim();
-                if ("打开".equals(trim)) {
+                if (getString(R.string.open).equals(trim)) {
                     tv_camera_switch.setText("关闭");
                     camera.startPreview();
                     parameter = camera.getParameters();
@@ -166,36 +157,88 @@ public class CaptureActivity extends Activity implements Callback {
         });
     }
 
+    private ProgressDialog mProgressDialog;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == RESULT){
             if(data != null){
-                Uri selectedImage = data.getData();
+                showProgressDialog();
+                getPicturePath(data);
+            }
+        }
+    }
+
+    public void showProgressDialog(){
+        if(mProgressDialog == null){
+            mProgressDialog = ProgressDialog.show(this, "提示", "识别中", false, false);
+        }
+        if(mProgressDialog.isShowing())
+            mProgressDialog.dismiss();
+        mProgressDialog.show();
+    }
+    public void dismissProgressDialog(){
+        if(mProgressDialog != null && mProgressDialog.isShowing()){
+            mProgressDialog.dismiss();
+        }
+    }
+    public synchronized void getPicturePath(Intent data){
+        RedAsyncTask<Uri, String, String> redAsyncTask = new RedAsyncTask<Uri, String, String>(this) {
+            @Override
+            public String doInBackground(Context context, Uri... params) {
                 String[] filePathColumn = { MediaStore.Images.Media.DATA };
-                Cursor cursor = getContentResolver().query(selectedImage,
+                Cursor cursor = getContentResolver().query(params[0],
                         filePathColumn, null, null, null);
                 if(cursor != null){
                     cursor.moveToFirst();
                     int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                     String picturePath = cursor.getString(columnIndex);
                     cursor.close();
-                    Result result = QRCodeUtil.scanningImage(picturePath);
-                    if(result != null){
-                        String text = result.getText();
-                        show(text);
-                    }else {
-                        Toast.makeText(this, "识别失败", Toast.LENGTH_SHORT).show();
-                    }
+                    return picturePath;
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Context context, String s) {
+                scanImage(s);
+            }
+        };
+        Uri selectedImage = data.getData();
+        redAsyncTask.execute(selectedImage);
+    }
+    public synchronized void scanImage(String picturePath){
+        RedAsyncTask<String, String, String> redAsyncTask = new RedAsyncTask<String, String, String>(this) {
+            @Override
+            public String doInBackground(Context context, String... params) {
+                if(params == null || params.length < 0)return null;
+                Result result = QRCodeUtil.scanImage(params[0]);
+                if(result != null){
+                    return result.getText();
+                }
+                return null;
+            }
+            @Override
+            protected void onPostExecute(Context con,String s) {
+                dismissProgressDialog();
+                if(s != null){
+                    show(s);
+                }else {
+                    Toast.makeText(con, "识别失败", Toast.LENGTH_SHORT).show();
                 }
             }
-        }
+        };
+        redAsyncTask.execute(picturePath);
     }
     public synchronized void show(final String resultString){
         RedAlertDialogV7 red = new RedAlertDialogV7(this,R.layout.pop_capture_activity_b,R.style.AnimBottom) {
             @Override
             protected void convertView(View view) {
                 setText(R.id.tv_content,resultString);
+                if (resultString.trim().contains("http://ofo.so") || resultString.trim().contains("https://ofo.so")){
+                   setText(R.id.btn_open_app,"搜索");
+                }
                 setOnClickListener(R.id.btn_open_app,this);
                 setOnClickListener(R.id.btn_cancel,this);
             }
@@ -203,9 +246,7 @@ public class CaptureActivity extends Activity implements Callback {
             @Override
             public void onClick(View v) {
                 dismiss();
-                if (v.getId() == R.id.btn_cancel){
-
-                }else {
+                if (v.getId() == R.id.btn_open_app){
                     if (URLUtil.isNetworkUrl(resultString)){
                         if (resultString.trim().contains("http://ofo.so") || resultString.trim().contains("https://ofo.so")){
                             String s = resultString;
@@ -238,6 +279,7 @@ public class CaptureActivity extends Activity implements Callback {
     @Override
     protected void onPause() {
         super.onPause();
+        dismissProgressDialog();
         if (handler != null) {
             handler.quitSynchronously();
             handler = null;
@@ -247,6 +289,8 @@ public class CaptureActivity extends Activity implements Callback {
 
     @Override
     protected void onDestroy() {
+        dismissProgressDialog();
+        mProgressDialog = null;
         inactivityTimer.shutdown();
         super.onDestroy();
     }
@@ -284,7 +328,11 @@ public class CaptureActivity extends Activity implements Callback {
                 Toast.makeText(CaptureActivity.this, "没有应用程序可打开", Toast.LENGTH_SHORT).show();
                 return;
             }
-            show(resultString);
+            if (resultString.trim().contains("http://ofo.so") || resultString.trim().contains("https://ofo.so")){
+                show(resultString);
+            }else {
+                show(resultString);
+            }
         } else {
             show(resultString);
         }

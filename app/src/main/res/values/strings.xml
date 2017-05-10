@@ -49,4 +49,5 @@
     <string name="tv_text_content">内容</string>
     <string name="open_the_other_app">打开其他app</string>
     <string name="text_photo">相册</string>
+    <string name="open">打开</string>
 </resources>
