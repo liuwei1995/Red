@@ -70,8 +70,7 @@
 
         android:padding="5dp"
         android:text="提交"
-        android:background="@android:drawable/ic_dialog_email"
-        app:srcCompat="@android:drawable/ic_dialog_email"
+        android:background="@color/color_navigationbar_selected_text"
         tools:ignore="HardcodedText"/>
 
 

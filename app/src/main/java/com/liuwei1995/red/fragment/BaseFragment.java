@@ -21,6 +21,30 @@ public abstract class BaseFragment<E extends FragmentPresenter> extends Fragment
 
     protected E presenter;
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        presenter = getPresenter();
+        time = System.currentTimeMillis();
+        if (getArguments() != null) {
+            Bundle arguments = getArguments();
+            isPrepared = arguments.getBoolean("isPrepared", false);
+        }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isPause = false;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isPause = true;
+    }
+
     abstract E getPresenter();
     /**
      * 查找view的空间id
@@ -37,17 +61,6 @@ public abstract class BaseFragment<E extends FragmentPresenter> extends Fragment
         for (int i = 0; i < views.length; i++) {
             views[i].setOnClickListener(this);
         }
-    }
-    @Override
-    public void onResume() {
-        super.onResume();
-        isPause = false;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        isPause = true;
     }
 
     public boolean isVisible = true;
@@ -108,18 +121,6 @@ public abstract class BaseFragment<E extends FragmentPresenter> extends Fragment
     }
 
     protected void onInvisible() {
-
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        presenter = getPresenter();
-        time = System.currentTimeMillis();
-        if (getArguments() != null) {
-            Bundle arguments = getArguments();
-            isPrepared = arguments.getBoolean("isPrepared", false);
-        }
 
     }
 

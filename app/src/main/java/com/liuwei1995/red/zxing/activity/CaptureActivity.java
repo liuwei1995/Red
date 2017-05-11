@@ -10,6 +10,7 @@ import android.content.pm.ResolveInfo;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.media.AudioManager;
@@ -20,7 +21,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.provider.MediaStore;
-import android.text.TextUtils;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -28,9 +28,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.URLUtil;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blankj.utilcode.util.ImageUtils;
 import com.blankj.utilcode.util.QRCodeUtil;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
@@ -38,6 +40,7 @@ import com.liuwei1995.red.R;
 import com.liuwei1995.red.activity.EyeActivity;
 import com.liuwei1995.red.async.RedAsyncTask;
 import com.liuwei1995.red.view.RedAlertDialogV7;
+import com.liuwei1995.red.view.RedSnackbar;
 import com.liuwei1995.red.zxing.camera.CameraManager;
 import com.liuwei1995.red.zxing.decoding.CaptureActivityHandler;
 import com.liuwei1995.red.zxing.decoding.InactivityTimer;
@@ -201,8 +204,26 @@ public class CaptureActivity extends Activity implements Callback {
             }
 
             @Override
-            protected void onPostExecute(Context context, String s) {
+            protected void onPostExecute(Context context, final String s) {
                 scanImage(s);
+
+//                RedSnackbar snackbar = new RedSnackbar(context,R.layout.test_red_snackbar) {
+//                    @Override
+//                    public void setCustomView(Context mContext, View customView) {
+//                        Bitmap bitmap = BitmapFactory.decodeFile(s);
+//                        Bitmap toGray = ImageUtils.toGray(bitmap, false);
+//                        Bitmap tolineGrey = ImageUtils.tolineGrey(bitmap, false);
+//                        Bitmap gray2Binary = ImageUtils.gray2Binary(bitmap, true);
+//                        ImageView iv_1 = getView(R.id.iv_1);
+//                        iv_1.setImageBitmap(toGray);
+//                        ImageView iv_2 = getView(R.id.iv_2);
+//                        iv_2.setImageBitmap(tolineGrey);
+//                        ImageView iv_3 = getView(R.id.iv_3);
+//                        iv_3.setImageBitmap(gray2Binary);
+//                    }
+//                };
+//                snackbar.make(viewfinderView,60*1000);
+
             }
         };
         Uri selectedImage = data.getData();

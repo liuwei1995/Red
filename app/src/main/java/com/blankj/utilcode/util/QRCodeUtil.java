@@ -295,21 +295,14 @@ public class QRCodeUtil {
         }
         return result;
     }
-    public static Result scanImage(String picturePath) {
-        // 开始对图像资源解码
-//        BitmapFactory.Options options = new BitmapFactory.Options();
-//        options.inJustDecodeBounds = true; // 先获取原大小
-        Bitmap scanBitmap = BitmapFactory.decodeFile(picturePath);
-//        int sampleSize = (int) (options.outHeight / (float) 200);
-//
-//        if (sampleSize <= 0)
-//            sampleSize = 1;
-//        options.inSampleSize = sampleSize;
-//
-//        options.inJustDecodeBounds = false; // 获取新的大小
-//
-//        scanBitmap = BitmapFactory.decodeFile(picturePath, options);
 
+    /**
+     * 开始对图像资源解码
+     * @param picturePath
+     * @return
+     */
+    public static Result scanImage(String picturePath) {
+        Bitmap scanBitmap = BitmapFactory.decodeFile(picturePath);
         if (scanBitmap == null) return null;
         return scanImage(scanBitmap);
     }

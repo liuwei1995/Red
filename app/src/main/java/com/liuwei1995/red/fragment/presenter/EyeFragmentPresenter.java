@@ -123,6 +123,7 @@ public class EyeFragmentPresenter extends FragmentPresenter implements TextWatch
         }
     }
     public void onInvisible(){
+        handler.removeMessages(H_SHOW_RED_SNACKBAR);
         dismissRedSnackbar();
     }
 
