@@ -5,11 +5,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.liuwei1995.red.R;
 import com.liuwei1995.red.adapter.TabFragmentAdapter;
@@ -105,4 +111,27 @@ public class EyeActivity extends AppCompatActivity {
             }
         });
     }
+    public static void setSnackbarColor(Snackbar snackbar, int messageColor, int backgroundColor) {
+        View view = snackbar.getView();//获取Snackbar的view
+        if(view!=null){
+            view.setBackgroundColor(backgroundColor);//修改view的背景色
+            ((TextView) view.findViewById(R.id.snackbar_text)).setTextColor(messageColor);//获取Snackbar的message控件，修改字体颜色
+        }
+    }
+
+    public static void SnackbarAddView(Snackbar snackbar,int layoutId,int index) {
+        View snackbarview = snackbar.getView();//获取snackbar的View(其实就是SnackbarLayout)
+
+        Snackbar.SnackbarLayout snackbarLayout=(Snackbar.SnackbarLayout)snackbarview;//将获取的View转换成SnackbarLayout
+
+        View add_view = LayoutInflater.from(snackbarview.getContext()).inflate(layoutId,null);//加载布局文件新建View
+
+        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);//设置新建布局参数
+
+        p.gravity= Gravity.CENTER_VERTICAL;//设置新建布局在Snackbar内垂直居中显示
+
+        snackbarLayout.addView(add_view,index,p);//将新建布局添加进snackbarLayout相应位置
+    }
+
+
 }

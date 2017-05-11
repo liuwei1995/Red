@@ -5,16 +5,23 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
+import com.liuwei1995.red.fragment.presenter.FragmentPresenter;
+
 /**
  * Created by liuwei on 2017/3/21
  * <li>要实现延迟加载Fragment内容,需要在 onCreateView
  * isPrepared = true;</li>
  */
 
-public class BaseFragment extends Fragment implements View.OnClickListener{
+public abstract class BaseFragment<E extends FragmentPresenter> extends Fragment implements View.OnClickListener{
+
     public boolean isPause = false;
     public long time = 0;
 
+
+    protected E presenter;
+
+    abstract E getPresenter();
     /**
      * 查找view的空间id
      * @param view
@@ -107,6 +114,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        presenter = getPresenter();
         time = System.currentTimeMillis();
         if (getArguments() != null) {
             Bundle arguments = getArguments();

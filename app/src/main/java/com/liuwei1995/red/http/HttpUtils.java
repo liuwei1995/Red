@@ -35,8 +35,8 @@ public class HttpUtils {
         OkHttpClientUtils.newInstance().post(http+userLogin,map,httpcallback);
     }
 
-    public static void ofoSearchAccountPassword(Map<String,Object> map,HttpCallback httpcallback){
-        OkHttpClientUtils.newInstance().post(http+ofoSearchAccountPassword,map,httpcallback);
+    public static void ofoSearchAccountPassword(Map<String,Object> map,final Object tag,HttpCallback httpcallback){
+        OkHttpClientUtils.newInstance().post(http+ofoSearchAccountPassword,map,tag,httpcallback);
     }
     public static <T>void ofoGetAccountPassword(Map<String,Object> map,HttpCallback<T> httpcallback){
         OkHttpClientUtils.newInstance().post(http+ofoGetAccountPassword,map,httpcallback);

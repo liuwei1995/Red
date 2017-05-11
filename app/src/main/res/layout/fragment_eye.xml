@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:hint="车牌号"
                 android:imeOptions="actionSearch"
-                android:inputType="textPhonetic"
+                android:inputType="number"
                 android:maxLines="1"
                 tools:ignore="HardcodedText"/>
 

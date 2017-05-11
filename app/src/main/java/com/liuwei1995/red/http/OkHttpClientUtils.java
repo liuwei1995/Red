@@ -68,13 +68,17 @@ public class OkHttpClientUtils {
 	public synchronized void post(String url,final HttpCallback httpCallback){
 		postOk(url,null,null,null,httpCallback);
 	}
+
 	public synchronized void post(String url,Map<String,Object> map,final HttpCallback httpCallback){
+		post(url,map,null,httpCallback);
+	}
+	public synchronized void post(String url,Map<String,Object> map,final Object tag,final HttpCallback httpCallback){
 		FormBody.Builder builder = getFormBodyBuilder();
 		if(map != null)
 		for (String key : map.keySet()) {
 			builder.add(key,map.get(key) != null ? map.get(key).toString():"");
 		}
-		postOk(url,builder,null,null,httpCallback);
+		postOk(url,builder,tag,null,httpCallback);
 	}
 	public synchronized void post(String url,FormBody.Builder builder,final HttpCallback httpCallback){
 		postOk(url,builder,null,null,httpCallback);
@@ -115,12 +119,10 @@ public class OkHttpClientUtils {
 		if (!cookies.isEmpty()) {
 			newBuilder.header("Cookie", cookieHeader(cookies));
 		}
-
-
-
 		Call call = client.newCall(request);
-		if(tag != null)
-			map.put(tag, call);
+		if(tag != null){
+			addTag(tag,call);
+		}
 		call.enqueue(new Callback() {
 			@Override
 			public void onResponse(Call call, Response response) throws IOException {
@@ -217,8 +219,9 @@ public class OkHttpClientUtils {
 				builder.post(body);
 			Request request = builder.build();
 			Call call = client.newCall(request);
-			if(tag != null)
-				map.put(tag, call);
+			if(tag != null){
+				addTag(tag,call);
+			}
 			Response response = call.execute();
 			if(httpCallback == null)return;
 			try {
@@ -292,8 +295,9 @@ public class OkHttpClientUtils {
 		}
 		OkHttpClient client = new OkHttpClient.Builder().build();
 		Call call = client.newCall(request);
-		if(tag != null)
-			map.put(tag, call);
+		if(tag != null){
+			addTag(tag,call);
+		}
 			call.enqueue(new Callback() {
 				@Override
 				public void onResponse(Call call, Response response) throws IOException {
@@ -369,8 +373,9 @@ public class OkHttpClientUtils {
 		try {
 			Request request = new Builder().url(url).get().build();
 			Call call = client.newCall(request);
-			if(tag != null)
-				map.put(tag, call);
+			if(tag != null){
+				addTag(tag,call);
+			}
 			Response response = call.execute();
 			if(httpCallback == null)return;
 			if(response.isSuccessful()){
@@ -391,15 +396,24 @@ public class OkHttpClientUtils {
 			httpCallback.onResponse(false, null);
 		}
 	}
-	public synchronized static void cancel(Object tag) {
-		Call call = map.remove(tag);
-		if(call != null){
-			call.cancel();
+	private static void addTag(Object key, Call value){
+		synchronized (OkHttpClientUtils.class){
+			map.put(key,value);
 		}
 	}
-	private synchronized static void remove(Object tag){
-		if(tag != null)
-			map.remove(tag);
+	public static void cancel(Object tag) {
+		synchronized (OkHttpClientUtils.class){
+			Call call = map.remove(tag);
+			if(call != null){
+				call.cancel();
+			}
+		}
+	}
+	private  static void remove(Object tag){
+		synchronized (OkHttpClientUtils.class){
+			if(tag != null)
+				map.remove(tag);
+		}
 	}
 	
 	/**
