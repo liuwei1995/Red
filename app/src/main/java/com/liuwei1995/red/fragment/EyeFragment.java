@@ -67,6 +67,11 @@ public class EyeFragment extends BaseFragment<EyeFragmentPresenter>{
         presenter.initData();
     }
 
+    @Override
+    protected void onInvisible() {
+        if(presenter != null)
+        presenter.onInvisible();
+    }
 
     @Override
     public void onClick(View v) {

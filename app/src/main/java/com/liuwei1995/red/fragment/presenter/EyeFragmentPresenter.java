@@ -60,21 +60,21 @@ public class EyeFragmentPresenter extends FragmentPresenter implements TextWatch
     private FragmentHandler handler = null;
 
 
-    public static final int H_DISMISS_RED_SNACKBAR = 10;//DISMISS_RED_SNACKBAR
-    public static final int H_SHOW_RED_SNACKBAR = 11;
-    public static final int H_TYPE_ZERO = 0;
-    public static final int H_TYPE_ONE = 1;
-    public static final int H_TYPE_TWO = 2;
+    private static final int H_DISMISS_RED_SNACKBAR = 10;//DISMISS_RED_SNACKBAR
+    private static final int H_SHOW_RED_SNACKBAR = 11;
+    private static final int H_TYPE_ZERO = 0;
+    private static final int H_TYPE_ONE = 1;
+    private static final int H_TYPE_TWO = 2;
 
     /**
      * The fragment argument representing the section number for this
      * fragment.
      */
-    public static final String ACCOUNT = "account";
-    public static final String TYPE = "type";
+    private static final String ACCOUNT = "account";
+    private static final String TYPE = "type";
     private int type = 0;
     private String acc = null;
-    private boolean isPrepared;
+    private boolean isPrepared = false;
 
     public void onAttach(Context context,android.support.v4.app.Fragment fragment) {
         super.onAttach(context);
@@ -121,6 +121,9 @@ public class EyeFragmentPresenter extends FragmentPresenter implements TextWatch
                 ofoGetAccountPassword();
             }
         }
+    }
+    public void onInvisible(){
+        dismissRedSnackbar();
     }
 
     private int pageNumber = 30;
@@ -341,12 +344,12 @@ public class EyeFragmentPresenter extends FragmentPresenter implements TextWatch
     }
     private RedSnackbar redSnackbar;
 
-    public void dismissRedSnackbar(){
+    private void dismissRedSnackbar(){
         if(redSnackbar != null){
             redSnackbar.dismiss();
         }
     }
-    public void showRedSnackbar(){
+    private void showRedSnackbar(){
         if(redSnackbar == null){
             synchronized (this){
                 if (redSnackbar == null)
@@ -469,15 +472,14 @@ public class EyeFragmentPresenter extends FragmentPresenter implements TextWatch
     /**
      * 方法说明:监控软键盘的的搜索按钮
      */
-    public void watchSearch() {
-        if (type == 1)
+    private void watchSearch() {
+        if (type == H_TYPE_ONE)
             actv_license_plate_number.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId,KeyEvent event) {
                     if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                         // 先隐藏键盘
-                        ((InputMethodManager) actv_license_plate_number.getContext()
-                                .getSystemService(Context.INPUT_METHOD_SERVICE))
+                        ((InputMethodManager) actv_license_plate_number.getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
                                 .hideSoftInputFromWindow(((Activity)mContext).getCurrentFocus().getWindowToken(),
                                         InputMethodManager.HIDE_NOT_ALWAYS);
                         // 搜索，进行自己要的操作...
@@ -514,13 +516,14 @@ public class EyeFragmentPresenter extends FragmentPresenter implements TextWatch
         list = null;
         list_quanbu = null;
         adapter = null;
-        if(handler != null)
-        handler.removeMessages(H_DISMISS_RED_SNACKBAR);
-        handler.removeMessages(H_SHOW_RED_SNACKBAR);
-        handler.removeMessages(H_TYPE_TWO);
-        handler.removeMessages(H_TYPE_ONE);
-        handler.removeMessages(H_TYPE_ZERO);
-        handler = null;
+        if(handler != null){
+            handler.removeMessages(H_DISMISS_RED_SNACKBAR);
+            handler.removeMessages(H_SHOW_RED_SNACKBAR);
+            handler.removeMessages(H_TYPE_TWO);
+            handler.removeMessages(H_TYPE_ONE);
+            handler.removeMessages(H_TYPE_ZERO);
+            handler = null;
+        }
         super.onDestroy();
     }
 
