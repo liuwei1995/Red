@@ -62,7 +62,7 @@ public class WebViewActivity extends BaseActivity {
                 finish();
                 return;
             }
-        }else {
+        }else {//com.android.browser.application_id
             for (String key : savedInstanceState.keySet()){
                 Object o = savedInstanceState.get(key);
                 LogUtils.d(TAG,o);
