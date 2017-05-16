@@ -56,6 +56,7 @@ public abstract class BaseFragment<E extends FragmentPresenter> extends Fragment
     public <T extends View> T $(View view,int viewID) {
         return (T) view.findViewById(viewID);
     }
+
     public void setOnClickListener(View ...views){
         if(views != null)
         for (int i = 0; i < views.length; i++) {

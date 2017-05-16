@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.Signature;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,7 +15,6 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Html;
@@ -32,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blankj.utilcode.util.AppUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.liuwei1995.red.R;
 import com.liuwei1995.red.entity.AppEntity;
 import com.liuwei1995.red.service.DingDingAccessibilityService;
@@ -55,7 +56,7 @@ import java.util.List;
 import static com.liuwei1995.red.BaseApplication.QQ_map;
 import static com.liuwei1995.red.BaseApplication.WeChat_map;
 
-public class MainActivity extends Activity
+public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -68,6 +69,8 @@ public class MainActivity extends Activity
     private TextView text_notification_listener;
     private TextView text_start_SensorService;
     TextView tv_content;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,18 +80,17 @@ public class MainActivity extends Activity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Signature[] appSignature = AppUtils.getAppSignature(view.getContext(),"so.ofo.labofo");
+                LogUtils.d("so.ofo.labofo:"+appSignature[0].toCharsString());
+                LogUtils.d(appSignature != null&& appSignature.length > 0?appSignature[0].toCharsString()+"\n\t"+AppUtils.getAppSignature(view.getContext())[0].toCharsString():null);
             }
         });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         startRequestPermissions();
-        receiver = new SensorServiceReceiver();//com.alibaba.android.rimet
+        receiver = new SensorServiceReceiver();
         registerReceiver(receiver,new IntentFilter(ACTION_SensorServiceReceiver_CHANGE));
         text_WeChat_accessible = (TextView) findViewById(R.id.text_WeChat_accessible);
         text_QQ_accessible = (TextView) findViewById(R.id.text_QQ_accessible);
@@ -131,7 +133,8 @@ public class MainActivity extends Activity
 
         }
         else if (id == R.id.nav_gallery) {
-
+            WebViewActivity.startActivity(this,"https://www.baidu.com/");
+//            WebViewActivity.startActivity(this,"http://192.168.0.101:8020/zhaoyaohealthy/index.html");
         }
         else if (id == R.id.nav_slideshow) {
 

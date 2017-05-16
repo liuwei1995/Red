@@ -50,4 +50,15 @@
     <string name="open_the_other_app">打开其他app</string>
     <string name="text_photo">相册</string>
     <string name="open">打开</string>
+
+
+    <string name="toAlbum">从相册选择图片</string>
+    <string name="photograph">拍照</string>
+    <string name="bigimage">查看大图</string>
+    <string name="cancel">取消</string>
+
+
+    <string name="refresh_interface">刷新界面</string>
+    <string name="return_home">返回首页</string>
+
 </resources>

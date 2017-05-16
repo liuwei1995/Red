@@ -122,6 +122,8 @@ public class EyeFragmentPresenter extends FragmentPresenter implements TextWatch
             }
         }
     }
+    public void onVisible() {
+    }
     public void onInvisible(){
         handler.removeMessages(H_SHOW_RED_SNACKBAR);
         dismissRedSnackbar();
@@ -274,7 +276,7 @@ public class EyeFragmentPresenter extends FragmentPresenter implements TextWatch
     private void submit(final OFOEntity item){
         Map<String, Object> map = new HashMap<>();
         String account = item.getAccount();
-        map.put("account",account);
+        map.put("account",account);//提交密码 submitPassword
 
 //        String phoneNumber = item.getPhoneNumber();
         map.put("phoneNumber", PhoneUtils.getPhoneNumber(mContext));
@@ -307,6 +309,7 @@ public class EyeFragmentPresenter extends FragmentPresenter implements TextWatch
         String buildModel = item.getBuildModel();
         map.put("buildModel",buildModel);
         map.put("deviceType","Android");
+        map.put("submitPassword","");
 
         HttpUtils.saveAccountPassword(map, new HttpCallback<JSONObject>() {
             @Override

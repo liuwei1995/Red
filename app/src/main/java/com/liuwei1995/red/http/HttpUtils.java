@@ -21,7 +21,7 @@ public class HttpUtils {
     }
 
     public static final String IP = "http://139.201.126.215:8080";
-    //    public static final String IP = "http://192.168.0.103:8080";
+//    public static final String IP = "http://192.168.0.103:8080";
     public static final String http = IP+"/MiaoMiaoServer/app/user/";
 //    public static final String http = "http://192.168.0.103:8080"+"/MiaoMiaoServer/app/user/";
 

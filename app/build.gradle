@@ -10,6 +10,14 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+//        ndk {
+//            moduleName "red_jni"
+//        }
+//        sourceSets.main {
+//            jni.srcDirs = []
+//            jniLibs.srcDir "src/main/libs"
+//        }
     }
     buildTypes {
         release {
@@ -17,6 +25,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+//    sourceSets { main { jni.srcDirs = ['src/main/jni', 'src/main/jni/'] } }
 }
 
 dependencies {
@@ -31,4 +40,5 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.7.0'
     compile files('libs/universal-image-loader-1.9.5.jar')
     //    compile files('libs/core-3.2.1.jar')
+    compile files('libs/tbs_sdk_thirdapp_v3.1.0.1034_43100_sharewithdownload_obfs_20170301_182143.jar')
 }

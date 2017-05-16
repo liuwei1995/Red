@@ -6,7 +6,51 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <!--设置Overflow的属性-->
+        <item name="actionOverflowMenuStyle">@style/over_flow_poplist</item>
+        <!--设置替换三个小圆点按钮-->
+        <!--<item name="actionOverflowButtonStyle">@style/OverflowButtonStyle</item>-->
+
+        <item name="android:dropDownListViewStyle">@style/AppDropDownListViewStyle</item>
+
+        <item name="toolbarStyle">@style/MyToolbar</item>
+        <item name="android:listDivider">@drawable/divider</item>
+
     </style>
+
+
+    <!--溢出菜单的样式-->
+    <style name="over_flow_poplist" parent="Base.Widget.AppCompat.ListPopupWindow">
+        <item name="overlapAnchor">false</item>
+        <item name="android:dropDownWidth">wrap_content</item>
+        <!--<item name="android:popupBackground">@color/menuBackground</item>-->
+        <item name="android:dropDownVerticalOffset">2dip</item>
+        <item name="android:dropDownHorizontalOffset">-8dip</item>
+    </style>
+
+    <!--溢出菜单的分割线-->
+    <style name="AppDropDownListViewStyle" parent="Widget.AppCompat.ListView.DropDown">
+        <item name="android:showDividers">middle</item>
+        <item name="android:divider">@mipmap/line_divider</item>
+        <item name="android:dividerHeight">1px</item>
+    </style>
+
+
+    <!--设置替换三个小圆点按钮-->
+    <!--<style name="OverflowButtonStyle" parent="@style/Widget.AppCompat.ActionButton.Overflow">-->
+        <!--<item name="android:src">@mipmap/icon_over_flow</item>-->
+    <!--</style>-->
+    <style
+        name="MyToolbar"
+        parent="Widget.AppCompat.Toolbar">
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+    </style>
+
+
+
+
 
 
     <style name="NotificationText" parent="android:TextAppearance.StatusBar.EventContent"/>
