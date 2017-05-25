@@ -53,10 +53,13 @@ public class WeChatAccessibilityService extends AccessibilityService {
 //                    e.printStackTrace();
 //                }
 //            }
-            presenter = new Wechat_6_5_7_Presenter(this);
-            if(presenter != null)
-                presenter.onServiceConnected();
+//            presenter = new Wechat_6_5_7_Presenter(this);
+//            if(presenter != null)
+//                presenter.onServiceConnected();
         }
+        presenter = new Wechat_6_5_7_Presenter(this);
+        if(presenter != null)
+            presenter.onServiceConnected();
     }
     private boolean isStart = false;
     // 获得所有启动Activity的信息，类似于Launch界面
