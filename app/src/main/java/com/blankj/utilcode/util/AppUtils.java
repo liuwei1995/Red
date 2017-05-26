@@ -23,7 +23,7 @@ import java.util.List;
  * </pre>
  */
 public final class AppUtils {
-
+    private static final String TAG = "AppUtils";
     private AppUtils() {
         throw new UnsupportedOperationException("u can't instantiate me...");
     }
@@ -315,6 +315,7 @@ public final class AppUtils {
         try {
             PackageManager pm = context.getPackageManager();
             PackageInfo pi = pm.getPackageInfo(packageName, 0);
+            LogUtils.d(TAG,pi.toString());
             return pi == null ? null : pi.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();

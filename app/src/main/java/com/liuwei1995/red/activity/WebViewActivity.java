@@ -7,25 +7,37 @@ import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.GeolocationPermissions;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.liuwei1995.red.R;
 import com.liuwei1995.red.util.permission.AndPermission;
-import com.liuwei1995.red.util.webview.X5.BaseDownloadListener;
-import com.liuwei1995.red.util.webview.X5.BaseWebChromeClient;
-import com.liuwei1995.red.util.webview.X5.BaseWebSettings;
-import com.liuwei1995.red.util.webview.X5.BaseWebViewClient;
-import com.tencent.smtt.export.external.interfaces.GeolocationPermissionsCallback;
-import com.tencent.smtt.sdk.WebSettings;
-import com.tencent.smtt.sdk.WebView;
+import com.liuwei1995.red.util.webview.BaseDownloadListener;
+import com.liuwei1995.red.util.webview.BaseWebChromeClient;
+import com.liuwei1995.red.util.webview.BaseWebSettings;
+import com.liuwei1995.red.util.webview.BaseWebViewClient;
+
+import static com.blankj.utilcode.util.ClipboardUtils.getIntent;
+
+//import com.tencent.smtt.export.external.interfaces.GeolocationPermissionsCallback;
+
+//import com.tencent.smtt.sdk.WebSettings;
+//import com.tencent.smtt.sdk.WebView;
+
+//import com.liuwei1995.red.util.webview.X5.BaseDownloadListener;
+//import com.liuwei1995.red.util.webview.X5.BaseWebChromeClient;
+//import com.liuwei1995.red.util.webview.X5.BaseWebSettings;
+//import com.liuwei1995.red.util.webview.X5.BaseWebViewClient;
 
 public class WebViewActivity extends BaseActivity {
     private static final String TAG = "WebViewActivity";
@@ -40,6 +52,22 @@ public class WebViewActivity extends BaseActivity {
         intent.putExtra("url", url);
         context.startActivity(intent);
     }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (mWebView != null){
+            url = intent.getStringExtra("url");
+            if (TextUtils.isEmpty(url)) {
+                Uri data = intent.getData();
+                if (data != null){
+                    url = data.toString();
+                }
+            }
+            mWebView.loadUrl(url);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,22 +80,15 @@ public class WebViewActivity extends BaseActivity {
         if (savedInstanceState == null) {
             savedInstanceState = getIntent().getExtras();
         }
-        if (savedInstanceState == null) {
+        if (savedInstanceState != null){
+            url = savedInstanceState.getString("url");
+        }
+        if (TextUtils.isEmpty(url)) {
             Intent intent = getIntent();
             Uri data = intent.getData();
-            if(data != null){
+            if (data != null){
                 url = data.toString();
-            }else {
-                Toast.makeText(this, "数据错误稍后重试", Toast.LENGTH_SHORT).show();
-                finish();
-                return;
             }
-        }else {//com.android.browser.application_id
-            for (String key : savedInstanceState.keySet()){
-                Object o = savedInstanceState.get(key);
-                LogUtils.d(TAG,o);
-            }
-            url = savedInstanceState.getString("url");
         }
         if (url == null || url.isEmpty() || ! Patterns.WEB_URL.matcher(url).matches()) {
             Toast.makeText(this, "数据错误稍后重试", Toast.LENGTH_SHORT).show();
@@ -101,10 +122,16 @@ public class WebViewActivity extends BaseActivity {
                     }
                 super.onProgressChanged(webView, newProgress);
             }
+
             @Override
-            public void onGeolocationPermissionsShowPrompt(String s, GeolocationPermissionsCallback geolocationPermissionsCallback) {
-                super.onGeolocationPermissionsShowPrompt(s, geolocationPermissionsCallback);
+            public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
+                super.onGeolocationPermissionsShowPrompt(origin, callback);
             }
+
+//            @Override
+//            public void onGeolocationPermissionsShowPrompt(String s, GeolocationPermissionsCallback geolocationPermissionsCallback) {
+//                super.onGeolocationPermissionsShowPrompt(s, geolocationPermissionsCallback);
+//            }
         });
         mWebView.setWebViewClient(new BaseWebViewClient(this){
             @Override

@@ -220,7 +220,7 @@ public class MainActivity extends BaseActivity
         }
         for (String key : WeChat_map.keySet()){
             AppEntity appEntity = WeChat_map.get(key);
-            htmlLinkText += "<a href=\""+appEntity.getUrl()+"\" title=\"微信"+appEntity.getVersionName()+"下载\">微信"+appEntity.getVersionName()+"下载</a>";
+            htmlLinkText += "<a href=\""+appEntity.getUrl()+"\" title=\"微信"+appEntity.getVersionName()+"下载\">微信"+appEntity.getVersionName()+"下载</a>          ";
         }
         htmlLinkText += "<p> 你当前的QQ版本号为："+qqAppVersionName+"</p>";
         if(QQ_map.get(qqAppVersionName) != null){
@@ -230,7 +230,7 @@ public class MainActivity extends BaseActivity
         }
         for (String key : QQ_map.keySet()){
             AppEntity appEntity = QQ_map.get(key);
-            htmlLinkText += "<a href=\""+appEntity.getUrl()+"\" title=\"QQ"+appEntity.getVersionName()+"下载\">QQ"+appEntity.getVersionName()+"下载</a>";
+            htmlLinkText += "<a href=\""+appEntity.getUrl()+"\" title=\"QQ"+appEntity.getVersionName()+"下载\">QQ"+appEntity.getVersionName()+"下载</a>           ";
         }
         htmlLinkText += "</li>";
         tv_content.setText(Html.fromHtml(htmlLinkText));

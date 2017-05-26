@@ -20,6 +20,11 @@ android {
 //        }
     }
     buildTypes {
+        debug{
+            minifyEnabled false
+            debuggable true
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -39,6 +44,5 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     compile 'com.squareup.okhttp3:okhttp:3.7.0'
     compile files('libs/universal-image-loader-1.9.5.jar')
-    //    compile files('libs/core-3.2.1.jar')
-    compile files('libs/tbs_sdk_thirdapp_v3.1.0.1034_43100_sharewithdownload_obfs_20170301_182143.jar')
+    compile files('libs/core-3.2.1.jar')
 }
