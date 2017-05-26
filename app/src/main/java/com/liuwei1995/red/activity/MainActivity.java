@@ -42,6 +42,7 @@ import com.liuwei1995.red.service.OFOAccessibilityService;
 import com.liuwei1995.red.service.QQAccessibilityService;
 import com.liuwei1995.red.service.WeChatAccessibilityService;
 import com.liuwei1995.red.service.sensor.SensorService;
+import com.liuwei1995.red.service.util.ofo.presenter.OFOPresenter;
 import com.liuwei1995.red.service.util.qq.presenter.QQPresenter;
 import com.liuwei1995.red.service.util.wechat.presenter.WechatPresenter;
 import com.liuwei1995.red.util.permission.AndPermission;
@@ -52,7 +53,9 @@ import com.liuwei1995.red.zxing.activity.CaptureActivity;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import static com.liuwei1995.red.BaseApplication.OFO_map;
 import static com.liuwei1995.red.BaseApplication.QQ_map;
 import static com.liuwei1995.red.BaseApplication.WeChat_map;
 
@@ -124,10 +127,9 @@ public class MainActivity extends BaseActivity
                     .start();
         }
         else if (id == R.id.nav_look) {
-//            AndPermission.with(this).setPermission(Manifest.permission.READ_PHONE_STATE)
-//                    .setCallback(new mPermissionListener(this,EyeActivity.class))
-//                    .start();
-            EyeActivity.newStartActivity(this,0,null);
+            AndPermission.with(this).setPermission(Manifest.permission.READ_PHONE_STATE)
+                    .setCallback(new mPermissionListener(this,EyeActivity.class))
+                    .start();
         }
         else if (id == R.id.nav_search) {
 
@@ -186,7 +188,11 @@ public class MainActivity extends BaseActivity
             }
             @Override
             protected void onSucceed(Context context, int requestCode, @NonNull List<String> grantPermissions) {
-                startActivityForResult(new Intent(packageContext,cls),requestCode);
+                if (cls == EyeActivity.class){
+                    EyeActivity.newStartActivity(packageContext,0,null);
+                }else {
+                    startActivityForResult(new Intent(packageContext,cls),requestCode);
+                }
             }
             @Override
             protected void onFailed(@NonNull Context context, int requestCode, @NonNull List<String> deniedPermissionsList, @NonNull List<String> deniedDontRemindList, @NonNull
@@ -208,33 +214,23 @@ public class MainActivity extends BaseActivity
      * 提示内容
      */
     private void setHintContent() {
-        String wechatAppversionname = AppUtils.getAppVersionName(this, WechatPresenter.WECHAT_PACKAGENAME);
-        String qqAppVersionName = AppUtils.getAppVersionName(this, QQPresenter.QQ_PACKAGENAME);
+
         String htmlLinkText = "<li>";
         htmlLinkText += "<font color=\\\"#FF0000\\\"> 温馨提示：</font>";
-        htmlLinkText += "<p> 你当前的微信版本号为："+wechatAppversionname+"</p>";
-        if(WeChat_map.get(wechatAppversionname) != null){
-            htmlLinkText += "<p>下面的微信版本也支持可点击下载</p>";
-        }else{
-            htmlLinkText += "<p>现在只能支持下面的微信版本可点击下载</p>";
-        }
-        for (String key : WeChat_map.keySet()){
-            AppEntity appEntity = WeChat_map.get(key);
-            htmlLinkText += "<a href=\""+appEntity.getUrl()+"\" title=\"微信"+appEntity.getVersionName()+"下载\">微信"+appEntity.getVersionName()+"下载</a>          ";
-        }
-        htmlLinkText += "<p> 你当前的QQ版本号为："+qqAppVersionName+"</p>";
-        if(QQ_map.get(qqAppVersionName) != null){
-            htmlLinkText += "<p>下面的QQ版本也支持可点击下载</p>";
-        }else{
-            htmlLinkText += "<p>现在只能支持下面的QQ版本可点击下载</p>";
-        }
-        for (String key : QQ_map.keySet()){
-            AppEntity appEntity = QQ_map.get(key);
-            htmlLinkText += "<a href=\""+appEntity.getUrl()+"\" title=\"QQ"+appEntity.getVersionName()+"下载\">QQ"+appEntity.getVersionName()+"下载</a>           ";
-        }
+
+
+        String wechatAppversionname = AppUtils.getAppVersionName(this, WechatPresenter.WECHAT_PACKAGENAME);
+        htmlLinkText =  setHtmlLinkText(htmlLinkText,"微信",WeChat_map,wechatAppversionname);
+
+        String qqAppVersionName = AppUtils.getAppVersionName(this, QQPresenter.QQ_PACKAGENAME);
+        htmlLinkText =  setHtmlLinkText(htmlLinkText,"QQ",QQ_map,qqAppVersionName);
+
+        String ofoAppVersionName = AppUtils.getAppVersionName(this, OFOPresenter.OFO_PACKAGENAME);
+        htmlLinkText =  setHtmlLinkText(htmlLinkText,"OFO",OFO_map,ofoAppVersionName);
+
         htmlLinkText += "</li>";
         tv_content.setText(Html.fromHtml(htmlLinkText));
-//        //此行必须有
+        //此行必须有
         tv_content.setMovementMethod(LinkMovementMethod.getInstance());
         CharSequence text = tv_content.getText();
         if(text instanceof Spannable){
@@ -249,6 +245,21 @@ public class MainActivity extends BaseActivity
             }
             tv_content.setText(style);
         }
+    }
+
+    @NonNull
+    private String setHtmlLinkText(String htmlLinkText, String appName, Map<String, AppEntity> map, String ofoAppVersionName) {
+        htmlLinkText += "<p> 你当前的"+appName+"版本号为："+ofoAppVersionName+"</p>";
+        if(map.get(ofoAppVersionName) != null){
+            htmlLinkText += "<p>下面的OFO版本也支持可点击下载</p>";
+        }else{
+            htmlLinkText += "<p>现在只能支持下面的"+appName+"版本可点击下载</p>";
+        }
+        for (String key : map.keySet()){
+            AppEntity appEntity = map.get(key);
+            htmlLinkText += "<a href=\""+appEntity.getUrl()+" title="+appName+appEntity.getVersionName()+"下载\">"+appName+appEntity.getVersionName()+"下载</a>           ";
+        }
+        return htmlLinkText;
     }
 
     private  class ClickURLSpan extends ClickableSpan {

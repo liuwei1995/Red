@@ -2,13 +2,13 @@ package com.liuwei1995.red.service.util.qq.presenter;
 
 import android.view.accessibility.AccessibilityEvent;
 
-import com.liuwei1995.red.service.util.qq.iview.QQ_6_5_7_IView;
+import com.liuwei1995.red.service.util.qq.iview.QQIView;
 
 /**
  * Created by liuwei on 2017/4/20
  */
 
-public class QQPresenter implements QQ_6_5_7_IView {
+public class QQPresenter implements QQIView {
 
     /**
      * android.widget.RelativeLayout com.tencent.mobileqq:id/name

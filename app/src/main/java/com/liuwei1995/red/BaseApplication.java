@@ -48,9 +48,11 @@ public class BaseApplication extends Application {
      */
     public static final Map<String, AppEntity> WeChat_map = new HashMap<>();
     public static final Map<String, AppEntity> QQ_map = new HashMap<>();
+    public static final Map<String, AppEntity> OFO_map = new HashMap<>();
 
     public static final String WeChat = "WeChat";
     public static final String QQ = "QQ";
+    public static final String OFO = "OFO";
 
     @Override
     public void onCreate() {
@@ -88,6 +90,8 @@ public class BaseApplication extends Application {
                     WeChat_map.put(versionName,appEntity);
                 }else if (QQ.equals(name)){
                     QQ_map.put(versionName,appEntity);
+                }else if (OFO.equals(name)){
+                    OFO_map.put(versionName,appEntity);
                 }
             }
         }catch (JSONException e) {
