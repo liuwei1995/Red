@@ -46,17 +46,7 @@
                 android:textColor="@color/text_color_white"
                 android:textSize="15sp"/>
 
-            <TextView
-                android:id="@+id/tv_camera_switch"
-                android:layout_width="70dp"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:background="@color/header_bg"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="@string/text_open"
-                android:textColor="@color/text_color_white"
-                android:textSize="15sp"/>
+
         </RelativeLayout>
 
         <LinearLayout
@@ -66,7 +56,7 @@
             android:layout_margin="4dp"
             android:orientation="horizontal"
             android:paddingBottom="10dp"
-            android:weightSum="2">
+            android:weightSum="3">
 
             <Button
                 android:id="@+id/btn_cancel_scan"
@@ -79,6 +69,19 @@
                 android:textColor="@color/text_color_red"
                 android:textSize="15sp"
                 android:textStyle="normal"/>
+            <TextView
+                android:id="@+id/tv_camera_switch"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:background="@null"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/text_open"
+                android:textColor="@color/text_color_white"
+                android:textSize="15sp"/>
+
             <!--相册-->
             <Button
                 android:id="@+id/btn_photo"
