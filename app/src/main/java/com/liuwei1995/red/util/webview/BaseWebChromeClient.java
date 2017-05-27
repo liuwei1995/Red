@@ -19,6 +19,11 @@ import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import com.liuwei1995.red.util.permission.AndPermission;
+import com.liuwei1995.red.util.permission.PermissionListener;
+
+import java.util.List;
+
 
 /**
  * Created by liuwei on 2017/4/6
@@ -44,9 +49,15 @@ public class BaseWebChromeClient  extends WebChromeClient {
 //    }
 
     @Override
-    public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
-        callback.invoke(origin,true,false);
-        super.onGeolocationPermissionsShowPrompt(origin, callback);
+    public void onGeolocationPermissionsShowPrompt(final String origin, final GeolocationPermissions.Callback callback) {
+        AndPermission.with(mActivity).setPermission(origin)
+                .setCallback(new PermissionListener() {
+                    @Override
+                    protected void onSucceed(Context context, int requestCode, @NonNull List<String> grantPermissions) {
+                        callback.invoke(origin,true,false);
+                    }
+                })
+                .start();
     }
 
     @Override
