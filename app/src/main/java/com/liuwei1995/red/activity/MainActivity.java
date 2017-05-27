@@ -139,6 +139,7 @@ public class MainActivity extends BaseActivity
 //            WebViewActivity.startActivity(this,"http://192.168.0.101:8020/zhaoyaohealthy/index.html");
         }
         else if (id == R.id.nav_slideshow) {
+            WebViewActivity.startActivity(this,"https://cli.im/");
 
         } else if (id == R.id.nav_manage) {
 

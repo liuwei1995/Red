@@ -27,11 +27,11 @@ package com.google.zxing.common.reedsolomon;
  */
 final class GenericGFPoly {
 
-  private final GenericGF field;
+  private final com.google.zxing.common.reedsolomon.GenericGF field;
   private final int[] coefficients;
 
   /**
-   * @param field the {@link GenericGF} instance representing the field to use
+   * @param field the {@link com.google.zxing.common.reedsolomon.GenericGF} instance representing the field to use
    * to perform computations
    * @param coefficients coefficients as ints representing elements of GF(size), arranged
    * from most significant (highest-power term) coefficient to least significant
@@ -39,7 +39,7 @@ final class GenericGFPoly {
    * or if leading coefficient is 0 and this is not a
    * constant polynomial (that is, it is not the monomial "0")
    */
-  GenericGFPoly(GenericGF field, int[] coefficients) {
+  GenericGFPoly(com.google.zxing.common.reedsolomon.GenericGF field, int[] coefficients) {
     if (coefficients.length == 0) {
       throw new IllegalArgumentException();
     }
@@ -103,14 +103,14 @@ final class GenericGFPoly {
       // Just the sum of the coefficients
       int result = 0;
       for (int coefficient : coefficients) {
-        result = GenericGF.addOrSubtract(result, coefficient);
+        result = com.google.zxing.common.reedsolomon.GenericGF.addOrSubtract(result, coefficient);
       }
       return result;
     }
     int result = coefficients[0];
     int size = coefficients.length;
     for (int i = 1; i < size; i++) {
-      result = GenericGF.addOrSubtract(field.multiply(a, result), coefficients[i]);
+      result = com.google.zxing.common.reedsolomon.GenericGF.addOrSubtract(field.multiply(a, result), coefficients[i]);
     }
     return result;
   }
@@ -139,7 +139,7 @@ final class GenericGFPoly {
     System.arraycopy(largerCoefficients, 0, sumDiff, 0, lengthDiff);
 
     for (int i = lengthDiff; i < largerCoefficients.length; i++) {
-      sumDiff[i] = GenericGF.addOrSubtract(smallerCoefficients[i - lengthDiff], largerCoefficients[i]);
+      sumDiff[i] = com.google.zxing.common.reedsolomon.GenericGF.addOrSubtract(smallerCoefficients[i - lengthDiff], largerCoefficients[i]);
     }
 
     return new GenericGFPoly(field, sumDiff);
@@ -160,7 +160,7 @@ final class GenericGFPoly {
     for (int i = 0; i < aLength; i++) {
       int aCoeff = aCoefficients[i];
       for (int j = 0; j < bLength; j++) {
-        product[i + j] = GenericGF.addOrSubtract(product[i + j],
+        product[i + j] = com.google.zxing.common.reedsolomon.GenericGF.addOrSubtract(product[i + j],
             field.multiply(aCoeff, bCoefficients[j]));
       }
     }

@@ -25,7 +25,7 @@ import java.util.List;
  *
  * @author Sean Owen
  * @author dswitkin@google.com (Daniel Switkin)
- * @see Reader#decode(BinaryBitmap,java.util.Map)
+ * @see com.google.zxing.Reader#decode(BinaryBitmap,java.util.Map)
  */
 public enum DecodeHintType {
 

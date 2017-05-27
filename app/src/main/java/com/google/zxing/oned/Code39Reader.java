@@ -34,7 +34,7 @@ import java.util.Map;
  * @author Sean Owen
  * @see Code93Reader
  */
-public final class Code39Reader extends OneDReader {
+public final class Code39Reader extends com.google.zxing.oned.OneDReader {
 
   static final String ALPHABET_STRING = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. *$/+%";
   // Note this lacks '*' compared to ALPHABET_STRING

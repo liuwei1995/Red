@@ -25,7 +25,7 @@ import com.google.zxing.common.BitMatrix;
 final class BitMatrixParser {
 
   private final BitMatrix bitMatrix;
-  private Version parsedVersion;
+  private com.google.zxing.qrcode.decoder.Version parsedVersion;
   private FormatInformation parsedFormatInfo;
   private boolean mirror;
 
@@ -89,11 +89,11 @@ final class BitMatrixParser {
   /**
    * <p>Reads version information from one of its two locations within the QR Code.</p>
    *
-   * @return {@link Version} encapsulating the QR Code's version
+   * @return {@link com.google.zxing.qrcode.decoder.Version} encapsulating the QR Code's version
    * @throws FormatException if both version information locations cannot be parsed as
    * the valid encoding of version information
    */
-  Version readVersion() throws FormatException {
+  com.google.zxing.qrcode.decoder.Version readVersion() throws FormatException {
 
     if (parsedVersion != null) {
       return parsedVersion;
@@ -103,7 +103,7 @@ final class BitMatrixParser {
 
     int provisionalVersion = (dimension - 17) / 4;
     if (provisionalVersion <= 6) {
-      return Version.getVersionForNumber(provisionalVersion);
+      return com.google.zxing.qrcode.decoder.Version.getVersionForNumber(provisionalVersion);
     }
 
     // Read top-right version info: 3 wide by 6 tall
@@ -115,7 +115,7 @@ final class BitMatrixParser {
       }
     }
 
-    Version theParsedVersion = Version.decodeVersionInformation(versionBits);
+    com.google.zxing.qrcode.decoder.Version theParsedVersion = com.google.zxing.qrcode.decoder.Version.decodeVersionInformation(versionBits);
     if (theParsedVersion != null && theParsedVersion.getDimensionForVersion() == dimension) {
       parsedVersion = theParsedVersion;
       return theParsedVersion;
@@ -129,7 +129,7 @@ final class BitMatrixParser {
       }
     }
 
-    theParsedVersion = Version.decodeVersionInformation(versionBits);
+    theParsedVersion = com.google.zxing.qrcode.decoder.Version.decodeVersionInformation(versionBits);
     if (theParsedVersion != null && theParsedVersion.getDimensionForVersion() == dimension) {
       parsedVersion = theParsedVersion;
       return theParsedVersion;
@@ -153,11 +153,11 @@ final class BitMatrixParser {
   byte[] readCodewords() throws FormatException {
 
     FormatInformation formatInfo = readFormatInformation();
-    Version version = readVersion();
+    com.google.zxing.qrcode.decoder.Version version = readVersion();
 
     // Get the data mask for the format used in this QR Code. This will exclude
     // some bits from reading as we wind through the bit matrix.
-    DataMask dataMask = DataMask.values()[formatInfo.getDataMask()];
+    com.google.zxing.qrcode.decoder.DataMask dataMask = com.google.zxing.qrcode.decoder.DataMask.values()[formatInfo.getDataMask()];
     int dimension = bitMatrix.getHeight();
     dataMask.unmaskBitMatrix(bitMatrix, dimension);
 
@@ -211,7 +211,7 @@ final class BitMatrixParser {
     if (parsedFormatInfo == null) {
       return; // We have no format information, and have no data mask
     }
-    DataMask dataMask = DataMask.values()[parsedFormatInfo.getDataMask()];
+    com.google.zxing.qrcode.decoder.DataMask dataMask = com.google.zxing.qrcode.decoder.DataMask.values()[parsedFormatInfo.getDataMask()];
     int dimension = bitMatrix.getHeight();
     dataMask.unmaskBitMatrix(bitMatrix, dimension);
   }

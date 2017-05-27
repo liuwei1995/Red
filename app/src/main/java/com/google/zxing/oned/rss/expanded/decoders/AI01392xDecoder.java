@@ -33,7 +33,7 @@ import com.google.zxing.common.BitArray;
 /**
  * @author Pablo Orduña, University of Deusto (pablo.orduna@deusto.es)
  */
-final class AI01392xDecoder extends AI01decoder {
+final class AI01392xDecoder extends com.google.zxing.oned.rss.expanded.decoders.AI01decoder {
 
   private static final int HEADER_SIZE = 5 + 1 + 2;
   private static final int LAST_DIGIT_SIZE = 2;

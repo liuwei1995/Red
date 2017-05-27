@@ -39,7 +39,7 @@ final class BitArrayBuilder {
   private BitArrayBuilder() {
   }
 
-  static BitArray buildBitArray(List<ExpandedPair> pairs) {
+  static BitArray buildBitArray(List<com.google.zxing.oned.rss.expanded.ExpandedPair> pairs) {
     int charNumber = (pairs.size() * 2) - 1;
     if (pairs.get(pairs.size() - 1).getRightChar() == null) {
       charNumber -= 1;
@@ -50,7 +50,7 @@ final class BitArrayBuilder {
     BitArray binary = new BitArray(size);
     int accPos = 0;
 
-    ExpandedPair firstPair = pairs.get(0);
+    com.google.zxing.oned.rss.expanded.ExpandedPair firstPair = pairs.get(0);
     int firstValue = firstPair.getRightChar().getValue();
     for (int i = 11; i >= 0; --i) {
       if ((firstValue & (1 << i)) != 0) {
@@ -60,7 +60,7 @@ final class BitArrayBuilder {
     }
 
     for (int i = 1; i < pairs.size(); ++i) {
-      ExpandedPair currentPair = pairs.get(i);
+      com.google.zxing.oned.rss.expanded.ExpandedPair currentPair = pairs.get(i);
 
       int leftValue = currentPair.getLeftChar().getValue();
       for (int j = 11; j >= 0; --j) {

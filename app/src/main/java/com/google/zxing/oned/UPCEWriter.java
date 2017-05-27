@@ -61,7 +61,7 @@ public final class UPCEWriter extends UPCEANWriter {
         // No check digit present, calculate it and add it
         int check;
         try {
-          check = UPCEANReader.getStandardUPCEANChecksum(UPCEReader.convertUPCEtoUPCA(contents));
+          check = UPCEANReader.getStandardUPCEANChecksum(com.google.zxing.oned.UPCEReader.convertUPCEtoUPCA(contents));
         } catch (FormatException fe) {
           throw new IllegalArgumentException(fe);
         }
@@ -87,7 +87,7 @@ public final class UPCEWriter extends UPCEANWriter {
     }
       
     int checkDigit = Character.digit(contents.charAt(7), 10);
-    int parities = UPCEReader.NUMSYS_AND_CHECK_DIGIT_PATTERNS[firstDigit][checkDigit];
+    int parities = com.google.zxing.oned.UPCEReader.NUMSYS_AND_CHECK_DIGIT_PATTERNS[firstDigit][checkDigit];
     boolean[] result = new boolean[CODE_WIDTH];
     int pos = 0;
 

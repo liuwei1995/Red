@@ -22,7 +22,7 @@ package com.google.zxing;
  *
  * @author Sean Owen
  */
-public final class ChecksumException extends ReaderException {
+public final class ChecksumException extends com.google.zxing.ReaderException {
 
   private static final ChecksumException INSTANCE = new ChecksumException();
   static {

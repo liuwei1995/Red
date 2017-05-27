@@ -123,7 +123,7 @@ final class MatrixUtil {
   //
   // JAVAPORT: We shouldn't need to do this at all. The code should be rewritten to begin encoding
   // with the ByteMatrix initialized all to zero.
-  static void clearMatrix(ByteMatrix matrix) {
+  static void clearMatrix(com.google.zxing.qrcode.encoder.ByteMatrix matrix) {
     matrix.clear((byte) -1);
   }
 
@@ -133,7 +133,7 @@ final class MatrixUtil {
                           ErrorCorrectionLevel ecLevel,
                           Version version,
                           int maskPattern,
-                          ByteMatrix matrix) throws WriterException {
+                          com.google.zxing.qrcode.encoder.ByteMatrix matrix) throws WriterException {
     clearMatrix(matrix);
     embedBasicPatterns(version, matrix);
     // Type information appear with any version.
@@ -150,7 +150,7 @@ final class MatrixUtil {
   // - Timing patterns
   // - Dark dot at the left bottom corner
   // - Position adjustment patterns, if need be
-  static void embedBasicPatterns(Version version, ByteMatrix matrix) throws WriterException {
+  static void embedBasicPatterns(Version version, com.google.zxing.qrcode.encoder.ByteMatrix matrix) throws WriterException {
     // Let's get started with embedding big squares at corners.
     embedPositionDetectionPatternsAndSeparators(matrix);
     // Then, embed the dark dot at the left bottom corner.
@@ -163,7 +163,7 @@ final class MatrixUtil {
   }
 
   // Embed type information. On success, modify the matrix.
-  static void embedTypeInfo(ErrorCorrectionLevel ecLevel, int maskPattern, ByteMatrix matrix)
+  static void embedTypeInfo(ErrorCorrectionLevel ecLevel, int maskPattern, com.google.zxing.qrcode.encoder.ByteMatrix matrix)
       throws WriterException {
     BitArray typeInfoBits = new BitArray();
     makeTypeInfoBits(ecLevel, maskPattern, typeInfoBits);
@@ -195,7 +195,7 @@ final class MatrixUtil {
 
   // Embed version information if need be. On success, modify the matrix and return true.
   // See 8.10 of JISX0510:2004 (p.47) for how to embed version information.
-  static void maybeEmbedVersionInfo(Version version, ByteMatrix matrix) throws WriterException {
+  static void maybeEmbedVersionInfo(Version version, com.google.zxing.qrcode.encoder.ByteMatrix matrix) throws WriterException {
     if (version.getVersionNumber() < 7) {  // Version info is necessary if version >= 7.
       return;  // Don't need version info.
     }
@@ -219,7 +219,7 @@ final class MatrixUtil {
   // Embed "dataBits" using "getMaskPattern". On success, modify the matrix and return true.
   // For debugging purposes, it skips masking process if "getMaskPattern" is -1.
   // See 8.7 of JISX0510:2004 (p.38) for how to embed data bits.
-  static void embedDataBits(BitArray dataBits, int maskPattern, ByteMatrix matrix)
+  static void embedDataBits(BitArray dataBits, int maskPattern, com.google.zxing.qrcode.encoder.ByteMatrix matrix)
       throws WriterException {
     int bitIndex = 0;
     int direction = -1;
@@ -249,7 +249,7 @@ final class MatrixUtil {
           }
 
           // Skip masking if mask_pattern is -1.
-          if (maskPattern != -1 && MaskUtil.getDataMaskBit(maskPattern, xx, y)) {
+          if (maskPattern != -1 && com.google.zxing.qrcode.encoder.MaskUtil.getDataMaskBit(maskPattern, xx, y)) {
             bit = !bit;
           }
           matrix.set(xx, y, bit);
@@ -356,7 +356,7 @@ final class MatrixUtil {
     return value == -1;
   }
 
-  private static void embedTimingPatterns(ByteMatrix matrix) {
+  private static void embedTimingPatterns(com.google.zxing.qrcode.encoder.ByteMatrix matrix) {
     // -8 is for skipping position detection patterns (size 7), and two horizontal/vertical
     // separation patterns (size 1). Thus, 8 = 7 + 1.
     for (int i = 8; i < matrix.getWidth() - 8; ++i) {
@@ -373,7 +373,7 @@ final class MatrixUtil {
   }
 
   // Embed the lonely dark dot at left bottom corner. JISX0510:2004 (p.46)
-  private static void embedDarkDotAtLeftBottomCorner(ByteMatrix matrix) throws WriterException {
+  private static void embedDarkDotAtLeftBottomCorner(com.google.zxing.qrcode.encoder.ByteMatrix matrix) throws WriterException {
     if (matrix.get(8, matrix.getHeight() - 8) == 0) {
       throw new WriterException();
     }
@@ -382,7 +382,7 @@ final class MatrixUtil {
 
   private static void embedHorizontalSeparationPattern(int xStart,
                                                        int yStart,
-                                                       ByteMatrix matrix) throws WriterException {
+                                                       com.google.zxing.qrcode.encoder.ByteMatrix matrix) throws WriterException {
     for (int x = 0; x < 8; ++x) {
       if (!isEmpty(matrix.get(xStart + x, yStart))) {
         throw new WriterException();
@@ -393,7 +393,7 @@ final class MatrixUtil {
 
   private static void embedVerticalSeparationPattern(int xStart,
                                                      int yStart,
-                                                     ByteMatrix matrix) throws WriterException {
+                                                     com.google.zxing.qrcode.encoder.ByteMatrix matrix) throws WriterException {
     for (int y = 0; y < 7; ++y) {
       if (!isEmpty(matrix.get(xStart, yStart + y))) {
         throw new WriterException();
@@ -402,7 +402,7 @@ final class MatrixUtil {
     }
   }
 
-  private static void embedPositionAdjustmentPattern(int xStart, int yStart, ByteMatrix matrix) {
+  private static void embedPositionAdjustmentPattern(int xStart, int yStart, com.google.zxing.qrcode.encoder.ByteMatrix matrix) {
     for (int y = 0; y < 5; ++y) {
       int[] patternY = POSITION_ADJUSTMENT_PATTERN[y];
       for (int x = 0; x < 5; ++x) {
@@ -411,7 +411,7 @@ final class MatrixUtil {
     }
   }
 
-  private static void embedPositionDetectionPattern(int xStart, int yStart, ByteMatrix matrix) {
+  private static void embedPositionDetectionPattern(int xStart, int yStart, com.google.zxing.qrcode.encoder.ByteMatrix matrix) {
     for (int y = 0; y < 7; ++y) {
       int[] patternY = POSITION_DETECTION_PATTERN[y];
       for (int x = 0; x < 7; ++x) {
@@ -421,7 +421,7 @@ final class MatrixUtil {
   }
 
   // Embed position detection patterns and surrounding vertical/horizontal separators.
-  private static void embedPositionDetectionPatternsAndSeparators(ByteMatrix matrix) throws WriterException {
+  private static void embedPositionDetectionPatternsAndSeparators(com.google.zxing.qrcode.encoder.ByteMatrix matrix) throws WriterException {
     // Embed three big squares at corners.
     int pdpWidth = POSITION_DETECTION_PATTERN[0].length;
     // Left top corner.

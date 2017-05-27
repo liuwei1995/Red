@@ -31,7 +31,7 @@ import com.google.zxing.common.BitArray;
 /**
  * @author Pablo Orduña, University of Deusto (pablo.orduna@deusto.es)
  */
-abstract class AI01weightDecoder extends AI01decoder {
+abstract class AI01weightDecoder extends com.google.zxing.oned.rss.expanded.decoders.AI01decoder {
 
   AI01weightDecoder(BitArray information) {
     super(information);

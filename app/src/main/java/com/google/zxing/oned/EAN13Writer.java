@@ -80,7 +80,7 @@ public final class EAN13Writer extends UPCEANWriter {
 
 
     int firstDigit = Character.digit(contents.charAt(0), 10);
-    int parities = EAN13Reader.FIRST_DIGIT_ENCODINGS[firstDigit];
+    int parities = com.google.zxing.oned.EAN13Reader.FIRST_DIGIT_ENCODINGS[firstDigit];
     boolean[] result = new boolean[CODE_WIDTH];
     int pos = 0;
 

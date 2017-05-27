@@ -70,7 +70,7 @@ public class CaptureActivity extends Activity implements Callback {
     private Button cancelScanButton;
     private Camera camera;
     private Parameters parameter;
-    private android.view.View parent;
+    private View parent;
 
     /**
      * Called when the activity is first created.
@@ -98,7 +98,7 @@ public class CaptureActivity extends Activity implements Callback {
         this.findViewById(R.id.btn_photo).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, RESULT);
             }
         });

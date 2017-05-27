@@ -27,10 +27,10 @@ import com.google.zxing.common.BitMatrix;
  */
 public final class BinaryBitmap {
 
-  private final Binarizer binarizer;
+  private final com.google.zxing.Binarizer binarizer;
   private BitMatrix matrix;
 
-  public BinaryBitmap(Binarizer binarizer) {
+  public BinaryBitmap(com.google.zxing.Binarizer binarizer) {
     if (binarizer == null) {
       throw new IllegalArgumentException("Binarizer must be non-null.");
     }

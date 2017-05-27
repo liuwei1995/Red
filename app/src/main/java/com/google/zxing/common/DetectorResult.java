@@ -27,15 +27,15 @@ import com.google.zxing.ResultPoint;
  */
 public class DetectorResult {
 
-  private final BitMatrix bits;
+  private final com.google.zxing.common.BitMatrix bits;
   private final ResultPoint[] points;
 
-  public DetectorResult(BitMatrix bits, ResultPoint[] points) {
+  public DetectorResult(com.google.zxing.common.BitMatrix bits, ResultPoint[] points) {
     this.bits = bits;
     this.points = points;
   }
 
-  public final BitMatrix getBits() {
+  public final com.google.zxing.common.BitMatrix getBits() {
     return bits;
   }
 

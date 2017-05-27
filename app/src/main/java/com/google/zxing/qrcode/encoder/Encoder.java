@@ -64,17 +64,17 @@ public final class Encoder {
   /**
    * @param content text to encode
    * @param ecLevel error correction level to use
-   * @return {@link QRCode} representing the encoded QR code
+   * @return {@link com.google.zxing.qrcode.encoder.QRCode} representing the encoded QR code
    * @throws WriterException if encoding can't succeed, because of for example invalid content
    *   or configuration
    */
-  public static QRCode encode(String content, ErrorCorrectionLevel ecLevel) throws WriterException {
+  public static com.google.zxing.qrcode.encoder.QRCode encode(String content, ErrorCorrectionLevel ecLevel) throws WriterException {
     return encode(content, ecLevel, null);
   }
 
-  public static QRCode encode(String content,
-                              ErrorCorrectionLevel ecLevel,
-                              Map<EncodeHintType,?> hints) throws WriterException {
+  public static com.google.zxing.qrcode.encoder.QRCode encode(String content,
+                                                              ErrorCorrectionLevel ecLevel,
+                                                              Map<EncodeHintType,?> hints) throws WriterException {
 
     // Determine what character encoding has been specified by the caller, if any
     String encoding = DEFAULT_BYTE_MODE_ENCODING;
@@ -139,7 +139,7 @@ public final class Encoder {
                                                numDataBytes,
                                                ecBlocks.getNumBlocks());
 
-    QRCode qrCode = new QRCode();
+    com.google.zxing.qrcode.encoder.QRCode qrCode = new com.google.zxing.qrcode.encoder.QRCode();
 
     qrCode.setECLevel(ecLevel);
     qrCode.setMode(mode);
@@ -258,7 +258,7 @@ public final class Encoder {
     int minPenalty = Integer.MAX_VALUE;  // Lower penalty is better.
     int bestMaskPattern = -1;
     // We try all mask patterns to choose the best one.
-    for (int maskPattern = 0; maskPattern < QRCode.NUM_MASK_PATTERNS; maskPattern++) {
+    for (int maskPattern = 0; maskPattern < com.google.zxing.qrcode.encoder.QRCode.NUM_MASK_PATTERNS; maskPattern++) {
       MatrixUtil.buildMatrix(bits, ecLevel, version, maskPattern, matrix);
       int penalty = calculateMaskPenalty(matrix);
       if (penalty < minPenalty) {

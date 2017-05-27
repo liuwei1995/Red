@@ -16,6 +16,10 @@
 
 package com.google.zxing;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.ResultMetadataType;
+import com.google.zxing.ResultPoint;
+
 import java.util.EnumMap;
 import java.util.Map;
 

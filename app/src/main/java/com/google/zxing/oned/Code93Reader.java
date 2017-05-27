@@ -32,7 +32,7 @@ import java.util.Map;
  * <p>Decodes Code 93 barcodes.</p>
  *
  * @author Sean Owen
- * @see Code39Reader
+ * @see com.google.zxing.oned.Code39Reader
  */
 public final class Code93Reader extends OneDReader {
 

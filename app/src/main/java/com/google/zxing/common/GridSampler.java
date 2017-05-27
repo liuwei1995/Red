@@ -61,8 +61,8 @@ public abstract class GridSampler {
    * image space.
    *
    * @param image image to sample
-   * @param dimensionX width of {@link BitMatrix} to sample from image
-   * @param dimensionY height of {@link BitMatrix} to sample from image
+   * @param dimensionX width of {@link com.google.zxing.common.BitMatrix} to sample from image
+   * @param dimensionY height of {@link com.google.zxing.common.BitMatrix} to sample from image
    * @param p1ToX point 1 preimage X
    * @param p1ToY point 1 preimage Y
    * @param p2ToX point 2 preimage X
@@ -79,27 +79,27 @@ public abstract class GridSampler {
    * @param p3FromY point 3 image Y
    * @param p4FromX point 4 image X
    * @param p4FromY point 4 image Y
-   * @return {@link BitMatrix} representing a grid of points sampled from the image within a region
+   * @return {@link com.google.zxing.common.BitMatrix} representing a grid of points sampled from the image within a region
    *   defined by the "from" parameters
    * @throws NotFoundException if image can't be sampled, for example, if the transformation defined
    *   by the given points is invalid or results in sampling outside the image boundaries
    */
-  public abstract BitMatrix sampleGrid(BitMatrix image,
-                                       int dimensionX,
-                                       int dimensionY,
-                                       float p1ToX, float p1ToY,
-                                       float p2ToX, float p2ToY,
-                                       float p3ToX, float p3ToY,
-                                       float p4ToX, float p4ToY,
-                                       float p1FromX, float p1FromY,
-                                       float p2FromX, float p2FromY,
-                                       float p3FromX, float p3FromY,
-                                       float p4FromX, float p4FromY) throws NotFoundException;
+  public abstract com.google.zxing.common.BitMatrix sampleGrid(com.google.zxing.common.BitMatrix image,
+                                                               int dimensionX,
+                                                               int dimensionY,
+                                                               float p1ToX, float p1ToY,
+                                                               float p2ToX, float p2ToY,
+                                                               float p3ToX, float p3ToY,
+                                                               float p4ToX, float p4ToY,
+                                                               float p1FromX, float p1FromY,
+                                                               float p2FromX, float p2FromY,
+                                                               float p3FromX, float p3FromY,
+                                                               float p4FromX, float p4FromY) throws NotFoundException;
   
-  public abstract BitMatrix sampleGrid(BitMatrix image,
-                                       int dimensionX,
-                                       int dimensionY,
-                                       PerspectiveTransform transform) throws NotFoundException;
+  public abstract com.google.zxing.common.BitMatrix sampleGrid(com.google.zxing.common.BitMatrix image,
+                                                               int dimensionX,
+                                                               int dimensionY,
+                                                               PerspectiveTransform transform) throws NotFoundException;
 
   /**
    * <p>Checks a set of points that have been transformed to sample points on an image against
@@ -116,7 +116,7 @@ public abstract class GridSampler {
    * @param points actual points in x1,y1,...,xn,yn form
    * @throws NotFoundException if an endpoint is lies outside the image boundaries
    */
-  protected static void checkAndNudgePoints(BitMatrix image,
+  protected static void checkAndNudgePoints(com.google.zxing.common.BitMatrix image,
                                             float[] points) throws NotFoundException {
     int width = image.getWidth();
     int height = image.getHeight();

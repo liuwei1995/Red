@@ -27,7 +27,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 /**
- * @see UPCEANExtension2Support
+ * @see com.google.zxing.oned.UPCEANExtension2Support
  */
 final class UPCEANExtension5Support {
 
@@ -73,7 +73,7 @@ final class UPCEANExtension5Support {
     int lgPatternFound = 0;
 
     for (int x = 0; x < 5 && rowOffset < end; x++) {
-      int bestMatch = UPCEANReader.decodeDigit(row, counters, rowOffset, UPCEANReader.L_AND_G_PATTERNS);
+      int bestMatch = com.google.zxing.oned.UPCEANReader.decodeDigit(row, counters, rowOffset, UPCEANReader.L_AND_G_PATTERNS);
       resultString.append((char) ('0' + bestMatch % 10));
       for (int counter : counters) {
         rowOffset += counter;

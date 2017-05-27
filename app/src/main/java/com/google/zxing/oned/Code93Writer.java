@@ -52,31 +52,31 @@ public class Code93Writer extends OneDimensionalCodeWriter {
     int codeWidth = (contents.length() + 2 + 2) * 9 + 1;
 
     //start character (*)
-    toIntArray(Code93Reader.CHARACTER_ENCODINGS[47], widths);
+    toIntArray(com.google.zxing.oned.Code93Reader.CHARACTER_ENCODINGS[47], widths);
 
     boolean[] result = new boolean[codeWidth];
     int pos = appendPattern(result, 0, widths);
 
     for (int i = 0; i < length; i++) {
-      int indexInString = Code93Reader.ALPHABET_STRING.indexOf(contents.charAt(i));
-      toIntArray(Code93Reader.CHARACTER_ENCODINGS[indexInString], widths);
+      int indexInString = com.google.zxing.oned.Code93Reader.ALPHABET_STRING.indexOf(contents.charAt(i));
+      toIntArray(com.google.zxing.oned.Code93Reader.CHARACTER_ENCODINGS[indexInString], widths);
       pos += appendPattern(result, pos, widths);
     }
 
     //add two checksums
     int check1 = computeChecksumIndex(contents, 20);
-    toIntArray(Code93Reader.CHARACTER_ENCODINGS[check1], widths);
+    toIntArray(com.google.zxing.oned.Code93Reader.CHARACTER_ENCODINGS[check1], widths);
     pos += appendPattern(result, pos, widths);
 
     //append the contents to reflect the first checksum added
-    contents += Code93Reader.ALPHABET_STRING.charAt(check1);
+    contents += com.google.zxing.oned.Code93Reader.ALPHABET_STRING.charAt(check1);
 
     int check2 = computeChecksumIndex(contents, 15);
-    toIntArray(Code93Reader.CHARACTER_ENCODINGS[check2], widths);
+    toIntArray(com.google.zxing.oned.Code93Reader.CHARACTER_ENCODINGS[check2], widths);
     pos += appendPattern(result, pos, widths);
 
     //end character (*)
-    toIntArray(Code93Reader.CHARACTER_ENCODINGS[47], widths);
+    toIntArray(com.google.zxing.oned.Code93Reader.CHARACTER_ENCODINGS[47], widths);
     pos += appendPattern(result, pos, widths);
 
     //termination bar (single black bar)
@@ -117,7 +117,7 @@ public class Code93Writer extends OneDimensionalCodeWriter {
     int total = 0;
 
     for (int i = contents.length() - 1; i >= 0; i--) {
-      int indexInString = Code93Reader.ALPHABET_STRING.indexOf(contents.charAt(i));
+      int indexInString = com.google.zxing.oned.Code93Reader.ALPHABET_STRING.indexOf(contents.charAt(i));
       total += indexInString * weight;
       if (++weight > maxWeight) {
         weight = 1;

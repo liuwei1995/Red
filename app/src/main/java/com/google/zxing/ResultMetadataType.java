@@ -16,6 +16,8 @@
 
 package com.google.zxing;
 
+import com.google.zxing.*;
+
 /**
  * Represents some type of metadata about the result of the decoding that the decoder
  * wishes to communicate back to the caller.
@@ -40,7 +42,7 @@ public enum ResultMetadataType {
 
   /**
    * <p>2D barcode formats typically encode text, but allow for a sort of 'byte mode'
-   * which is sometimes used to encode binary data. While {@link Result} makes available
+   * which is sometimes used to encode binary data. While {@link com.google.zxing.Result} makes available
    * the complete raw bytes in the barcode for these formats, it does not offer the bytes
    * from the byte segments alone.</p>
    *

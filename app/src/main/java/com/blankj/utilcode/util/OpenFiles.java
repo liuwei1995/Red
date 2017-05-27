@@ -163,7 +163,7 @@ public final class OpenFiles {
     public static Intent getApkFileIntent(File file) {
         Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setAction(android.content.Intent.ACTION_VIEW);
+        intent.setAction(Intent.ACTION_VIEW);
         intent.setDataAndType(Uri.fromFile(file),
                 "application/vnd.android.package-archive");
         return intent;

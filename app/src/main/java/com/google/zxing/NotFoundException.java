@@ -22,7 +22,7 @@ package com.google.zxing;
  *
  * @author Sean Owen
  */
-public final class NotFoundException extends ReaderException {
+public final class NotFoundException extends com.google.zxing.ReaderException {
 
   private static final NotFoundException INSTANCE = new NotFoundException();
   static {

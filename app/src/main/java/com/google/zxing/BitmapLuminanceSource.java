@@ -3,13 +3,15 @@ package com.google.zxing;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.google.zxing.*;
+
 import java.io.FileNotFoundException;
 
 /**
  * Created by liuwei on 2017/5/10
  */
 
-public class BitmapLuminanceSource extends LuminanceSource{
+public class BitmapLuminanceSource extends com.google.zxing.LuminanceSource {
 
     private final byte[] luminances;
 

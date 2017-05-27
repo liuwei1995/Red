@@ -113,8 +113,8 @@ public final class RSSExpandedReader extends AbstractRSSReader {
 
   private static final int MAX_PAIRS = 11;
 
-  private final List<ExpandedPair> pairs = new ArrayList<>(MAX_PAIRS);
-  private final List<ExpandedRow> rows = new ArrayList<>();
+  private final List<com.google.zxing.oned.rss.expanded.ExpandedPair> pairs = new ArrayList<>(MAX_PAIRS);
+  private final List<com.google.zxing.oned.rss.expanded.ExpandedRow> rows = new ArrayList<>();
   private final int [] startEnd = new int[2];
   private boolean startFromEven;
 
@@ -144,10 +144,10 @@ public final class RSSExpandedReader extends AbstractRSSReader {
   }
 
   // Not private for testing
-  List<ExpandedPair> decodeRow2pairs(int rowNumber, BitArray row) throws NotFoundException {
+  List<com.google.zxing.oned.rss.expanded.ExpandedPair> decodeRow2pairs(int rowNumber, BitArray row) throws NotFoundException {
     try {
       while (true) {
-        ExpandedPair nextPair = retrieveNextPair(row, this.pairs, rowNumber);
+        com.google.zxing.oned.rss.expanded.ExpandedPair nextPair = retrieveNextPair(row, this.pairs, rowNumber);
         this.pairs.add(nextPair);
         // exit this loop when retrieveNextPair() fails and throws
       }
@@ -167,7 +167,7 @@ public final class RSSExpandedReader extends AbstractRSSReader {
     if (tryStackedDecode) {
       // When the image is 180-rotated, then rows are sorted in wrong direction.
       // Try twice with both the directions.
-      List<ExpandedPair> ps = checkRows(false);
+      List<com.google.zxing.oned.rss.expanded.ExpandedPair> ps = checkRows(false);
       if (ps != null) {
         return ps;
       }
@@ -180,7 +180,7 @@ public final class RSSExpandedReader extends AbstractRSSReader {
     throw NotFoundException.getNotFoundInstance();
   }
 
-  private List<ExpandedPair> checkRows(boolean reverse) {
+  private List<com.google.zxing.oned.rss.expanded.ExpandedPair> checkRows(boolean reverse) {
     // Limit number of rows we are checking
     // We use recursive algorithm with pure complexity and don't want it to take forever
     // Stacked barcode can have up to 11 rows, so 25 seems reasonable enough
@@ -194,9 +194,9 @@ public final class RSSExpandedReader extends AbstractRSSReader {
       Collections.reverse(this.rows);
     }
 
-    List<ExpandedPair> ps = null;
+    List<com.google.zxing.oned.rss.expanded.ExpandedPair> ps = null;
     try {
-      ps = checkRows(new ArrayList<ExpandedRow>(), 0);
+      ps = checkRows(new ArrayList<com.google.zxing.oned.rss.expanded.ExpandedRow>(), 0);
     } catch (NotFoundException e) {
       // OK
     }
@@ -210,11 +210,11 @@ public final class RSSExpandedReader extends AbstractRSSReader {
 
   // Try to construct a valid rows sequence
   // Recursion is used to implement backtracking
-  private List<ExpandedPair> checkRows(List<ExpandedRow> collectedRows, int currentRow) throws NotFoundException {
+  private List<com.google.zxing.oned.rss.expanded.ExpandedPair> checkRows(List<com.google.zxing.oned.rss.expanded.ExpandedRow> collectedRows, int currentRow) throws NotFoundException {
     for (int i = currentRow; i < rows.size(); i++) {
-      ExpandedRow row = rows.get(i);
+      com.google.zxing.oned.rss.expanded.ExpandedRow row = rows.get(i);
       this.pairs.clear();
-      for (ExpandedRow collectedRow : collectedRows) {
+      for (com.google.zxing.oned.rss.expanded.ExpandedRow collectedRow : collectedRows) {
         this.pairs.addAll(collectedRow.getPairs());
       }
       this.pairs.addAll(row.getPairs());
@@ -227,7 +227,7 @@ public final class RSSExpandedReader extends AbstractRSSReader {
         return this.pairs;
       }
 
-      List<ExpandedRow> rs = new ArrayList<>();
+      List<com.google.zxing.oned.rss.expanded.ExpandedRow> rs = new ArrayList<>();
       rs.addAll(collectedRows);
       rs.add(row);
       try {
@@ -243,7 +243,7 @@ public final class RSSExpandedReader extends AbstractRSSReader {
 
   // Whether the pairs form a valid find pattern sequence,
   // either complete or a prefix
-  private static boolean isValidSequence(List<ExpandedPair> pairs) {
+  private static boolean isValidSequence(List<com.google.zxing.oned.rss.expanded.ExpandedPair> pairs) {
     for (int[] sequence : FINDER_PATTERN_SEQUENCES) {
       if (pairs.size() > sequence.length) {
         continue;
@@ -271,7 +271,7 @@ public final class RSSExpandedReader extends AbstractRSSReader {
     boolean prevIsSame = false;
     boolean nextIsSame = false;
     while (insertPos < this.rows.size()) {
-      ExpandedRow erow = this.rows.get(insertPos);
+      com.google.zxing.oned.rss.expanded.ExpandedRow erow = this.rows.get(insertPos);
       if (erow.getRowNumber() > rowNumber) {
         nextIsSame = erow.isEquivalent(this.pairs);
         break;
@@ -292,22 +292,22 @@ public final class RSSExpandedReader extends AbstractRSSReader {
       return;
     }
 
-    this.rows.add(insertPos, new ExpandedRow(this.pairs, rowNumber, wasReversed));
+    this.rows.add(insertPos, new com.google.zxing.oned.rss.expanded.ExpandedRow(this.pairs, rowNumber, wasReversed));
 
     removePartialRows(this.pairs, this.rows);
   }
 
   // Remove all the rows that contains only specified pairs 
-  private static void removePartialRows(List<ExpandedPair> pairs, List<ExpandedRow> rows) {
-    for (Iterator<ExpandedRow> iterator = rows.iterator(); iterator.hasNext();) {
-      ExpandedRow r = iterator.next();
+  private static void removePartialRows(List<com.google.zxing.oned.rss.expanded.ExpandedPair> pairs, List<com.google.zxing.oned.rss.expanded.ExpandedRow> rows) {
+    for (Iterator<com.google.zxing.oned.rss.expanded.ExpandedRow> iterator = rows.iterator(); iterator.hasNext();) {
+      com.google.zxing.oned.rss.expanded.ExpandedRow r = iterator.next();
       if (r.getPairs().size() == pairs.size()) {
         continue;
       }
       boolean allFound = true;
-      for (ExpandedPair p : r.getPairs()) {
+      for (com.google.zxing.oned.rss.expanded.ExpandedPair p : r.getPairs()) {
         boolean found = false;
-        for (ExpandedPair pp : pairs) {
+        for (com.google.zxing.oned.rss.expanded.ExpandedPair pp : pairs) {
           if (p.equals(pp)) {
             found = true;
             break;
@@ -326,12 +326,12 @@ public final class RSSExpandedReader extends AbstractRSSReader {
   }
 
   // Returns true when one of the rows already contains all the pairs
-  private static boolean isPartialRow(Iterable<ExpandedPair> pairs, Iterable<ExpandedRow> rows) {
-    for (ExpandedRow r : rows) {
+  private static boolean isPartialRow(Iterable<com.google.zxing.oned.rss.expanded.ExpandedPair> pairs, Iterable<com.google.zxing.oned.rss.expanded.ExpandedRow> rows) {
+    for (com.google.zxing.oned.rss.expanded.ExpandedRow r : rows) {
       boolean allFound = true;
-      for (ExpandedPair p : pairs) {
+      for (com.google.zxing.oned.rss.expanded.ExpandedPair p : pairs) {
         boolean found = false;
-        for (ExpandedPair pp : r.getPairs()) {
+        for (com.google.zxing.oned.rss.expanded.ExpandedPair pp : r.getPairs()) {
           if (p.equals(pp)) {
             found = true;
             break;
@@ -351,13 +351,13 @@ public final class RSSExpandedReader extends AbstractRSSReader {
   }
 
   // Only used for unit testing
-  List<ExpandedRow> getRows() {
+  List<com.google.zxing.oned.rss.expanded.ExpandedRow> getRows() {
     return this.rows;
   }
 
   // Not private for unit testing
-  static Result constructResult(List<ExpandedPair> pairs) throws NotFoundException, FormatException {
-    BitArray binary = BitArrayBuilder.buildBitArray(pairs);
+  static Result constructResult(List<com.google.zxing.oned.rss.expanded.ExpandedPair> pairs) throws NotFoundException, FormatException {
+    BitArray binary = com.google.zxing.oned.rss.expanded.BitArrayBuilder.buildBitArray(pairs);
 
     AbstractExpandedDecoder decoder = AbstractExpandedDecoder.createDecoder(binary);
     String resultingString = decoder.parseInformation();
@@ -374,7 +374,7 @@ public final class RSSExpandedReader extends AbstractRSSReader {
   }
 
   private boolean checkChecksum() {
-    ExpandedPair firstPair = this.pairs.get(0);
+    com.google.zxing.oned.rss.expanded.ExpandedPair firstPair = this.pairs.get(0);
     DataCharacter checkCharacter = firstPair.getLeftChar();
     DataCharacter firstCharacter = firstPair.getRightChar();
 
@@ -386,7 +386,7 @@ public final class RSSExpandedReader extends AbstractRSSReader {
     int s = 2;
 
     for (int i = 1; i < this.pairs.size(); ++i) {
-      ExpandedPair currentPair = this.pairs.get(i);
+      com.google.zxing.oned.rss.expanded.ExpandedPair currentPair = this.pairs.get(i);
       checksum += currentPair.getLeftChar().getChecksumPortion();
       s++;
       DataCharacter currentRightChar = currentPair.getRightChar();
@@ -416,7 +416,7 @@ public final class RSSExpandedReader extends AbstractRSSReader {
   }
 
   // not private for testing
-  ExpandedPair retrieveNextPair(BitArray row, List<ExpandedPair> previousPairs, int rowNumber)
+  com.google.zxing.oned.rss.expanded.ExpandedPair retrieveNextPair(BitArray row, List<com.google.zxing.oned.rss.expanded.ExpandedPair> previousPairs, int rowNumber)
       throws NotFoundException {
     boolean isOddPattern  = previousPairs.size() % 2 == 0;
     if (startFromEven) {
@@ -452,10 +452,10 @@ public final class RSSExpandedReader extends AbstractRSSReader {
     } catch (NotFoundException ignored) {
       rightChar = null;
     }
-    return new ExpandedPair(leftChar, rightChar, pattern, true);
+    return new com.google.zxing.oned.rss.expanded.ExpandedPair(leftChar, rightChar, pattern, true);
   }
 
-  private void findNextPair(BitArray row, List<ExpandedPair> previousPairs, int forcedOffset)
+  private void findNextPair(BitArray row, List<com.google.zxing.oned.rss.expanded.ExpandedPair> previousPairs, int forcedOffset)
       throws NotFoundException {
     int[] counters = this.getDecodeFinderCounters();
     counters[0] = 0;
@@ -471,7 +471,7 @@ public final class RSSExpandedReader extends AbstractRSSReader {
     } else if (previousPairs.isEmpty()) {
       rowOffset = 0;
     } else {
-      ExpandedPair lastPair = previousPairs.get(previousPairs.size() - 1);
+      com.google.zxing.oned.rss.expanded.ExpandedPair lastPair = previousPairs.get(previousPairs.size() - 1);
       rowOffset = lastPair.getFinderPattern().getStartEnd()[1];
     }
     boolean searchingEvenPair = previousPairs.size() % 2 != 0;

@@ -29,7 +29,7 @@ final class UPCEANExtensionSupport {
   private final UPCEANExtension5Support fiveSupport = new UPCEANExtension5Support();
 
   Result decodeRow(int rowNumber, BitArray row, int rowOffset) throws NotFoundException {
-    int[] extensionStartRange = UPCEANReader.findGuardPattern(row, rowOffset, false, EXTENSION_START_PATTERN);
+    int[] extensionStartRange = com.google.zxing.oned.UPCEANReader.findGuardPattern(row, rowOffset, false, EXTENSION_START_PATTERN);
     try {
       return fiveSupport.decodeRow(rowNumber, row, extensionStartRange);
     } catch (ReaderException ignored) {

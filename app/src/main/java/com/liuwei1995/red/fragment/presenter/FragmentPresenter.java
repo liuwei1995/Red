@@ -20,7 +20,7 @@ import com.liuwei1995.red.fragment.iview.FragmentIView;
 public abstract class FragmentPresenter implements FragmentIView {
 
     protected Context mContext;
-    protected android.support.v4.app.Fragment mFragment;
+    protected Fragment mFragment;
 
     @Override
     public void onAttach(Context context) {

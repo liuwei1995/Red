@@ -16,6 +16,9 @@
 
 package com.google.zxing;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 
 import java.util.Map;

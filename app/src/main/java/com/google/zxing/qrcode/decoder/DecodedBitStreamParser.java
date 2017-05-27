@@ -50,7 +50,7 @@ final class DecodedBitStreamParser {
   }
 
   static DecoderResult decode(byte[] bytes,
-                              Version version,
+                              com.google.zxing.qrcode.decoder.Version version,
                               ErrorCorrectionLevel ecLevel,
                               Map<DecodeHintType,?> hints) throws FormatException {
     BitSource bits = new BitSource(bytes);
@@ -62,14 +62,14 @@ final class DecodedBitStreamParser {
     try {
       CharacterSetECI currentCharacterSetECI = null;
       boolean fc1InEffect = false;
-      Mode mode;
+      com.google.zxing.qrcode.decoder.Mode mode;
       do {
         // While still another segment to read...
         if (bits.available() < 4) {
           // OK, assume we're done. Really, a TERMINATOR mode should have been recorded here
-          mode = Mode.TERMINATOR;
+          mode = com.google.zxing.qrcode.decoder.Mode.TERMINATOR;
         } else {
-          mode = Mode.forBits(bits.readBits(4)); // mode is encoded by 4 bits
+          mode = com.google.zxing.qrcode.decoder.Mode.forBits(bits.readBits(4)); // mode is encoded by 4 bits
         }
         switch (mode) {
           case TERMINATOR:

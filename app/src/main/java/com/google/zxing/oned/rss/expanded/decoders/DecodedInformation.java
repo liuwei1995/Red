@@ -30,7 +30,7 @@ package com.google.zxing.oned.rss.expanded.decoders;
  * @author Pablo Orduña, University of Deusto (pablo.orduna@deusto.es)
  * @author Eduardo Castillejo, University of Deusto (eduardo.castillejo@deusto.es)
  */
-final class DecodedInformation extends DecodedObject {
+final class DecodedInformation extends com.google.zxing.oned.rss.expanded.decoders.DecodedObject {
 
   private final String newString;
   private final int remainingValue;

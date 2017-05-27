@@ -32,10 +32,10 @@ import java.util.Map;
  * @author Sean Owen
  * @author dswitkin@google.com (Daniel Switkin)
  */
-public final class MultiFormatReader implements Reader {
+public final class MultiFormatReader implements com.google.zxing.Reader {
 
-  private Map<DecodeHintType,?> hints;
-  private Reader[] readers;
+  private Map<com.google.zxing.DecodeHintType,?> hints;
+  private com.google.zxing.Reader[] readers;
 
   /**
    * This version of decode honors the intent of Reader.decode(BinaryBitmap) in that it
@@ -47,7 +47,7 @@ public final class MultiFormatReader implements Reader {
    * @throws NotFoundException Any errors which occurred
    */
   @Override
-  public Result decode(BinaryBitmap image) throws NotFoundException {
+  public com.google.zxing.Result decode(com.google.zxing.BinaryBitmap image) throws NotFoundException {
     setHints(null);
     return decodeInternal(image);
   }
@@ -61,7 +61,7 @@ public final class MultiFormatReader implements Reader {
    * @throws NotFoundException Any errors which occurred
    */
   @Override
-  public Result decode(BinaryBitmap image, Map<DecodeHintType,?> hints) throws NotFoundException {
+  public com.google.zxing.Result decode(com.google.zxing.BinaryBitmap image, Map<com.google.zxing.DecodeHintType,?> hints) throws NotFoundException {
     setHints(hints);
     return decodeInternal(image);
   }
@@ -74,7 +74,7 @@ public final class MultiFormatReader implements Reader {
    * @return The contents of the image
    * @throws NotFoundException Any errors which occurred
    */
-  public Result decodeWithState(BinaryBitmap image) throws NotFoundException {
+  public com.google.zxing.Result decodeWithState(com.google.zxing.BinaryBitmap image) throws NotFoundException {
     // Make sure to set up the default state so we don't crash
     if (readers == null) {
       setHints(null);
@@ -89,32 +89,32 @@ public final class MultiFormatReader implements Reader {
    *
    * @param hints The set of hints to use for subsequent calls to decode(image)
    */
-  public void setHints(Map<DecodeHintType,?> hints) {
+  public void setHints(Map<com.google.zxing.DecodeHintType,?> hints) {
     this.hints = hints;
 
-    boolean tryHarder = hints != null && hints.containsKey(DecodeHintType.TRY_HARDER);
+    boolean tryHarder = hints != null && hints.containsKey(com.google.zxing.DecodeHintType.TRY_HARDER);
     @SuppressWarnings("unchecked")
-    Collection<BarcodeFormat> formats =
-        hints == null ? null : (Collection<BarcodeFormat>) hints.get(DecodeHintType.POSSIBLE_FORMATS);
-    Collection<Reader> readers = new ArrayList<>();
+    Collection<com.google.zxing.BarcodeFormat> formats =
+        hints == null ? null : (Collection<com.google.zxing.BarcodeFormat>) hints.get(com.google.zxing.DecodeHintType.POSSIBLE_FORMATS);
+    Collection<com.google.zxing.Reader> readers = new ArrayList<>();
     if (formats != null) {
       boolean addOneDReader =
-          formats.contains(BarcodeFormat.UPC_A) ||
-          formats.contains(BarcodeFormat.UPC_E) ||
-          formats.contains(BarcodeFormat.EAN_13) ||
-          formats.contains(BarcodeFormat.EAN_8) ||
-          formats.contains(BarcodeFormat.CODABAR) ||
-          formats.contains(BarcodeFormat.CODE_39) ||
-          formats.contains(BarcodeFormat.CODE_93) ||
-          formats.contains(BarcodeFormat.CODE_128) ||
-          formats.contains(BarcodeFormat.ITF) ||
-          formats.contains(BarcodeFormat.RSS_14) ||
-          formats.contains(BarcodeFormat.RSS_EXPANDED);
+          formats.contains(com.google.zxing.BarcodeFormat.UPC_A) ||
+          formats.contains(com.google.zxing.BarcodeFormat.UPC_E) ||
+          formats.contains(com.google.zxing.BarcodeFormat.EAN_13) ||
+          formats.contains(com.google.zxing.BarcodeFormat.EAN_8) ||
+          formats.contains(com.google.zxing.BarcodeFormat.CODABAR) ||
+          formats.contains(com.google.zxing.BarcodeFormat.CODE_39) ||
+          formats.contains(com.google.zxing.BarcodeFormat.CODE_93) ||
+          formats.contains(com.google.zxing.BarcodeFormat.CODE_128) ||
+          formats.contains(com.google.zxing.BarcodeFormat.ITF) ||
+          formats.contains(com.google.zxing.BarcodeFormat.RSS_14) ||
+          formats.contains(com.google.zxing.BarcodeFormat.RSS_EXPANDED);
       // Put 1D readers upfront in "normal" mode
       if (addOneDReader && !tryHarder) {
         readers.add(new MultiFormatOneDReader(hints));
       }
-      if (formats.contains(BarcodeFormat.QR_CODE)) {
+      if (formats.contains(com.google.zxing.BarcodeFormat.QR_CODE)) {
         readers.add(new QRCodeReader());
       }
       if (formats.contains(BarcodeFormat.MAXICODE)) {
@@ -137,13 +137,13 @@ public final class MultiFormatReader implements Reader {
         readers.add(new MultiFormatOneDReader(hints));
       }
     }
-    this.readers = readers.toArray(new Reader[readers.size()]);
+    this.readers = readers.toArray(new com.google.zxing.Reader[readers.size()]);
   }
 
   @Override
   public void reset() {
     if (readers != null) {
-      for (Reader reader : readers) {
+      for (com.google.zxing.Reader reader : readers) {
         reader.reset();
       }
     }

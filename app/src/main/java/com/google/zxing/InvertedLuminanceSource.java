@@ -17,16 +17,16 @@
 package com.google.zxing;
 
 /**
- * A wrapper implementation of {@link LuminanceSource} which inverts the luminances it returns -- black becomes
+ * A wrapper implementation of {@link com.google.zxing.LuminanceSource} which inverts the luminances it returns -- black becomes
  * white and vice versa, and each value becomes (255-value).
  * 
  * @author Sean Owen
  */
-public final class InvertedLuminanceSource extends LuminanceSource {
+public final class InvertedLuminanceSource extends com.google.zxing.LuminanceSource {
 
-  private final LuminanceSource delegate;
+  private final com.google.zxing.LuminanceSource delegate;
 
-  public InvertedLuminanceSource(LuminanceSource delegate) {
+  public InvertedLuminanceSource(com.google.zxing.LuminanceSource delegate) {
     super(delegate.getWidth(), delegate.getHeight());
     this.delegate = delegate;
   }
@@ -58,7 +58,7 @@ public final class InvertedLuminanceSource extends LuminanceSource {
   }
 
   @Override
-  public LuminanceSource crop(int left, int top, int width, int height) {
+  public com.google.zxing.LuminanceSource crop(int left, int top, int width, int height) {
     return new InvertedLuminanceSource(delegate.crop(left, top, width, height));
   }
 
@@ -68,20 +68,20 @@ public final class InvertedLuminanceSource extends LuminanceSource {
   }
 
   /**
-   * @return original delegate {@link LuminanceSource} since invert undoes itself
+   * @return original delegate {@link com.google.zxing.LuminanceSource} since invert undoes itself
    */
   @Override
-  public LuminanceSource invert() {
+  public com.google.zxing.LuminanceSource invert() {
     return delegate;
   }
 
   @Override
-  public LuminanceSource rotateCounterClockwise() {
+  public com.google.zxing.LuminanceSource rotateCounterClockwise() {
     return new InvertedLuminanceSource(delegate.rotateCounterClockwise());
   }
 
   @Override
-  public LuminanceSource rotateCounterClockwise45() {
+  public com.google.zxing.LuminanceSource rotateCounterClockwise45() {
     return new InvertedLuminanceSource(delegate.rotateCounterClockwise45());
   }
 

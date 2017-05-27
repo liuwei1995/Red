@@ -49,11 +49,11 @@ public class GlobalHistogramBinarizer extends Binarizer {
 
   // Applies simple sharpening to the row data to improve performance of the 1D Readers.
   @Override
-  public BitArray getBlackRow(int y, BitArray row) throws NotFoundException {
+  public com.google.zxing.common.BitArray getBlackRow(int y, com.google.zxing.common.BitArray row) throws NotFoundException {
     LuminanceSource source = getLuminanceSource();
     int width = source.getWidth();
     if (row == null || row.getSize() < width) {
-      row = new BitArray(width);
+      row = new com.google.zxing.common.BitArray(width);
     } else {
       row.clear();
     }
@@ -91,11 +91,11 @@ public class GlobalHistogramBinarizer extends Binarizer {
 
   // Does not sharpen the data, as this call is intended to only be used by 2D Readers.
   @Override
-  public BitMatrix getBlackMatrix() throws NotFoundException {
+  public com.google.zxing.common.BitMatrix getBlackMatrix() throws NotFoundException {
     LuminanceSource source = getLuminanceSource();
     int width = source.getWidth();
     int height = source.getHeight();
-    BitMatrix matrix = new BitMatrix(width, height);
+    com.google.zxing.common.BitMatrix matrix = new BitMatrix(width, height);
 
     // Quickly calculates the histogram by sampling four rows from the image. This proved to be
     // more robust on the blackbox tests than sampling a diagonal as we used to do.

@@ -150,7 +150,7 @@ public final class Code128Writer extends OneDimensionalCodeWriter {
       }
       
       // Get the pattern
-      patterns.add(Code128Reader.CODE_PATTERNS[patternIndex]);
+      patterns.add(com.google.zxing.oned.Code128Reader.CODE_PATTERNS[patternIndex]);
       
       // Compute checksum
       checkSum += patternIndex * checkWeight;
@@ -161,10 +161,10 @@ public final class Code128Writer extends OneDimensionalCodeWriter {
     
     // Compute and append checksum
     checkSum %= 103;
-    patterns.add(Code128Reader.CODE_PATTERNS[checkSum]);
+    patterns.add(com.google.zxing.oned.Code128Reader.CODE_PATTERNS[checkSum]);
     
     // Append stop code
-    patterns.add(Code128Reader.CODE_PATTERNS[CODE_STOP]);
+    patterns.add(com.google.zxing.oned.Code128Reader.CODE_PATTERNS[CODE_STOP]);
     
     // Compute code width
     int codeWidth = 0;

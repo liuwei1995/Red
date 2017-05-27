@@ -200,7 +200,7 @@ public final class BitMatrix implements Cloneable {
         || rowSize != mask.getRowSize()) {
       throw new IllegalArgumentException("input matrix dimensions do not match");
     }
-    BitArray rowArray = new BitArray(width / 32 + 1);
+    com.google.zxing.common.BitArray rowArray = new com.google.zxing.common.BitArray(width / 32 + 1);
     for (int y = 0; y < height; y++) {
       int offset = y * rowSize;
       int[] row = mask.getRow(y, rowArray).getBitArray();
@@ -256,9 +256,9 @@ public final class BitMatrix implements Cloneable {
    * @return The resulting BitArray - this reference should always be used even when passing
    *         your own row
    */
-  public BitArray getRow(int y, BitArray row) {
+  public com.google.zxing.common.BitArray getRow(int y, com.google.zxing.common.BitArray row) {
     if (row == null || row.getSize() < width) {
-      row = new BitArray(width);
+      row = new com.google.zxing.common.BitArray(width);
     } else {
       row.clear();
     }
@@ -271,9 +271,9 @@ public final class BitMatrix implements Cloneable {
 
   /**
    * @param y row to set
-   * @param row {@link BitArray} to copy from
+   * @param row {@link com.google.zxing.common.BitArray} to copy from
    */
-  public void setRow(int y, BitArray row) {
+  public void setRow(int y, com.google.zxing.common.BitArray row) {
     System.arraycopy(row.getBitArray(), 0, bits, y * rowSize, rowSize);
   }
 
@@ -283,8 +283,8 @@ public final class BitMatrix implements Cloneable {
   public void rotate180() {
     int width = getWidth();
     int height = getHeight();
-    BitArray topRow = new BitArray(width);
-    BitArray bottomRow = new BitArray(width);
+    com.google.zxing.common.BitArray topRow = new com.google.zxing.common.BitArray(width);
+    com.google.zxing.common.BitArray bottomRow = new com.google.zxing.common.BitArray(width);
     for (int i = 0; i < (height + 1) / 2; i++) {
       topRow = getRow(i, topRow);
       bottomRow = getRow(height - 1 - i, bottomRow);

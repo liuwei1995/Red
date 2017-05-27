@@ -45,7 +45,7 @@ final class DataBlock {
    *         QR Code
    */
   static DataBlock[] getDataBlocks(byte[] rawCodewords,
-                                   Version version,
+                                   com.google.zxing.qrcode.decoder.Version version,
                                    ErrorCorrectionLevel ecLevel) {
 
     if (rawCodewords.length != version.getTotalCodewords()) {
@@ -54,19 +54,19 @@ final class DataBlock {
 
     // Figure out the number and size of data blocks used by this version and
     // error correction level
-    Version.ECBlocks ecBlocks = version.getECBlocksForLevel(ecLevel);
+    com.google.zxing.qrcode.decoder.Version.ECBlocks ecBlocks = version.getECBlocksForLevel(ecLevel);
 
     // First count the total number of data blocks
     int totalBlocks = 0;
-    Version.ECB[] ecBlockArray = ecBlocks.getECBlocks();
-    for (Version.ECB ecBlock : ecBlockArray) {
+    com.google.zxing.qrcode.decoder.Version.ECB[] ecBlockArray = ecBlocks.getECBlocks();
+    for (com.google.zxing.qrcode.decoder.Version.ECB ecBlock : ecBlockArray) {
       totalBlocks += ecBlock.getCount();
     }
 
     // Now establish DataBlocks of the appropriate size and number of data codewords
     DataBlock[] result = new DataBlock[totalBlocks];
     int numResultBlocks = 0;
-    for (Version.ECB ecBlock : ecBlockArray) {
+    for (com.google.zxing.qrcode.decoder.Version.ECB ecBlock : ecBlockArray) {
       for (int i = 0; i < ecBlock.getCount(); i++) {
         int numDataCodewords = ecBlock.getDataCodewords();
         int numBlockCodewords = ecBlocks.getECCodewordsPerBlock() + numDataCodewords;

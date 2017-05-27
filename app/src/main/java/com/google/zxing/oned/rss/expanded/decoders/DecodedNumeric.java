@@ -32,7 +32,7 @@ import com.google.zxing.FormatException;
  * @author Pablo Orduña, University of Deusto (pablo.orduna@deusto.es)
  * @author Eduardo Castillejo, University of Deusto (eduardo.castillejo@deusto.es)
  */
-final class DecodedNumeric extends DecodedObject {
+final class DecodedNumeric extends com.google.zxing.oned.rss.expanded.decoders.DecodedObject {
 
   private final int firstDigit;
   private final int secondDigit;

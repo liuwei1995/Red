@@ -44,7 +44,7 @@ public class FinderPatternFinder {
   protected static final int MAX_MODULES = 57; // support up to version 10 for mobile clients
 
   private final BitMatrix image;
-  private final List<FinderPattern> possibleCenters;
+  private final List<com.google.zxing.qrcode.detector.FinderPattern> possibleCenters;
   private boolean hasSkipped;
   private final int[] crossCheckStateCount;
   private final ResultPointCallback resultPointCallback;
@@ -69,11 +69,11 @@ public class FinderPatternFinder {
     return image;
   }
 
-  protected final List<FinderPattern> getPossibleCenters() {
+  protected final List<com.google.zxing.qrcode.detector.FinderPattern> getPossibleCenters() {
     return possibleCenters;
   }
 
-  final FinderPatternInfo find(Map<DecodeHintType,?> hints) throws NotFoundException {
+  final com.google.zxing.qrcode.detector.FinderPatternInfo find(Map<DecodeHintType,?> hints) throws NotFoundException {
     boolean tryHarder = hints != null && hints.containsKey(DecodeHintType.TRY_HARDER);
     boolean pureBarcode = hints != null && hints.containsKey(DecodeHintType.PURE_BARCODE);
     int maxI = image.getHeight();
@@ -177,10 +177,10 @@ public class FinderPatternFinder {
       }
     }
 
-    FinderPattern[] patternInfo = selectBestPatterns();
+    com.google.zxing.qrcode.detector.FinderPattern[] patternInfo = selectBestPatterns();
     ResultPoint.orderBestPatterns(patternInfo);
 
-    return new FinderPatternInfo(patternInfo);
+    return new com.google.zxing.qrcode.detector.FinderPatternInfo(patternInfo);
   }
 
   /**
@@ -497,7 +497,7 @@ public class FinderPatternFinder {
         float estimatedModuleSize = stateCountTotal / 7.0f;
         boolean found = false;
         for (int index = 0; index < possibleCenters.size(); index++) {
-          FinderPattern center = possibleCenters.get(index);
+          com.google.zxing.qrcode.detector.FinderPattern center = possibleCenters.get(index);
           // Look for about the same center and module size:
           if (center.aboutEquals(estimatedModuleSize, centerI, centerJ)) {
             possibleCenters.set(index, center.combineEstimate(centerI, centerJ, estimatedModuleSize));
@@ -506,7 +506,7 @@ public class FinderPatternFinder {
           }
         }
         if (!found) {
-          FinderPattern point = new FinderPattern(centerJ, centerI, estimatedModuleSize);
+          com.google.zxing.qrcode.detector.FinderPattern point = new com.google.zxing.qrcode.detector.FinderPattern(centerJ, centerI, estimatedModuleSize);
           possibleCenters.add(point);
           if (resultPointCallback != null) {
             resultPointCallback.foundPossibleResultPoint(point);
@@ -530,7 +530,7 @@ public class FinderPatternFinder {
       return 0;
     }
     ResultPoint firstConfirmedCenter = null;
-    for (FinderPattern center : possibleCenters) {
+    for (com.google.zxing.qrcode.detector.FinderPattern center : possibleCenters) {
       if (center.getCount() >= CENTER_QUORUM) {
         if (firstConfirmedCenter == null) {
           firstConfirmedCenter = center;
@@ -558,7 +558,7 @@ public class FinderPatternFinder {
     int confirmedCount = 0;
     float totalModuleSize = 0.0f;
     int max = possibleCenters.size();
-    for (FinderPattern pattern : possibleCenters) {
+    for (com.google.zxing.qrcode.detector.FinderPattern pattern : possibleCenters) {
       if (pattern.getCount() >= CENTER_QUORUM) {
         confirmedCount++;
         totalModuleSize += pattern.getEstimatedModuleSize();
@@ -573,19 +573,19 @@ public class FinderPatternFinder {
     // 5% of the total module size estimates, it's too much.
     float average = totalModuleSize / max;
     float totalDeviation = 0.0f;
-    for (FinderPattern pattern : possibleCenters) {
+    for (com.google.zxing.qrcode.detector.FinderPattern pattern : possibleCenters) {
       totalDeviation += Math.abs(pattern.getEstimatedModuleSize() - average);
     }
     return totalDeviation <= 0.05f * totalModuleSize;
   }
 
   /**
-   * @return the 3 best {@link FinderPattern}s from our list of candidates. The "best" are
+   * @return the 3 best {@link com.google.zxing.qrcode.detector.FinderPattern}s from our list of candidates. The "best" are
    *         those that have been detected at least {@link #CENTER_QUORUM} times, and whose module
    *         size differs from the average among those patterns the least
    * @throws NotFoundException if 3 such finder patterns do not exist
    */
-  private FinderPattern[] selectBestPatterns() throws NotFoundException {
+  private com.google.zxing.qrcode.detector.FinderPattern[] selectBestPatterns() throws NotFoundException {
 
     int startSize = possibleCenters.size();
     if (startSize < 3) {
@@ -598,7 +598,7 @@ public class FinderPatternFinder {
       // But we can only afford to do so if we have at least 4 possibilities to choose from
       float totalModuleSize = 0.0f;
       float square = 0.0f;
-      for (FinderPattern center : possibleCenters) {
+      for (com.google.zxing.qrcode.detector.FinderPattern center : possibleCenters) {
         float size = center.getEstimatedModuleSize();
         totalModuleSize += size;
         square += size * size;
@@ -611,7 +611,7 @@ public class FinderPatternFinder {
       float limit = Math.max(0.2f * average, stdDev);
 
       for (int i = 0; i < possibleCenters.size() && possibleCenters.size() > 3; i++) {
-        FinderPattern pattern = possibleCenters.get(i);
+        com.google.zxing.qrcode.detector.FinderPattern pattern = possibleCenters.get(i);
         if (Math.abs(pattern.getEstimatedModuleSize() - average) > limit) {
           possibleCenters.remove(i);
           i--;
@@ -623,7 +623,7 @@ public class FinderPatternFinder {
       // Throw away all but those first size candidate points we found.
 
       float totalModuleSize = 0.0f;
-      for (FinderPattern possibleCenter : possibleCenters) {
+      for (com.google.zxing.qrcode.detector.FinderPattern possibleCenter : possibleCenters) {
         totalModuleSize += possibleCenter.getEstimatedModuleSize();
       }
 
@@ -634,7 +634,7 @@ public class FinderPatternFinder {
       possibleCenters.subList(3, possibleCenters.size()).clear();
     }
 
-    return new FinderPattern[]{
+    return new com.google.zxing.qrcode.detector.FinderPattern[]{
         possibleCenters.get(0),
         possibleCenters.get(1),
         possibleCenters.get(2)
@@ -644,13 +644,13 @@ public class FinderPatternFinder {
   /**
    * <p>Orders by furthest from average</p>
    */
-  private static final class FurthestFromAverageComparator implements Comparator<FinderPattern>, Serializable {
+  private static final class FurthestFromAverageComparator implements Comparator<com.google.zxing.qrcode.detector.FinderPattern>, Serializable {
     private final float average;
     private FurthestFromAverageComparator(float f) {
       average = f;
     }
     @Override
-    public int compare(FinderPattern center1, FinderPattern center2) {
+    public int compare(com.google.zxing.qrcode.detector.FinderPattern center1, com.google.zxing.qrcode.detector.FinderPattern center2) {
       float dA = Math.abs(center2.getEstimatedModuleSize() - average);
       float dB = Math.abs(center1.getEstimatedModuleSize() - average);
       return dA < dB ? -1 : dA > dB ? 1 : 0;
@@ -658,15 +658,15 @@ public class FinderPatternFinder {
   }
 
   /**
-   * <p>Orders by {@link FinderPattern#getCount()}, descending.</p>
+   * <p>Orders by {@link com.google.zxing.qrcode.detector.FinderPattern#getCount()}, descending.</p>
    */
-  private static final class CenterComparator implements Comparator<FinderPattern>, Serializable {
+  private static final class CenterComparator implements Comparator<com.google.zxing.qrcode.detector.FinderPattern>, Serializable {
     private final float average;
     private CenterComparator(float f) {
       average = f;
     }
     @Override
-    public int compare(FinderPattern center1, FinderPattern center2) {
+    public int compare(com.google.zxing.qrcode.detector.FinderPattern center1, FinderPattern center2) {
       if (center2.getCount() == center1.getCount()) {
         float dA = Math.abs(center2.getEstimatedModuleSize() - average);
         float dB = Math.abs(center1.getEstimatedModuleSize() - average);

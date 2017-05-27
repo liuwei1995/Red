@@ -21,20 +21,20 @@ import com.google.zxing.NotFoundException;
 /**
  * @author Sean Owen
  */
-public final class DefaultGridSampler extends GridSampler {
+public final class DefaultGridSampler extends com.google.zxing.common.GridSampler {
 
   @Override
-  public BitMatrix sampleGrid(BitMatrix image,
-                              int dimensionX,
-                              int dimensionY,
-                              float p1ToX, float p1ToY,
-                              float p2ToX, float p2ToY,
-                              float p3ToX, float p3ToY,
-                              float p4ToX, float p4ToY,
-                              float p1FromX, float p1FromY,
-                              float p2FromX, float p2FromY,
-                              float p3FromX, float p3FromY,
-                              float p4FromX, float p4FromY) throws NotFoundException {
+  public com.google.zxing.common.BitMatrix sampleGrid(com.google.zxing.common.BitMatrix image,
+                                                      int dimensionX,
+                                                      int dimensionY,
+                                                      float p1ToX, float p1ToY,
+                                                      float p2ToX, float p2ToY,
+                                                      float p3ToX, float p3ToY,
+                                                      float p4ToX, float p4ToY,
+                                                      float p1FromX, float p1FromY,
+                                                      float p2FromX, float p2FromY,
+                                                      float p3FromX, float p3FromY,
+                                                      float p4FromX, float p4FromY) throws NotFoundException {
 
     PerspectiveTransform transform = PerspectiveTransform.quadrilateralToQuadrilateral(
         p1ToX, p1ToY, p2ToX, p2ToY, p3ToX, p3ToY, p4ToX, p4ToY,
@@ -44,14 +44,14 @@ public final class DefaultGridSampler extends GridSampler {
   }
 
   @Override
-  public BitMatrix sampleGrid(BitMatrix image,
-                              int dimensionX,
-                              int dimensionY,
-                              PerspectiveTransform transform) throws NotFoundException {
+  public com.google.zxing.common.BitMatrix sampleGrid(com.google.zxing.common.BitMatrix image,
+                                                      int dimensionX,
+                                                      int dimensionY,
+                                                      PerspectiveTransform transform) throws NotFoundException {
     if (dimensionX <= 0 || dimensionY <= 0) {
       throw NotFoundException.getNotFoundInstance();      
     }
-    BitMatrix bits = new BitMatrix(dimensionX, dimensionY);
+    com.google.zxing.common.BitMatrix bits = new BitMatrix(dimensionX, dimensionY);
     float[] points = new float[2 * dimensionX];
     for (int y = 0; y < dimensionY; y++) {
       int max = points.length;

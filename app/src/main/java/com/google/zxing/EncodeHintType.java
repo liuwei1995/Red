@@ -16,6 +16,10 @@
 
 package com.google.zxing;
 
+import com.google.zxing.*;
+import com.google.zxing.Dimension;
+
+
 /**
  * These are a set of hints that you may pass to Writers to specify their behavior.
  *
@@ -45,10 +49,10 @@ public enum EncodeHintType {
   DATA_MATRIX_SHAPE,
 
   /**
-   * Specifies a minimum barcode size (type {@link Dimension}). Only applicable to Data Matrix now.
+   * Specifies a minimum barcode size (type {@link com.google.zxing.Dimension}). Only applicable to Data Matrix now.
    *
    * @deprecated use width/height params in
-   * {@link com.google.zxing.datamatrix.DataMatrixWriter#encode(String, BarcodeFormat, int, int)}
+   * {@link com.google.zxing.datamatrix.DataMatrixWriter#encode(String, com.google.zxing.BarcodeFormat, int, int)}
    */
   @Deprecated
   MIN_SIZE,

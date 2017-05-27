@@ -47,7 +47,7 @@ public final class HybridBinarizer extends GlobalHistogramBinarizer {
     private static final int MINIMUM_DIMENSION = BLOCK_SIZE * 5;
     private static final int MIN_DYNAMIC_RANGE = 24;
 
-    private BitMatrix matrix;
+    private com.google.zxing.common.BitMatrix matrix;
 
     public HybridBinarizer(LuminanceSource source) {
         super(source);
@@ -59,7 +59,7 @@ public final class HybridBinarizer extends GlobalHistogramBinarizer {
      * profiling easier, and not doing heavy lifting when callers don't expect it.
      */
     @Override
-    public BitMatrix getBlackMatrix() throws NotFoundException {
+    public com.google.zxing.common.BitMatrix getBlackMatrix() throws NotFoundException {
         if (matrix != null) {
             return matrix;
         }
@@ -78,7 +78,7 @@ public final class HybridBinarizer extends GlobalHistogramBinarizer {
             }
             int[][] blackPoints = calculateBlackPoints(luminances, subWidth, subHeight, width, height);
 
-            BitMatrix newMatrix = new BitMatrix(width, height);
+            com.google.zxing.common.BitMatrix newMatrix = new com.google.zxing.common.BitMatrix(width, height);
             calculateThresholdForBlock(luminances, subWidth, subHeight, width, height, blackPoints, newMatrix);
             matrix = newMatrix;
         } else {
@@ -104,7 +104,7 @@ public final class HybridBinarizer extends GlobalHistogramBinarizer {
                                                    int width,
                                                    int height,
                                                    int[][] blackPoints,
-                                                   BitMatrix matrix) {
+                                                   com.google.zxing.common.BitMatrix matrix) {
         int maxYOffset = height - BLOCK_SIZE;
         int maxXOffset = width - BLOCK_SIZE;
         for (int y = 0; y < subHeight; y++) {
@@ -142,7 +142,7 @@ public final class HybridBinarizer extends GlobalHistogramBinarizer {
                                        int yoffset,
                                        int threshold,
                                        int stride,
-                                       BitMatrix matrix) {
+                                       com.google.zxing.common.BitMatrix matrix) {
         for (int y = 0, offset = yoffset * stride + xoffset; y < BLOCK_SIZE; y++, offset += stride) {
             for (int x = 0; x < BLOCK_SIZE; x++) {
                 // Comparison needs to be <= so that black == 0 pixels are black even if the threshold is 0.

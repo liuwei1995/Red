@@ -34,7 +34,7 @@ import java.util.Map;
  *
  * @author Sean Owen
  */
-public final class Code128Reader extends OneDReader {
+public final class Code128Reader extends com.google.zxing.oned.OneDReader {
 
   static final int[][] CODE_PATTERNS = {
       {2, 1, 2, 2, 2, 2}, // 0

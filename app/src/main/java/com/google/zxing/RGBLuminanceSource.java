@@ -23,7 +23,7 @@ package com.google.zxing;
  * @author dswitkin@google.com (Daniel Switkin)
  * @author Betaminos
  */
-public final class RGBLuminanceSource extends LuminanceSource {
+public final class RGBLuminanceSource extends com.google.zxing.LuminanceSource {
 
   private final byte[] luminances;
   private final int dataWidth;
@@ -123,7 +123,7 @@ public final class RGBLuminanceSource extends LuminanceSource {
   }
 
   @Override
-  public LuminanceSource crop(int left, int top, int width, int height) {
+  public com.google.zxing.LuminanceSource crop(int left, int top, int width, int height) {
     return new RGBLuminanceSource(luminances,
                                   dataWidth,
                                   dataHeight,

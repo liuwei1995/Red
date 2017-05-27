@@ -55,6 +55,10 @@
     <uses-permission android:name="android.permission.READ_PROFILE"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
+
+
+
+
     <application
         android:name=".BaseApplication"
         android:allowBackup="true"
@@ -236,7 +240,6 @@
                 <data android:scheme="https"/>
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

@@ -54,8 +54,8 @@ public final class RSS14Reader extends AbstractRSSReader {
       {1,3,9,1},
   };
 
-  private final List<Pair> possibleLeftPairs;
-  private final List<Pair> possibleRightPairs;
+  private final List<com.google.zxing.oned.rss.Pair> possibleLeftPairs;
+  private final List<com.google.zxing.oned.rss.Pair> possibleRightPairs;
 
   public RSS14Reader() {
     possibleLeftPairs = new ArrayList<>();
@@ -66,15 +66,15 @@ public final class RSS14Reader extends AbstractRSSReader {
   public Result decodeRow(int rowNumber,
                           BitArray row,
                           Map<DecodeHintType,?> hints) throws NotFoundException {
-    Pair leftPair = decodePair(row, false, rowNumber, hints);
+    com.google.zxing.oned.rss.Pair leftPair = decodePair(row, false, rowNumber, hints);
     addOrTally(possibleLeftPairs, leftPair);
     row.reverse();
-    Pair rightPair = decodePair(row, true, rowNumber, hints);
+    com.google.zxing.oned.rss.Pair rightPair = decodePair(row, true, rowNumber, hints);
     addOrTally(possibleRightPairs, rightPair);
     row.reverse();
-    for (Pair left : possibleLeftPairs) {
+    for (com.google.zxing.oned.rss.Pair left : possibleLeftPairs) {
       if (left.getCount() > 1) {
-        for (Pair right : possibleRightPairs) {
+        for (com.google.zxing.oned.rss.Pair right : possibleRightPairs) {
           if (right.getCount() > 1) {
             if (checkChecksum(left, right)) {
               return constructResult(left, right);
@@ -86,12 +86,12 @@ public final class RSS14Reader extends AbstractRSSReader {
     throw NotFoundException.getNotFoundInstance();
   }
 
-  private static void addOrTally(Collection<Pair> possiblePairs, Pair pair) {
+  private static void addOrTally(Collection<com.google.zxing.oned.rss.Pair> possiblePairs, com.google.zxing.oned.rss.Pair pair) {
     if (pair == null) {
       return;
     }
     boolean found = false;
-    for (Pair other : possiblePairs) {
+    for (com.google.zxing.oned.rss.Pair other : possiblePairs) {
       if (other.getValue() == pair.getValue()) {
         other.incrementCount();
         found = true;
@@ -109,7 +109,7 @@ public final class RSS14Reader extends AbstractRSSReader {
     possibleRightPairs.clear();
   }
 
-  private static Result constructResult(Pair leftPair, Pair rightPair) {
+  private static Result constructResult(com.google.zxing.oned.rss.Pair leftPair, com.google.zxing.oned.rss.Pair rightPair) {
     long symbolValue = 4537077L * leftPair.getValue() + rightPair.getValue();
     String text = String.valueOf(symbolValue);
 
@@ -139,7 +139,7 @@ public final class RSS14Reader extends AbstractRSSReader {
         BarcodeFormat.RSS_14);
   }
 
-  private static boolean checkChecksum(Pair leftPair, Pair rightPair) {
+  private static boolean checkChecksum(com.google.zxing.oned.rss.Pair leftPair, com.google.zxing.oned.rss.Pair rightPair) {
     //int leftFPValue = leftPair.getFinderPattern().getValue();
     //int rightFPValue = rightPair.getFinderPattern().getValue();
     //if ((leftFPValue == 0 && rightFPValue == 8) ||
@@ -157,7 +157,7 @@ public final class RSS14Reader extends AbstractRSSReader {
     return checkValue == targetCheckValue;
   }
 
-  private Pair decodePair(BitArray row, boolean right, int rowNumber, Map<DecodeHintType,?> hints) {
+  private com.google.zxing.oned.rss.Pair decodePair(BitArray row, boolean right, int rowNumber, Map<DecodeHintType,?> hints) {
     try {
       int[] startEnd = findFinderPattern(row, right);
       FinderPattern pattern = parseFoundFinderPattern(row, rowNumber, right, startEnd);
@@ -176,7 +176,7 @@ public final class RSS14Reader extends AbstractRSSReader {
 
       DataCharacter outside = decodeDataCharacter(row, pattern, true);
       DataCharacter inside = decodeDataCharacter(row, pattern, false);
-      return new Pair(1597 * outside.getValue() + inside.getValue(),
+      return new com.google.zxing.oned.rss.Pair(1597 * outside.getValue() + inside.getValue(),
                       outside.getChecksumPortion() + 4 * inside.getChecksumPortion(),
                       pattern);
     } catch (NotFoundException ignored) {
@@ -260,8 +260,8 @@ public final class RSS14Reader extends AbstractRSSReader {
       int group = (12 - oddSum) / 2;
       int oddWidest = OUTSIDE_ODD_WIDEST[group];
       int evenWidest = 9 - oddWidest;
-      int vOdd = RSSUtils.getRSSvalue(oddCounts, oddWidest, false);
-      int vEven = RSSUtils.getRSSvalue(evenCounts, evenWidest, true);
+      int vOdd = com.google.zxing.oned.rss.RSSUtils.getRSSvalue(oddCounts, oddWidest, false);
+      int vEven = com.google.zxing.oned.rss.RSSUtils.getRSSvalue(evenCounts, evenWidest, true);
       int tEven = OUTSIDE_EVEN_TOTAL_SUBSET[group];
       int gSum = OUTSIDE_GSUM[group];
       return new DataCharacter(vOdd * tEven + vEven + gSum, checksumPortion);
@@ -272,7 +272,7 @@ public final class RSS14Reader extends AbstractRSSReader {
       int group = (10 - evenSum) / 2;
       int oddWidest = INSIDE_ODD_WIDEST[group];
       int evenWidest = 9 - oddWidest;
-      int vOdd = RSSUtils.getRSSvalue(oddCounts, oddWidest, true);
+      int vOdd = com.google.zxing.oned.rss.RSSUtils.getRSSvalue(oddCounts, oddWidest, true);
       int vEven = RSSUtils.getRSSvalue(evenCounts, evenWidest, false);
       int tOdd = INSIDE_ODD_TOTAL_SUBSET[group];
       int gSum = INSIDE_GSUM[group];

@@ -39,7 +39,7 @@ import java.util.Map;
  * @author Sean Owen
  * @author alasdair@google.com (Alasdair Mackintosh)
  */
-public abstract class UPCEANReader extends OneDReader {
+public abstract class UPCEANReader extends com.google.zxing.oned.OneDReader {
 
   // These two values are critical for determining how permissive the decoding will be.
   // We've arrived at these values through a lot of trial and error. Setting them any higher

@@ -27,21 +27,21 @@ import java.util.List;
  */
 public final class ReedSolomonEncoder {
 
-  private final GenericGF field;
-  private final List<GenericGFPoly> cachedGenerators;
+  private final com.google.zxing.common.reedsolomon.GenericGF field;
+  private final List<com.google.zxing.common.reedsolomon.GenericGFPoly> cachedGenerators;
 
-  public ReedSolomonEncoder(GenericGF field) {
+  public ReedSolomonEncoder(com.google.zxing.common.reedsolomon.GenericGF field) {
     this.field = field;
     this.cachedGenerators = new ArrayList<>();
-    cachedGenerators.add(new GenericGFPoly(field, new int[]{1}));
+    cachedGenerators.add(new com.google.zxing.common.reedsolomon.GenericGFPoly(field, new int[]{1}));
   }
 
-  private GenericGFPoly buildGenerator(int degree) {
+  private com.google.zxing.common.reedsolomon.GenericGFPoly buildGenerator(int degree) {
     if (degree >= cachedGenerators.size()) {
-      GenericGFPoly lastGenerator = cachedGenerators.get(cachedGenerators.size() - 1);
+      com.google.zxing.common.reedsolomon.GenericGFPoly lastGenerator = cachedGenerators.get(cachedGenerators.size() - 1);
       for (int d = cachedGenerators.size(); d <= degree; d++) {
-        GenericGFPoly nextGenerator = lastGenerator.multiply(
-            new GenericGFPoly(field, new int[] { 1, field.exp(d - 1 + field.getGeneratorBase()) }));
+        com.google.zxing.common.reedsolomon.GenericGFPoly nextGenerator = lastGenerator.multiply(
+            new com.google.zxing.common.reedsolomon.GenericGFPoly(field, new int[] { 1, field.exp(d - 1 + field.getGeneratorBase()) }));
         cachedGenerators.add(nextGenerator);
         lastGenerator = nextGenerator;
       }
@@ -57,12 +57,12 @@ public final class ReedSolomonEncoder {
     if (dataBytes <= 0) {
       throw new IllegalArgumentException("No data bytes provided");
     }
-    GenericGFPoly generator = buildGenerator(ecBytes);
+    com.google.zxing.common.reedsolomon.GenericGFPoly generator = buildGenerator(ecBytes);
     int[] infoCoefficients = new int[dataBytes];
     System.arraycopy(toEncode, 0, infoCoefficients, 0, dataBytes);
-    GenericGFPoly info = new GenericGFPoly(field, infoCoefficients);
+    com.google.zxing.common.reedsolomon.GenericGFPoly info = new com.google.zxing.common.reedsolomon.GenericGFPoly(field, infoCoefficients);
     info = info.multiplyByMonomial(ecBytes, 1);
-    GenericGFPoly remainder = info.divide(generator)[1];
+    com.google.zxing.common.reedsolomon.GenericGFPoly remainder = info.divide(generator)[1];
     int[] coefficients = remainder.getCoefficients();
     int numZeroCoefficients = ecBytes - coefficients.length;
     for (int i = 0; i < numZeroCoefficients; i++) {

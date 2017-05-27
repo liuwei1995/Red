@@ -16,6 +16,10 @@
 
 package com.google.zxing;
 
+import com.google.zxing.*;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.Writer;
+import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.oned.Code128Writer;
 import com.google.zxing.oned.Code39Writer;
@@ -35,19 +39,19 @@ import java.util.Map;
  *
  * @author dswitkin@google.com (Daniel Switkin)
  */
-public final class MultiFormatWriter implements Writer {
+public final class MultiFormatWriter implements com.google.zxing.Writer {
 
   @Override
   public BitMatrix encode(String contents,
-                          BarcodeFormat format,
+                          com.google.zxing.BarcodeFormat format,
                           int width,
-                          int height) throws WriterException {
+                          int height) throws com.google.zxing.WriterException {
     return encode(contents, format, width, height, null);
   }
 
   @Override
   public BitMatrix encode(String contents,
-                          BarcodeFormat format,
+                          com.google.zxing.BarcodeFormat format,
                           int width, int height,
                           Map<EncodeHintType,?> hints) throws WriterException {
 

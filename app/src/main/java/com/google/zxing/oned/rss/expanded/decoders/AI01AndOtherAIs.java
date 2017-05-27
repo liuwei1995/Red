@@ -34,7 +34,7 @@ import com.google.zxing.common.BitArray;
  * @author Pablo Orduña, University of Deusto (pablo.orduna@deusto.es)
  * @author Eduardo Castillejo, University of Deusto (eduardo.castillejo@deusto.es)
  */
-final class AI01AndOtherAIs extends AI01decoder {
+final class AI01AndOtherAIs extends com.google.zxing.oned.rss.expanded.decoders.AI01decoder {
 
   private static final int HEADER_SIZE = 1 + 1 + 2; //first bit encodes the linkage flag,
                           //the second one is the encodation method, and the other two are for the variable length

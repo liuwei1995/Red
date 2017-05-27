@@ -29,7 +29,7 @@ import java.util.List;
  *
  * <p>At the moment this only looks for the bottom-right alignment pattern.</p>
  *
- * <p>This is mostly a simplified copy of {@link FinderPatternFinder}. It is copied,
+ * <p>This is mostly a simplified copy of {@link com.google.zxing.qrcode.detector.FinderPatternFinder}. It is copied,
  * pasted and stripped down here for maximum performance but does unfortunately duplicate
  * some code.</p>
  *
@@ -40,7 +40,7 @@ import java.util.List;
 final class AlignmentPatternFinder {
 
   private final BitMatrix image;
-  private final List<AlignmentPattern> possibleCenters;
+  private final List<com.google.zxing.qrcode.detector.AlignmentPattern> possibleCenters;
   private final int startX;
   private final int startY;
   private final int width;
@@ -81,10 +81,10 @@ final class AlignmentPatternFinder {
    * <p>This method attempts to find the bottom-right alignment pattern in the image. It is a bit messy since
    * it's pretty performance-critical and so is written to be fast foremost.</p>
    *
-   * @return {@link AlignmentPattern} if found
+   * @return {@link com.google.zxing.qrcode.detector.AlignmentPattern} if found
    * @throws NotFoundException if not found
    */
-  AlignmentPattern find() throws NotFoundException {
+  com.google.zxing.qrcode.detector.AlignmentPattern find() throws NotFoundException {
     int startX = this.startX;
     int height = this.height;
     int maxJ = startX + width;
@@ -114,7 +114,7 @@ final class AlignmentPatternFinder {
           } else { // Counting white pixels
             if (currentState == 2) { // A winner?
               if (foundPatternCross(stateCount)) { // Yes
-                AlignmentPattern confirmed = handlePossibleCenter(stateCount, i, j);
+                com.google.zxing.qrcode.detector.AlignmentPattern confirmed = handlePossibleCenter(stateCount, i, j);
                 if (confirmed != null) {
                   return confirmed;
                 }
@@ -136,7 +136,7 @@ final class AlignmentPatternFinder {
         j++;
       }
       if (foundPatternCross(stateCount)) {
-        AlignmentPattern confirmed = handlePossibleCenter(stateCount, i, maxJ);
+        com.google.zxing.qrcode.detector.AlignmentPattern confirmed = handlePossibleCenter(stateCount, i, maxJ);
         if (confirmed != null) {
           return confirmed;
         }
@@ -250,22 +250,22 @@ final class AlignmentPatternFinder {
    * @param stateCount reading state module counts from horizontal scan
    * @param i row where alignment pattern may be found
    * @param j end of possible alignment pattern in row
-   * @return {@link AlignmentPattern} if we have found the same pattern twice, or null if not
+   * @return {@link com.google.zxing.qrcode.detector.AlignmentPattern} if we have found the same pattern twice, or null if not
    */
-  private AlignmentPattern handlePossibleCenter(int[] stateCount, int i, int j) {
+  private com.google.zxing.qrcode.detector.AlignmentPattern handlePossibleCenter(int[] stateCount, int i, int j) {
     int stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2];
     float centerJ = centerFromEnd(stateCount, j);
     float centerI = crossCheckVertical(i, (int) centerJ, 2 * stateCount[1], stateCountTotal);
     if (!Float.isNaN(centerI)) {
       float estimatedModuleSize = (stateCount[0] + stateCount[1] + stateCount[2]) / 3.0f;
-      for (AlignmentPattern center : possibleCenters) {
+      for (com.google.zxing.qrcode.detector.AlignmentPattern center : possibleCenters) {
         // Look for about the same center and module size:
         if (center.aboutEquals(estimatedModuleSize, centerI, centerJ)) {
           return center.combineEstimate(centerI, centerJ, estimatedModuleSize);
         }
       }
       // Hadn't found this before; save it
-      AlignmentPattern point = new AlignmentPattern(centerJ, centerI, estimatedModuleSize);
+      com.google.zxing.qrcode.detector.AlignmentPattern point = new AlignmentPattern(centerJ, centerI, estimatedModuleSize);
       possibleCenters.add(point);
       if (resultPointCallback != null) {
         resultPointCallback.foundPossibleResultPoint(point);

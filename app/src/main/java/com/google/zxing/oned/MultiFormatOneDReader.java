@@ -34,9 +34,9 @@ import java.util.Map;
  * @author dswitkin@google.com (Daniel Switkin)
  * @author Sean Owen
  */
-public final class MultiFormatOneDReader extends OneDReader {
+public final class MultiFormatOneDReader extends com.google.zxing.oned.OneDReader {
 
-  private final OneDReader[] readers;
+  private final com.google.zxing.oned.OneDReader[] readers;
 
   public MultiFormatOneDReader(Map<DecodeHintType,?> hints) {
     @SuppressWarnings("unchecked")    
@@ -44,7 +44,7 @@ public final class MultiFormatOneDReader extends OneDReader {
         (Collection<BarcodeFormat>) hints.get(DecodeHintType.POSSIBLE_FORMATS);
     boolean useCode39CheckDigit = hints != null &&
         hints.get(DecodeHintType.ASSUME_CODE_39_CHECK_DIGIT) != null;
-    Collection<OneDReader> readers = new ArrayList<>();
+    Collection<com.google.zxing.oned.OneDReader> readers = new ArrayList<>();
     if (possibleFormats != null) {
       if (possibleFormats.contains(BarcodeFormat.EAN_13) ||
           possibleFormats.contains(BarcodeFormat.UPC_A) ||
@@ -53,16 +53,16 @@ public final class MultiFormatOneDReader extends OneDReader {
         readers.add(new MultiFormatUPCEANReader(hints));
       }
       if (possibleFormats.contains(BarcodeFormat.CODE_39)) {
-        readers.add(new Code39Reader(useCode39CheckDigit));
+        readers.add(new com.google.zxing.oned.Code39Reader(useCode39CheckDigit));
       }
       if (possibleFormats.contains(BarcodeFormat.CODE_93)) {
-        readers.add(new Code93Reader());
+        readers.add(new com.google.zxing.oned.Code93Reader());
       }
       if (possibleFormats.contains(BarcodeFormat.CODE_128)) {
-        readers.add(new Code128Reader());
+        readers.add(new com.google.zxing.oned.Code128Reader());
       }
       if (possibleFormats.contains(BarcodeFormat.ITF)) {
-         readers.add(new ITFReader());
+         readers.add(new com.google.zxing.oned.ITFReader());
       }
       if (possibleFormats.contains(BarcodeFormat.RSS_14)) {
          readers.add(new RSS14Reader());
@@ -73,14 +73,14 @@ public final class MultiFormatOneDReader extends OneDReader {
     }
     if (readers.isEmpty()) {
       readers.add(new MultiFormatUPCEANReader(hints));
-      readers.add(new Code39Reader());
+      readers.add(new com.google.zxing.oned.Code39Reader());
       readers.add(new Code93Reader());
       readers.add(new Code128Reader());
       readers.add(new ITFReader());
       readers.add(new RSS14Reader());
       readers.add(new RSSExpandedReader());
     }
-    this.readers = readers.toArray(new OneDReader[readers.size()]);
+    this.readers = readers.toArray(new com.google.zxing.oned.OneDReader[readers.size()]);
   }
 
   @Override

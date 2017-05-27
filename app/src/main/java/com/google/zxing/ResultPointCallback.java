@@ -16,11 +16,14 @@
 
 package com.google.zxing;
 
+import com.google.zxing.*;
+import com.google.zxing.ResultPoint;
+
 /**
  * Callback which is invoked when a possible result point (significant
  * point in the barcode image such as a corner) is found.
  *
- * @see DecodeHintType#NEED_RESULT_POINT_CALLBACK
+ * @see com.google.zxing.DecodeHintType#NEED_RESULT_POINT_CALLBACK
  */
 public interface ResultPointCallback {
 

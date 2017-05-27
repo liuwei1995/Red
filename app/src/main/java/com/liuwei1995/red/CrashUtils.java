@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
 
-import com.blankj.utilcode.util.CloseUtils;
 import com.liuwei1995.red.util.permission.AndPermission;
 
 import java.io.File;
@@ -18,6 +17,8 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import com.blankj.utilcode.util.CloseUtils;
 
 /**
  * <pre>
