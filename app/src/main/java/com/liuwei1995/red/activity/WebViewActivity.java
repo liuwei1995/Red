@@ -9,8 +9,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Patterns;
+import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.GeolocationPermissions;
@@ -20,12 +23,15 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.blankj.utilcode.util.ScreenUtils;
 import com.liuwei1995.red.R;
 import com.liuwei1995.red.util.permission.AndPermission;
 import com.liuwei1995.red.util.webview.BaseDownloadListener;
 import com.liuwei1995.red.util.webview.BaseWebChromeClient;
 import com.liuwei1995.red.util.webview.BaseWebSettings;
 import com.liuwei1995.red.util.webview.BaseWebViewClient;
+import com.liuwei1995.red.util.webview.ItemLongClickedPopWindow;
+import com.liuwei1995.red.view.RedPopupWindow;
 
 import static com.blankj.utilcode.util.ClipboardUtils.getIntent;
 
@@ -97,12 +103,117 @@ public class WebViewActivity extends BaseActivity {
         }
         pbProgress = (ProgressBar) findViewById(R.id.pb_progress);
         mWebView = new WebView(getApplicationContext());
-        LinearLayout mLinearLayout = $(R.id.activity_web_view);
+       final LinearLayout mLinearLayout = $(R.id.activity_web_view);
         mLinearLayout.addView(mWebView);
         webSettings();
+        mWebView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                WebView.HitTestResult result = ((WebView) v).getHitTestResult();
+
+                if (null == result)
+                    return false;
+                int type = result.getType();
+                /**
+                 * WebView.HitTestResult.UNKNOWN_TYPE    未知类型
+                 WebView.HitTestResult.PHONE_TYPE    电话类型
+                 WebView.HitTestResult.EMAIL_TYPE    电子邮件类型
+                 WebView.HitTestResult.GEO_TYPE    地图类型
+                 WebView.HitTestResult.SRC_ANCHOR_TYPE    超链接类型
+                 WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE    带有链接的图片类型
+                 WebView.HitTestResult.IMAGE_TYPE    单纯的图片类型
+                 WebView.HitTestResult.EDIT_TEXT_TYPE    选中的文字类型
+                 */
+                String imgurl = result.getExtra();
+
+
+                if (type == WebView.HitTestResult.UNKNOWN_TYPE)
+                    return false;
+                if (type == WebView.HitTestResult.EDIT_TEXT_TYPE) {
+                    //let TextViewhandles context menu return true;
+                }
+                // Setup custom handlingdepending on the type
+                switch (type) {
+                    case WebView.HitTestResult.PHONE_TYPE: // 处理拨号
+                        break;
+                    case WebView.HitTestResult.EMAIL_TYPE: // 处理Email
+                        break;
+                    case WebView.HitTestResult.GEO_TYPE: // TODO
+                        break;
+                    case WebView.HitTestResult.SRC_ANCHOR_TYPE: // 超链接
+                        // Log.d(DEG_TAG, "超链接");
+                        break;
+                    case WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE:
+                        break;
+                    case WebView.HitTestResult.IMAGE_TYPE: // 处理长按图片的菜单项
+                        imgurl = result.getExtra();
+                        RedPopupWindow healthyPopupWindow = new RedPopupWindow(WebViewActivity.this, R.layout.list_item_longclicked_img){
+                            @Override
+                            public void setContentView(Context context, View contentView) {
+                                contentView.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+                                    public void onClick(View v) {
+                                        //销毁弹出框
+                                        dismiss();
+                                    }
+                                });
+                                contentView.findViewById(R.id.tvAlbum).setOnClickListener(new View.OnClickListener(){
+                                    @Override
+                                    public void onClick(View v) {
+                                        dismiss();
+                                    }
+                                });
+                            }
+                        };
+                        healthyPopupWindow.showAtLocation(mLinearLayout,
+                                Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+
+                        //通过GestureDetector获取按下的位置，来定位PopWindow显示的位置
+//                        itemLongClickedPopWindow.showAtLocation(v,Gravity.TOP| Gravity.LEFT, v.get, downY + 10);
+//                        itemLongClickedPopWindow.showAtLocation(v,Gravity.TOP| Gravity.LEFT, downX, downY + 10);
+//                        itemLongClickedPopWindow.showAtLocation();
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
+
         AndPermission.with(this).setPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                 .start();
         mWebView.loadUrl(url);
+    }
+
+    /**
+     * 计算出来的位置，y方向就在anchorView的上面和下面对齐显示，x方向就是与屏幕右边对齐显示
+     * 如果anchorView的位置有变化，就可以适当自己额外加入偏移来修正
+     * @param anchorView  呼出window的view
+     * @param contentView   window的内容布局
+     * @return window显示的左上角的xOff,yOff坐标
+     */
+    private static int[] calculatePopWindowPos(final View anchorView, final View contentView) {
+        final int windowPos[] = new int[2];
+        final int anchorLoc[] = new int[2];
+        // 获取锚点View在屏幕上的左上角坐标位置
+        anchorView.getLocationOnScreen(anchorLoc);
+        final int anchorHeight = anchorView.getHeight();
+        // 获取屏幕的高宽
+        final int screenHeight = ScreenUtils.getScreenHeight();
+        final int screenWidth = ScreenUtils.getScreenWidth();
+        contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        // 计算contentView的高宽
+        final int windowHeight = contentView.getMeasuredHeight();
+        final int windowWidth = contentView.getMeasuredWidth();
+        // 判断需要向上弹出还是向下弹出显示
+        final boolean isNeedShowUp = (screenHeight - anchorLoc[1] - anchorHeight < windowHeight);
+        if (isNeedShowUp) {
+            windowPos[0] = screenWidth - windowWidth;
+            windowPos[1] = anchorLoc[1] - windowHeight;
+        } else {
+            windowPos[0] = screenWidth - windowWidth;
+            windowPos[1] = anchorLoc[1] + anchorHeight;
+        }
+        return windowPos;
     }
     public void webSettings(){
         mWebView.setDownloadListener(new BaseDownloadListener(this));
