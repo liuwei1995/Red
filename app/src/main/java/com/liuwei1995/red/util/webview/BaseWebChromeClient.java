@@ -41,12 +41,6 @@ public class BaseWebChromeClient  extends WebChromeClient {
         this.webView = webView;
     }
     //配置权限（同样在WebChromeClient中实现）
-//    @Override
-//    public void onGeolocationPermissionsShowPrompt(String origin,
-//                                                   Callback callback) {
-//        callback.invoke(origin, true, false);
-//        super.onGeolocationPermissionsShowPrompt(origin, callback);
-//    }
 
     @Override
     public void onGeolocationPermissionsShowPrompt(final String origin, final GeolocationPermissions.Callback callback) {
