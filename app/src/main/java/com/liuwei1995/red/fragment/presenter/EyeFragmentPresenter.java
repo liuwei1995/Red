@@ -37,10 +37,13 @@ import com.liuwei1995.red.http.HttpCallback;
 import com.liuwei1995.red.http.HttpUtils;
 import com.liuwei1995.red.http.OkHttpClientUtils;
 import com.liuwei1995.red.service.OFOEntitySaveIntentService;
+import com.liuwei1995.red.util.MD5Util;
+import com.liuwei1995.red.util.SharedPreferencesUtil;
 import com.liuwei1995.red.util.UserJSON;
 import com.liuwei1995.red.view.RedSnackbar;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -158,7 +161,10 @@ public class EyeFragmentPresenter extends FragmentPresenter implements TextWatch
                     }
                 }
                 if(ofoEntities != null){
-                    if (list == null)list = new ArrayList<>();
+                    if (list == null)
+                    {
+                        list = new ArrayList<>();
+                    }
                     if (pageIndex == 1){
                         list.clear();
                     }
@@ -440,9 +446,39 @@ public class EyeFragmentPresenter extends FragmentPresenter implements TextWatch
                         }
                     }else {
                         Toast.makeText(mContext, UserJSON.getString(result,"message"), Toast.LENGTH_SHORT).show();
-                        LoginActivity.newStartActivity(mContext);
+//                        LoginActivity.newStartActivity(mContext);
+                        login();
                     }
                 }else Toast.makeText(mContext, "网络开小差啦", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    public void login(){
+        OkHttpClientUtils.cancel(mContext);
+        Map<String,Object> map = new HashMap<>();
+        map.put("userPassword", MD5Util.getStringMD5("123456"));
+        map.put("phoneNumber","17713601564");
+        HttpUtils.userLogin(map, new HttpCallback<JSONObject>() {
+            @Override
+            public void onResponse(Boolean isSuccess, JSONObject result) {
+                if (isSuccess){
+                    try {
+                        long code_time = result.getLong("code_time");
+                        long code_success = result.getLong("code_success");
+                        if(code_time == 1 && code_success == 1) {
+                            JSONObject data = result.getJSONObject("content");
+                            SharedPreferencesUtil.saveObject(data,"user_data","user_data",mContext);
+                            search();
+                        }else {
+                            LoginActivity.newStartActivity(mContext);
+                        }
+                    } catch (JSONException e) {
+                        LoginActivity.newStartActivity(mContext);
+                    }
+
+                }else {
+                    LoginActivity.newStartActivity(mContext);
+                }
             }
         });
     }
