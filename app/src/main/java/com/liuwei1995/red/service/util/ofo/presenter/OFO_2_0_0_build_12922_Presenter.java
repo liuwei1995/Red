@@ -19,6 +19,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.RemoteViews;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.liuwei1995.red.R;
 import com.liuwei1995.red.activity.MainActivity;
 import com.liuwei1995.red.service.OFOAccessibilityService;
@@ -88,43 +89,33 @@ public class OFO_2_0_0_build_12922_Presenter extends OFOPresenter {
                         AccessibilityNodeInfo parent = unlock_code.getParent();
                         if (parent != null){
                             int childCount = parent.getChildCount();
+                            String pwd = "";
                             for (int i = 0; i < childCount; i++) {
                                 AccessibilityNodeInfo child = parent.getChild(i);
-                                if ("android.widget.LinearLayout".equals(child.getClassName().toString())){
-                                    int childChildCount = child.getChildCount();
-                                    if (childChildCount != 4)continue;
-                                    String pwd = "";
-                                    for (int j = 0; j < childChildCount; j++) {
-                                        CharSequence text = child.getChild(j).getText();
-                                        if(!TextUtils.isEmpty(text)){
+                                CharSequence text = child.getText();
+                                if (TextUtils.isEmpty(text) || text.length() != 1){
+                                    pwd = "";
+                                    LogUtils.d(TAG,"text===="+(text == null ? null :text.toString()));
+                                    continue;
+                                }
+                                pwd += Integer.parseInt(text.toString());
+                                LogUtils.d(TAG,"pwd===="+pwd);
+                                if (pwd.length() == 4){
+                                    CharSequence text_unlock_code = unlock_code.getText();
+                                    if(!TextUtils.isEmpty(text_unlock_code)){
+                                        String account = "";
+                                        String toString = text_unlock_code.toString();
+                                        for (int j = 0; j < toString.length(); j++) {
+                                            char c = toString.charAt(j);
                                             try {
-                                                Integer integer = Integer.valueOf(text.toString());
-                                                pwd += integer;
+                                                int parseInt = Integer.parseInt("" + c);
+                                                account += parseInt;
                                             } catch (NumberFormatException e) {
                                                 e.printStackTrace();
                                             }
                                         }
-                                    }
-                                    if(pwd.length() == 4){
-                                        CharSequence text = unlock_code.getText();
-                                        if(!TextUtils.isEmpty(text.toString())){
-                                            try {
-                                                String account = "";
-                                                String toString = text.toString();
-                                                for (int j = 0; j < toString.length(); j++) {
-                                                    try {
-                                                        Long aLong = Long.valueOf(toString.indexOf(j));
-                                                        account += aLong;
-                                                    } catch (Exception e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                }
-                                                OFOEntitySaveIntentService.startActionBaz(getApplicationContext(),account+"",pwd);
-                                            } catch (NumberFormatException e) {
-                                                e.printStackTrace();
-                                            }
-                                            break;
-                                        }
+                                        OFOEntitySaveIntentService.startActionBaz(getApplicationContext(),account,pwd);
+                                        break;
                                     }
                                 }
                             }
