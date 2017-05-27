@@ -258,7 +258,6 @@ public class MainActivity extends BaseActivity
         for (String key : map.keySet()){
             AppEntity appEntity = map.get(key);
             htmlLinkText += "<a href=\""+appEntity.getUrl()+"\">"+appName+appEntity.getVersionName()+"下载</a>";
-
 //            htmlLinkText += "<a href=\""+appEntity.getUrl()+">"+appName+appEntity.getVersionName()+"下载</a>           ";
         }
         return htmlLinkText;
