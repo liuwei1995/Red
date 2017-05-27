@@ -158,6 +158,7 @@ public class EyeFragmentPresenter extends FragmentPresenter implements TextWatch
                     }
                 }
                 if(ofoEntities != null){
+                    if (list == null)list = new ArrayList<>();
                     if (pageIndex == 1){
                         list.clear();
                     }
