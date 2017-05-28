@@ -22,7 +22,9 @@
     <!-- 获取手机号的信息 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-
+    <!--屏幕解锁-->
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
 
     <!--使用GPS定位的话，需要如下权限：-->
     <!--如果使用WIFI接入点定位的话，需要如下权限：-->

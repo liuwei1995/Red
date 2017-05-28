@@ -11,6 +11,8 @@ import android.content.pm.Signature;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -45,6 +47,8 @@ import com.liuwei1995.red.service.sensor.SensorService;
 import com.liuwei1995.red.service.util.ofo.presenter.OFOPresenter;
 import com.liuwei1995.red.service.util.qq.presenter.QQPresenter;
 import com.liuwei1995.red.service.util.wechat.presenter.WechatPresenter;
+import com.liuwei1995.red.util.ScreenListener;
+import com.liuwei1995.red.util.UnlockUtils;
 import com.liuwei1995.red.util.permission.AndPermission;
 import com.liuwei1995.red.util.permission.PermissionListener;
 import com.liuwei1995.red.util.permission.RationaleListener;
@@ -60,7 +64,7 @@ import static com.liuwei1995.red.BaseApplication.QQ_map;
 import static com.liuwei1995.red.BaseApplication.WeChat_map;
 
 public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener ,ScreenListener.ScreenStateListener{
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -78,6 +82,9 @@ public class MainActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+//        锁屏监听
+        ScreenListener mScreenListener = new ScreenListener(this);
+        mScreenListener.begin(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -178,7 +185,38 @@ public class MainActivity extends BaseActivity
                 })
                 .start();
     }
-     class mPermissionListener extends PermissionListener{
+
+    @Override
+    public void onScreenOn() {
+        LogUtils.d(TAG,"onScreenOn");
+    }
+    private Handler h = new Handler();
+    @Override
+    public void onScreenOff() {
+        LogUtils.d(TAG,"onScreenOff");
+//        AndPermission.with(this).setPermission(android.Manifest.permission.DISABLE_KEYGUARD)
+//                .setCallback(new PermissionListener() {
+//                    @Override
+//                    protected void onSucceed(Context context, int requestCode, @NonNull List<String> grantPermissions) {
+//                        Handler handler = new Handler(){
+//                            @Override
+//                            public void handleMessage(Message msg) {
+//                                UnlockUtils.wakeUpAndUnlock(MainActivity.this);
+//                            }
+//                        };
+//                        handler.sendEmptyMessageDelayed(1,3000);
+//                    }
+//                })
+//                .start();
+    }
+
+    @Override
+    public void onUserPresent() {
+
+        LogUtils.d(TAG,"onUserPresent");
+    }
+
+    class mPermissionListener extends PermissionListener{
 
             private Context packageContext;
             private Class cls;
