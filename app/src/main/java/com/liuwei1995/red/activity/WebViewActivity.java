@@ -30,7 +30,6 @@ import com.liuwei1995.red.util.webview.BaseDownloadListener;
 import com.liuwei1995.red.util.webview.BaseWebChromeClient;
 import com.liuwei1995.red.util.webview.BaseWebSettings;
 import com.liuwei1995.red.util.webview.BaseWebViewClient;
-import com.liuwei1995.red.util.webview.ItemLongClickedPopWindow;
 import com.liuwei1995.red.view.RedPopupWindow;
 
 import static com.blankj.utilcode.util.ClipboardUtils.getIntent;
