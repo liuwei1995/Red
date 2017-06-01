@@ -64,7 +64,7 @@ import static com.liuwei1995.red.BaseApplication.QQ_map;
 import static com.liuwei1995.red.BaseApplication.WeChat_map;
 
 public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener ,ScreenListener.ScreenStateListener{
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -82,17 +82,14 @@ public class MainActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-//        锁屏监听
-        ScreenListener mScreenListener = new ScreenListener(this);
-        mScreenListener.begin(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Signature[] appSignature = AppUtils.getAppSignature(view.getContext(),"so.ofo.labofo");
-                LogUtils.d("so.ofo.labofo:"+appSignature[0].toCharsString());
-                LogUtils.d(appSignature != null&& appSignature.length > 0?appSignature[0].toCharsString()+"\n\t"+AppUtils.getAppSignature(view.getContext())[0].toCharsString():null);
+//                Signature[] appSignature = AppUtils.getAppSignature(view.getContext(),"so.ofo.labofo");
+//                LogUtils.d("so.ofo.labofo:"+appSignature[0].toCharsString());
+//                LogUtils.d(appSignature != null&& appSignature.length > 0?appSignature[0].toCharsString()+"\n\t"+AppUtils.getAppSignature(view.getContext())[0].toCharsString():null);
             }
         });
 
@@ -186,35 +183,7 @@ public class MainActivity extends BaseActivity
                 .start();
     }
 
-    @Override
-    public void onScreenOn() {
-        LogUtils.d(TAG,"onScreenOn");
-    }
-    private Handler h = new Handler();
-    @Override
-    public void onScreenOff() {
-        LogUtils.d(TAG,"onScreenOff");
-//        AndPermission.with(this).setPermission(android.Manifest.permission.DISABLE_KEYGUARD)
-//                .setCallback(new PermissionListener() {
-//                    @Override
-//                    protected void onSucceed(Context context, int requestCode, @NonNull List<String> grantPermissions) {
-//                        Handler handler = new Handler(){
-//                            @Override
-//                            public void handleMessage(Message msg) {
-//                                UnlockUtils.wakeUpAndUnlock(MainActivity.this);
-//                            }
-//                        };
-//                        handler.sendEmptyMessageDelayed(1,3000);
-//                    }
-//                })
-//                .start();
-    }
 
-    @Override
-    public void onUserPresent() {
-
-        LogUtils.d(TAG,"onUserPresent");
-    }
 
     class mPermissionListener extends PermissionListener{
 
