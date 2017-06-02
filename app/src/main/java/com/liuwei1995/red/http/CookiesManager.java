@@ -1,6 +1,6 @@
 package com.liuwei1995.red.http;
 
-import com.blankj.utilcode.util.Utils;
+import com.zhaoyao.zhaoyaohealthy.App;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import okhttp3.HttpUrl;
  */
 public class CookiesManager implements CookieJar {
 
-    private final PersistentCookieStore cookieStore = new PersistentCookieStore(Utils.getContext());
+    private final PersistentCookieStore cookieStore = new PersistentCookieStore(App.getContext());
 
     @Override
     public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
