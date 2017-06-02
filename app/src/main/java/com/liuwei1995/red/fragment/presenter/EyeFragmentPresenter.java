@@ -181,9 +181,9 @@ public class EyeFragmentPresenter extends FragmentPresenter implements TextWatch
         Map<String, Object> map = new HashMap<>();
         map.put("pageNumber",pageNumber);
         map.put("pageIndex",pageIndex);
-        HttpUtils.ofoGetAccountPassword(map, new HttpCallback<JSONObject>() {
+        HttpUtils.ofoGetAccountPassword(map, new com.liuwei1995.red.http.util.HttpCallback<JSONObject>() {
             @Override
-            public void onResponse(Boolean isSuccess, JSONObject result) {
+            public void onCallbackResult(Boolean isSuccess, JSONObject result) {
                 if (isSuccess){
                     int code_time = UserJSON.getInt(result, "code_time");
                     if (code_time == 1){
@@ -318,9 +318,9 @@ public class EyeFragmentPresenter extends FragmentPresenter implements TextWatch
         map.put("deviceType","Android");
         map.put("submitPassword","");
 
-        HttpUtils.saveAccountPassword(map, new HttpCallback<JSONObject>() {
+        HttpUtils.saveAccountPassword(map, new com.liuwei1995.red.http.util.HttpCallback<JSONObject>() {
             @Override
-            public void onResponse(Boolean isSuccess, JSONObject result) {
+            public void onCallbackResult(Boolean isSuccess, JSONObject result) {
                 if (isSuccess){
                     int code_time = UserJSON.getInt(result, "code_time");
                     if (code_time == 1) {
@@ -416,9 +416,9 @@ public class EyeFragmentPresenter extends FragmentPresenter implements TextWatch
         map.put("account",trim);
         map.put("pageNumber",pageNumber);
         map.put("pageIndex",pageIndex);
-        HttpUtils.ofoSearchAccountPassword(map,mContext,new HttpCallback<JSONObject>() {
+        HttpUtils.ofoSearchAccountPassword(map,new com.liuwei1995.red.http.util.HttpCallback<JSONObject>() {
             @Override
-            public void onResponse(Boolean isSuccess, JSONObject result) {
+            public void onCallbackResult(Boolean isSuccess, JSONObject result) {
                 if (isSuccess){
                     int code_time = UserJSON.getInt(result, "code_time");
                     if (code_time == 1){

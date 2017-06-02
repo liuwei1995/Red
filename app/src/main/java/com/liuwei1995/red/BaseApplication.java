@@ -9,6 +9,8 @@ import android.os.Build;
 import com.blankj.utilcode.util.FileUtils;
 import com.blankj.utilcode.util.Utils;
 import com.liuwei1995.red.entity.AppEntity;
+import com.liuwei1995.red.http.OkHttpPresenter;
+import com.liuwei1995.red.http.util.HttpHelper;
 import com.liuwei1995.red.util.NetWorkUtils;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -59,6 +61,7 @@ public class BaseApplication extends Application {
         super.onCreate();
         CrashUtils.getInstance().init(this);
         Utils.init(this);
+        HttpHelper.init(OkHttpPresenter.newInstance());//网络请求需要的初始化
         NETWORK_IS_AVAILABLE = NetWorkUtils.isNetworkConnected(this);
         if(NETWORK_IS_AVAILABLE) {
             isWiFi = NetWorkUtils.isWifiConnected(this);
