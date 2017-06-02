@@ -83,6 +83,9 @@ public class OFO_2_0_0_build_12922_Presenter extends OFOPresenter {
                 String s = event.getClassName().toString();
                 if (ofo_MainActivity.equals(s)){
                     AccessibilityNodeInfo rootInActiveWindow = getRootInActiveWindow();
+                    if (rootInActiveWindow == null){
+                        break;
+                    }
                     List<AccessibilityNodeInfo> unlock_code_list = rootInActiveWindow.findAccessibilityNodeInfosByText("解锁码");
                     if (unlock_code_list != null && unlock_code_list.size() > 0){
                         AccessibilityNodeInfo unlock_code = unlock_code_list.get(unlock_code_list.size() - 1);
