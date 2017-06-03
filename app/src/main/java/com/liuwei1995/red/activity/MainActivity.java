@@ -96,7 +96,7 @@ public class MainActivity extends BaseActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        startRequestPermissions();
+
         receiver = new SensorServiceReceiver();
         registerReceiver(receiver,new IntentFilter(ACTION_SensorServiceReceiver_CHANGE));
         text_WeChat_accessible = (TextView) findViewById(R.id.text_WeChat_accessible);
@@ -106,7 +106,6 @@ public class MainActivity extends BaseActivity
         text_notification_listener = (TextView) findViewById(R.id.text_notification_listener);
         text_start_SensorService = (TextView) findViewById(R.id.text_start_SensorService);
         tv_content = (TextView) findViewById(R.id.tv_content);
-        updateServiceStatus();
     }
 
     @Override
@@ -287,6 +286,7 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onResume() {
         super.onResume();
+        startRequestPermissions();
         updateServiceStatus();
     }
 

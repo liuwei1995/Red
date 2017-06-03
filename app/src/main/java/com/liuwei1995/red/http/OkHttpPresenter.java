@@ -68,7 +68,12 @@ public final class OkHttpPresenter implements IHttpPresenter {
 
     @Override
     public void get(String url, ICallback callback) {
-        get(url,null,callback);
+        get(url,null,null,callback);
+    }
+
+    @Override
+    public void get(String url, Object tag, ICallback callback) {
+        get(url,null,tag,callback);
     }
 
     @Override
@@ -151,6 +156,11 @@ public final class OkHttpPresenter implements IHttpPresenter {
     @Override
     public void post(String url, ICallback callback) {
         post(url,null,callback);
+    }
+
+    @Override
+    public void post(String url, Object tag, ICallback callback) {
+        post(url,null,tag,callback);
     }
 
     @Override
@@ -252,7 +262,7 @@ public final class OkHttpPresenter implements IHttpPresenter {
             map.put(key,value);
         }
     }
-    public static void cancel(Object tag) {
+    public  void cancel(Object tag) {
         synchronized (OkHttpPresenter.class){
             Call call = map.remove(tag);
             if(call != null){
@@ -266,7 +276,5 @@ public final class OkHttpPresenter implements IHttpPresenter {
                 map.remove(tag);
         }
     }
-
-
 
 }

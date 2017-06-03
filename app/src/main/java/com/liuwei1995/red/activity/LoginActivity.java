@@ -26,8 +26,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.liuwei1995.red.R;
-import com.liuwei1995.red.http.HttpCallback;
 import com.liuwei1995.red.http.HttpUtils;
+import com.liuwei1995.red.http.util.HttpCallback;
 import com.liuwei1995.red.util.MD5Util;
 import com.liuwei1995.red.util.SharedPreferencesUtil;
 
@@ -136,7 +136,7 @@ public class LoginActivity extends AppCompatActivity {
             map.put("phoneNumber",mPhoneNumber);
             HttpUtils.userLogin(map, new HttpCallback<JSONObject>() {
                 @Override
-                public void onResponse(Boolean isSuccess, JSONObject result) {
+                public void onCallbackResult(Boolean isSuccess, JSONObject result) {
                     showProgress(false);
                     if (isSuccess){
                         try {

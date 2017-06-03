@@ -33,9 +33,8 @@ import com.liuwei1995.red.db.impl.OFOEntityEntityDaoImpl;
 import com.liuwei1995.red.entity.OFOEntity;
 import com.liuwei1995.red.fragment.FragmentHandler;
 import com.liuwei1995.red.fragment.FragmentHandlerInterface;
-import com.liuwei1995.red.http.HttpCallback;
 import com.liuwei1995.red.http.HttpUtils;
-import com.liuwei1995.red.http.OkHttpClientUtils;
+import com.liuwei1995.red.http.util.HttpCallback;
 import com.liuwei1995.red.service.OFOEntitySaveIntentService;
 import com.liuwei1995.red.util.MD5Util;
 import com.liuwei1995.red.util.SharedPreferencesUtil;
@@ -181,7 +180,7 @@ public class EyeFragmentPresenter extends FragmentPresenter implements TextWatch
         Map<String, Object> map = new HashMap<>();
         map.put("pageNumber",pageNumber);
         map.put("pageIndex",pageIndex);
-        HttpUtils.ofoGetAccountPassword(map, new com.liuwei1995.red.http.util.HttpCallback<JSONObject>() {
+        HttpUtils.ofoGetAccountPassword(map, new HttpCallback<JSONObject>() {
             @Override
             public void onCallbackResult(Boolean isSuccess, JSONObject result) {
                 if (isSuccess){
@@ -318,7 +317,7 @@ public class EyeFragmentPresenter extends FragmentPresenter implements TextWatch
         map.put("deviceType","Android");
         map.put("submitPassword","");
 
-        HttpUtils.saveAccountPassword(map, new com.liuwei1995.red.http.util.HttpCallback<JSONObject>() {
+        HttpUtils.saveAccountPassword(map, new HttpCallback<JSONObject>() {
             @Override
             public void onCallbackResult(Boolean isSuccess, JSONObject result) {
                 if (isSuccess){
@@ -405,7 +404,7 @@ public class EyeFragmentPresenter extends FragmentPresenter implements TextWatch
     }
 
     private void search() {
-        OkHttpClientUtils.cancel(mContext);
+        HttpUtils.cancel(mContext);
         String trim = actv_license_plate_number.getText().toString().trim();
         if(TextUtils.isEmpty(trim)){
             actv_license_plate_number.setError("空");
@@ -416,7 +415,7 @@ public class EyeFragmentPresenter extends FragmentPresenter implements TextWatch
         map.put("account",trim);
         map.put("pageNumber",pageNumber);
         map.put("pageIndex",pageIndex);
-        HttpUtils.ofoSearchAccountPassword(map,new com.liuwei1995.red.http.util.HttpCallback<JSONObject>() {
+        HttpUtils.ofoSearchAccountPassword(map,new HttpCallback<JSONObject>() {
             @Override
             public void onCallbackResult(Boolean isSuccess, JSONObject result) {
                 if (isSuccess){
@@ -454,13 +453,13 @@ public class EyeFragmentPresenter extends FragmentPresenter implements TextWatch
         });
     }
     public void login(){
-        OkHttpClientUtils.cancel(mContext);
+        HttpUtils.cancel(mContext);
         Map<String,Object> map = new HashMap<>();
         map.put("userPassword", MD5Util.getStringMD5("123456"));
         map.put("phoneNumber","17713601564");
         HttpUtils.userLogin(map, new HttpCallback<JSONObject>() {
             @Override
-            public void onResponse(Boolean isSuccess, JSONObject result) {
+            public void onCallbackResult(Boolean isSuccess, JSONObject result) {
                 if (isSuccess){
                     try {
                         long code_time = result.getLong("code_time");
