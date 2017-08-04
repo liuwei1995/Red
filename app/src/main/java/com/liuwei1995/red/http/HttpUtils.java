@@ -5,8 +5,6 @@ import com.liuwei1995.red.http.util.HttpHelper;
 
 import java.util.Map;
 
-import okhttp3.FormBody;
-
 /**
  * Created by liuwei on 2017/3/22
  */
@@ -23,7 +21,8 @@ public class HttpUtils {
         getPresenter().get(url,httpcallback);
     }
 
-    public static final String IP = "http://zhaoyaoba.com:8080";
+    public static final String IP = "http://zhaoyaoba.com";
+//    public static final String IP = "http://zhaoyaoba.com:8080";
 //    public static final String IP = "http://139.201.126.215:8080";
 //    public static final String IP = "http://192.168.0.103:8080";
     public static final String http = IP+"/MiaoMiaoServer/app/user/";
@@ -42,12 +41,12 @@ public class HttpUtils {
     public static void ofoSearchAccountPassword(Map<String,Object> map,HttpCallback httpcallback){
         getPresenter().post(http+ofoSearchAccountPassword,map,httpcallback);
     }
-    public static <T>void ofoGetAccountPassword(Map<String,Object> map,HttpCallback httpcallback){
+    public static void ofoGetAccountPassword(Map<String,Object> map,HttpCallback httpcallback){
         getPresenter().post(http+ofoGetAccountPassword,map,httpcallback);
     }
 
 
-    public static <T>void saveAccountPassword(Map<String,Object> map,HttpCallback httpcallback){
+    public static void saveAccountPassword(Map<String,Object> map,HttpCallback httpcallback){
         getPresenter().post(http+ofoSaveAccountPassword,map,httpcallback);
     }
     public static void cancel(Object tag) {

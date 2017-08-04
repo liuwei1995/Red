@@ -88,7 +88,7 @@ public class MainActivity1 extends Activity {
                         +"\n"+deniedDontRemindList.toString()
                         );
                         if(!deniedDontRemindList.isEmpty())
-                        rationale.showSettingDialog(context,rationale);
+                            rationale.showSettingDialog(context,rationale,deniedDontRemindList);
                     }
 
                     @Override

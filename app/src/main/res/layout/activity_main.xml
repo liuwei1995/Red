@@ -6,162 +6,6 @@
     android:orientation="vertical"
     android:weightSum="1">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/LinearLayout_layout_height"
-        android:orientation="horizontal"
-        android:weightSum="2">
-
-        <Button
-            android:id="@+id/button_WeChat_accessible"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="onButtonClicked"
-            android:text="@string/service_WeChat_name"/>
-
-        <TextView
-            android:id="@+id/text_WeChat_accessible"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/service_WeChat_status"
-            android:textSize="16sp"
-            tools:text="@string/service_WeChat_status"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/LinearLayout_layout_height"
-        android:orientation="horizontal"
-        android:weightSum="2">
-
-        <Button
-            android:id="@+id/button_QQ_accessible"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="onButtonClicked"
-            android:text="@string/service_QQ_name"/>
-
-        <TextView
-            android:id="@+id/text_QQ_accessible"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/service_QQ_status"
-            android:textSize="16sp"
-            tools:text="@string/service_QQ_status"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/LinearLayout_layout_height"
-        android:orientation="horizontal"
-        android:weightSum="2">
-
-        <Button
-            android:id="@+id/button_ofo_accessible"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="onButtonClicked"
-            android:text="@string/service_ofo_name"/>
-
-        <TextView
-            android:id="@+id/text_ofo_accessible"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/service_ofo_status"
-            android:textSize="16sp"
-            tools:text="@string/service_ofo_status"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/LinearLayout_layout_height"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        android:weightSum="2">
-
-        <Button
-            android:id="@+id/button_dingding_accessible"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="onButtonClicked"
-            android:text="@string/service_dingding_name"/>
-
-        <TextView
-            android:id="@+id/text_dingding_accessible"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/service_dingding_status"
-            android:textSize="16sp"
-            tools:text="@string/service_dingding_status"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/LinearLayout_layout_height"
-        android:orientation="horizontal"
-        android:weightSum="2">
-
-        <Button
-            android:id="@+id/button_notification_listener"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="onButtonClicked"
-            android:text="@string/Listening_to_the_notification_bar"/>
-
-        <TextView
-            android:id="@+id/text_notification_listener"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/service_notification_status"
-            android:textSize="16sp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/LinearLayout_layout_height"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        android:weightSum="2">
-
-        <Button
-            android:id="@+id/button_start_SensorService"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="onButtonClicked"
-            android:text="开启步数监听"
-            tools:ignore="HardcodedText"/>
-
-        <TextView
-            android:id="@+id/text_start_SensorService"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:textSize="16sp"
-            tools:text="@string/service_notification_status"/>
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/button_float"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/Button_layout_height"
-        android:onClick="onButtonClicked"
-        android:text="@string/FloatWindow"/>
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -173,15 +17,220 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_content"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/LinearLayout_layout_height"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/button_WeChat_accessible"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="onButtonClicked"
+                    android:text="@string/service_WeChat_name"/>
+
+                <TextView
+                    android:id="@+id/text_WeChat_accessible"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/service_WeChat_status"
+                    android:textSize="16sp"
+                    tools:text="@string/service_WeChat_status"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/LinearLayout_layout_height"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/button_QQ_accessible"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="onButtonClicked"
+                    android:text="@string/service_QQ_name"/>
+
+                <TextView
+                    android:id="@+id/text_QQ_accessible"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/service_QQ_status"
+                    android:textSize="16sp"
+                    tools:text="@string/service_QQ_status"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/LinearLayout_layout_height"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/button_ofo_accessible"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="onButtonClicked"
+                    android:text="@string/service_ofo_name"/>
+
+                <TextView
+                    android:id="@+id/text_ofo_accessible"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/service_ofo_status"
+                    android:textSize="16sp"
+                    tools:text="@string/service_ofo_status"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/LinearLayout_layout_height"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/button_dingding_accessible"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="onButtonClicked"
+                    android:text="@string/service_dingding_name"/>
+
+                <TextView
+                    android:id="@+id/text_dingding_accessible"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/service_dingding_status"
+                    android:textSize="16sp"
+                    tools:text="@string/service_dingding_status"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/LinearLayout_layout_height"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/button_notification_listener"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="onButtonClicked"
+                    android:text="@string/Listening_to_the_notification_bar"/>
+
+                <TextView
+                    android:id="@+id/text_notification_listener"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/service_notification_status"
+                    android:textSize="16sp"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/LinearLayout_layout_height"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/button_xiaoka_accessible"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="onButtonClicked"
+                    android:text="@string/service_A_live_name"/>
+
+                <TextView
+                    android:id="@+id/tv_xiaoka_live"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/service_A_live_status"
+                    android:textSize="16sp"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/LinearLayout_layout_height"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/button_start_SensorService"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="onButtonClicked"
+                    android:text="开启步数监听"
+                    tools:ignore="HardcodedText"/>
+
+                <TextView
+                    android:id="@+id/text_start_SensorService"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    tools:text="@string/service_notification_status"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:padding="5dp"
-                android:text="内容"
-                android:textSize="12sp"
-                tools:ignore="HardcodedText"/>
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <Button
+                    android:id="@+id/button_float"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/Button_layout_height"
+                    android:layout_weight="1"
+                    android:onClick="onButtonClicked"
+                    android:text="@string/FloatWindow"/>
+
+                <Button
+                    android:id="@+id/button_DesktopView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/Button_layout_height"
+                    android:layout_weight="2"
+                    android:onClick="onButtonClicked"
+                    android:text="@string/DesktopView"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:padding="5dp"
+                    android:text="内容"
+                    android:textSize="12sp"
+                    tools:ignore="HardcodedText"/>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

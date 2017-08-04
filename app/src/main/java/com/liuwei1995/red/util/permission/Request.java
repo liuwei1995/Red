@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
  * Created by liuwei on 2017/5/3
  */
 
-public interface Request <T extends Request> {
+public interface Request<T extends Request> {
 
     /**
      * Here to fill in all of this to apply for permission, can be a, can be more.

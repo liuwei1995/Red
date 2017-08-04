@@ -1,0 +1,15 @@
+
+
+tv.xiaoka.live:id/send_msg_layout
+android.widget.RelativeLayout
+————
+    tv.xiaoka.live:id/edit_chat
+    android.widget.EditText
+    说点什么 ...
+
+
+    tv.xiaoka.live:id/btn_send
+    android.widget.Button
+    发送
+    clicable     true
+

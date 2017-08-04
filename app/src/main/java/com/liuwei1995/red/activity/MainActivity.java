@@ -7,12 +7,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.Signature;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -34,21 +31,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blankj.utilcode.util.AppUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.liuwei1995.red.R;
 import com.liuwei1995.red.entity.AppEntity;
+import com.liuwei1995.red.service.DesktopViewService;
 import com.liuwei1995.red.service.DingDingAccessibilityService;
 import com.liuwei1995.red.service.FloatWindowService;
 import com.liuwei1995.red.service.NotificationService;
 import com.liuwei1995.red.service.OFOAccessibilityService;
 import com.liuwei1995.red.service.QQAccessibilityService;
 import com.liuwei1995.red.service.WeChatAccessibilityService;
+import com.liuwei1995.red.service.XiaoKaAccessibilityService;
 import com.liuwei1995.red.service.sensor.SensorService;
 import com.liuwei1995.red.service.util.ofo.presenter.OFOPresenter;
 import com.liuwei1995.red.service.util.qq.presenter.QQPresenter;
 import com.liuwei1995.red.service.util.wechat.presenter.WechatPresenter;
-import com.liuwei1995.red.util.ScreenListener;
-import com.liuwei1995.red.util.UnlockUtils;
+import com.liuwei1995.red.util.FloatWindowPermissionUtils;
 import com.liuwei1995.red.util.permission.AndPermission;
 import com.liuwei1995.red.util.permission.PermissionListener;
 import com.liuwei1995.red.util.permission.RationaleListener;
@@ -64,7 +61,7 @@ import static com.liuwei1995.red.BaseApplication.QQ_map;
 import static com.liuwei1995.red.BaseApplication.WeChat_map;
 
 public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener{
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -73,11 +70,10 @@ public class MainActivity extends BaseActivity
     private TextView text_QQ_accessible;
     private TextView text_ofo_accessible;
     private TextView text_dingding_accessible;
+    private TextView text_xiaoka_accessible;
     private TextView text_notification_listener;
     private TextView text_start_SensorService;
     TextView tv_content;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,9 +99,26 @@ public class MainActivity extends BaseActivity
         text_QQ_accessible = (TextView) findViewById(R.id.text_QQ_accessible);
         text_ofo_accessible = (TextView) findViewById(R.id.text_ofo_accessible);
         text_dingding_accessible = (TextView) findViewById(R.id.text_dingding_accessible);
+        text_xiaoka_accessible = (TextView) findViewById(R.id.tv_xiaoka_live);
         text_notification_listener = (TextView) findViewById(R.id.text_notification_listener);
         text_start_SensorService = (TextView) findViewById(R.id.text_start_SensorService);
         tv_content = (TextView) findViewById(R.id.tv_content);
+    }
+
+
+    private synchronized void permissionDesktopView() {
+        if (!FloatWindowPermissionUtils.checkFloatWindowPermission(this)) {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent,10);
+        }else {
+            initDesktopView();
+        }
+    }
+
+
+    public void initDesktopView(){
+        DesktopViewService.startService(this);
     }
 
     @Override
@@ -170,8 +183,9 @@ public class MainActivity extends BaseActivity
                     }
                     @Override
                     protected void onFailed(@NonNull Context context, int requestCode, @NonNull List<String> deniedPermissions, @NonNull List<String> deniedDontRemindList, @NonNull RationaleListener rationale) {
-                        if(!deniedDontRemindList.isEmpty())
-                            rationale.showSettingDialog(context,rationale);
+                        if(!deniedDontRemindList.isEmpty()){
+                            rationale.showSettingDialog(context,rationale,deniedDontRemindList);
+                        }
                     }
 
                     @Override
@@ -181,7 +195,6 @@ public class MainActivity extends BaseActivity
                 })
                 .start();
     }
-
 
 
     class mPermissionListener extends PermissionListener{
@@ -205,7 +218,7 @@ public class MainActivity extends BaseActivity
             protected void onFailed(@NonNull Context context, int requestCode, @NonNull List<String> deniedPermissionsList, @NonNull List<String> deniedDontRemindList, @NonNull
             RationaleListener rationale) {
                 if(!deniedDontRemindList.isEmpty()){
-                    rationale.showSettingDialog(context,rationale);
+                    rationale.showSettingDialog(context,rationale,deniedDontRemindList);
                 }else {
                     Toast.makeText(context, "拒绝权限不能进入", Toast.LENGTH_SHORT).show();
                 }
@@ -300,6 +313,7 @@ public class MainActivity extends BaseActivity
         boolean QQServiceEnabled = false;
         boolean OFOServiceEnabled = false;
         boolean DingServiceEnabled = false;
+        boolean XiaoKaServiceEnabled = false;
 
         AccessibilityManager accessibilityManager =(AccessibilityManager) getSystemService(Context.ACCESSIBILITY_SERVICE);
         List<AccessibilityServiceInfo> accessibilityServices = accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC);
@@ -317,11 +331,15 @@ public class MainActivity extends BaseActivity
                 else if (info.getId().contains(DingDingAccessibilityService.class.getSimpleName())){
                     DingServiceEnabled = true;
                 }
+                else if (info.getId().contains(XiaoKaAccessibilityService.class.getSimpleName())){
+                    XiaoKaServiceEnabled = true;
+                }
             }
         text_WeChat_accessible.setText(WeChatServiceEnabled ? "微信辅助服务已开启" : "微信辅助服务已关闭");
         text_QQ_accessible.setText(QQServiceEnabled ? "QQ辅助服务已开启" : "QQ辅助服务已关闭");
         text_ofo_accessible.setText(OFOServiceEnabled ? "OFO辅助服务已开启" : "OFO辅助服务已关闭");
         text_dingding_accessible.setText(DingServiceEnabled ? "钉钉辅助服务已开启" : "钉钉辅助服务已关闭");
+        text_xiaoka_accessible.setText(XiaoKaServiceEnabled ? "一直播辅助服务已开启" : "一直播辅助服务已关闭");
         boolean serviceNotificationEnabled = false;
         String string = Settings.Secure.getString(getContentResolver(),"enabled_notification_listeners");
         if(string != null)
@@ -338,7 +356,11 @@ public class MainActivity extends BaseActivity
             case R.id.button_QQ_accessible:
             case R.id.button_ofo_accessible:
             case R.id.button_dingding_accessible:
+            case R.id.button_xiaoka_accessible:
                 startActivity(mAccessibleIntent);
+                break;
+            case R.id.button_DesktopView:
+                permissionDesktopView();
                 break;
             case R.id.button_notification_listener:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
@@ -403,6 +425,12 @@ public class MainActivity extends BaseActivity
                 }
             }
 
+        }else if (requestCode == 10 && resultCode == Activity.RESULT_OK){
+            if (FloatWindowPermissionUtils.checkFloatWindowPermission(this)){
+                initDesktopView();
+            }else {
+                Toast.makeText(this, "没有权限", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

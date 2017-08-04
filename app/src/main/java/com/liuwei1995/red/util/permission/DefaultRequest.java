@@ -2,7 +2,6 @@ package com.liuwei1995.red.util.permission;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -10,6 +9,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.PermissionChecker;
+
+import com.liuwei1995.red.util.permission.target.AppTarget;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,7 +20,7 @@ import java.util.List;
  * Created by liuwei on 2017/5/3
  */
 
-public class DefaultRequest implements Request,PermissionActivity.PermissionListener ,RationaleListener {
+public class DefaultRequest implements Request,onRequestPermissionsResultCallback,RationaleListener{
 
     private AppTarget mTarget;
     private int mRequestCode = 1;
@@ -71,11 +72,26 @@ public class DefaultRequest implements Request,PermissionActivity.PermissionList
             mDeniedPermissions = getDeniedPermissions(mTarget.getContext(), mPermissions);
             // Denied mPermissions size > 0.
             if (mDeniedPermissions.length > 0) {
-                    resume();
+                startRequest();
             } else { // All permission granted.
                 callbackSucceed();
             }
         }
+    }
+
+    /**
+     * 启动Activity去申请权限
+     */
+     @RequiresApi(api = Build.VERSION_CODES.M)
+    private void startRequest() {
+//         PermissionActivity.setPermissionListener(this);
+//         Intent intent = new Intent(mTarget.getContext(), PermissionActivity.class);
+//         intent.setAction(PermissionActivity.ACTION_PERMISSION);
+//         intent.putExtra(PermissionActivity.KEY_INPUT_PERMISSIONS, mDeniedPermissions);
+//         intent.putExtra(PermissionActivity.KEY_PERMISSIONS_REQUESTCODE, 100);
+//         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//         mTarget.startActivity(intent);
+         PermissionActivity.startPermissionActivity(mTarget.getContext(),mDeniedPermissions,this);
     }
 
     private  String[] getDeniedPermissions(Context mContext, @NonNull String... permissions) {
@@ -94,6 +110,18 @@ public class DefaultRequest implements Request,PermissionActivity.PermissionList
     }
     public static int targetSdkVersion = -1;
 
+
+    @Override
+    public void confirm(onRequestPermissionsResultCallback onRequestPermissionsResultCallback, String... mDeniedDontRemindList) {
+        PermissionActivity.startSettingActivity(mTarget.getContext(),mDeniedDontRemindList,onRequestPermissionsResultCallback);
+    }
+
+    @Override
+    public void confirm(onRequestPermissionsResultCallback onRequestPermissionsResultCallback, List<String> mDeniedDontRemindList) {
+        String[] mDeniedDontRemindPermissions = mDeniedDontRemindList.toArray(new String[mDeniedDontRemindList.size()]);
+        confirm(onRequestPermissionsResultCallback,mDeniedDontRemindPermissions);
+    }
+
     @Override
     public void cancel() {
         int[] results = new int[mPermissions.length];
@@ -108,28 +136,16 @@ public class DefaultRequest implements Request,PermissionActivity.PermissionList
     }
 
     @Override
-    public void showSettingDialog(@NonNull Context context, @NonNull RationaleListener rationale) {
-        SettingDialog mSettingDialog = new SettingDialog(context,rationale);
+    public void showSettingDialog(@NonNull Context context, @NonNull RationaleListener rationale,List<String> deniedDontRemindList) {
+        SettingDialog mSettingDialog = new SettingDialog(context,rationale,deniedDontRemindList);
         mSettingDialog.show();
     }
 
     @Override
-    public void settingDialogConfirmCallBack(@NonNull RationaleListener rationale) {
+    public void settingDialogCallBack(int requestCode, String[] deniedDontRemindList) {
         if (mCallback != null) {
-            mCallback.settingDialogConfirmCallBack(this);
+            mCallback.settingDialogCallBack(mTarget.getContext(),deniedDontRemindList == null || deniedDontRemindList.length <= 0, deniedDontRemindList);
         }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    @Override
-    public void resume() {
-        PermissionActivity.setPermissionListener(this);
-        Intent intent = new Intent(mTarget.getContext(), PermissionActivity.class);
-        intent.setAction(PermissionActivity.ACTION_PERMISSION);
-        intent.putExtra(PermissionActivity.KEY_INPUT_PERMISSIONS, mDeniedPermissions);
-        intent.putExtra(PermissionActivity.KEY_PERMISSIONS_REQUESTCODE, 100);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        mTarget.startActivity(intent);
     }
 
     @Override

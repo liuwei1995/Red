@@ -7,18 +7,20 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
 
-import com.liuwei1995.red.util.permission.AndPermission;
+import com.blankj.utilcode.util.CloseUtils;
+import com.liuwei1995.red.util.permission.PermissionUtils;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import com.blankj.utilcode.util.CloseUtils;
 
 /**
  * <pre>
@@ -33,8 +35,9 @@ public final class CrashUtils implements UncaughtExceptionHandler {
 
     private boolean mInitialized;
     private String crashDir;
-    private String versionName;
-    private int     versionCode;
+    public static String versionName;
+    public static int  versionCode;
+    private UncaughtExceptionHandler mUncaughtExceptionHandler;
 
     private CrashUtils() {
     }
@@ -82,38 +85,68 @@ public final class CrashUtils implements UncaughtExceptionHandler {
             e.printStackTrace();
             return false;
         }
+        mUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
         return mInitialized = true;
     }
 
+    private static final String TAG = "CrashUtils";
     @Override
     public void uncaughtException(Thread thread, final Throwable throwable) {
-        boolean permissionProhibit = AndPermission.hasPermission(ctx,Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        boolean permissionProhibit = PermissionUtils.isPermissionProhibit(ctx, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if(!permissionProhibit)return;
-        String now = new SimpleDateFormat("yyMMdd HH-mm-ss", Locale.getDefault()).format(new Date());
+        String now = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss", Locale.getDefault()).format(new Date());
         final String fullPath = crashDir + now + ".txt";
         if (!createOrExistsFile(fullPath)) return;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                PrintWriter pw = null;
-                try {
-                    pw = new PrintWriter(new FileWriter(fullPath, false));
-                    pw.write(getCrashHead());
-                    throwable.printStackTrace(pw);
-                    Throwable cause = throwable.getCause();
-                    while (cause != null) {
-                        cause.printStackTrace(pw);
-                        cause = cause.getCause();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    CloseUtils.closeIO(pw);
-                }
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                PrintWriter pw = null;
+//                try {
+//                    pw = new PrintWriter(new FileWriter(fullPath, false));
+//                    pw.write(getCrashHead());
+//                    throwable.printStackTrace(pw);
+//                    Throwable cause = throwable.getCause();
+//                    while (cause != null) {
+//                        cause.printStackTrace(pw);
+//                        cause = cause.getCause();
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                } finally {
+//                    CloseUtils.closeIO(pw);
+//                }
+//            }
+//        }).start();
+
+
+//        ----------------------------------------------------------------------
+        PrintWriter pw = null;
+        try {
+            pw = new PrintWriter(new FileWriter(fullPath, false));
+            pw.write(getCrashHeadMobileInfo());
+            throwable.printStackTrace(pw);
+            Throwable cause = throwable.getCause();
+            while (cause != null) {
+                cause.printStackTrace(pw);
+                cause = cause.getCause();
             }
-        }).start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            CloseUtils.closeIO(pw);
+        }
+        mUncaughtExceptionHandler.uncaughtException(thread, throwable);
     }
+
+    private String obtainExceptionInfo(Throwable throwable){
+        StringWriter sw = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(sw);
+        throwable.printStackTrace(printWriter);
+        printWriter.close();
+        return sw.toString();
+    }
+
 
     /**
      * 获取崩溃头
@@ -131,13 +164,36 @@ public final class CrashUtils implements UncaughtExceptionHandler {
                 "\n************* Crash Log Head ****************\n\n";
     }
 
+    private String getCrashHeadMobileInfo(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n************* Crash Log Head ****************");
+        sb.append("\nApp VersionName    : " + versionName);
+        sb.append("\nApp VersionCode    : " + versionCode);
+        Field[] fields = Build.class.getDeclaredFields();
+        for (Field field : fields) {
+            if (!Modifier.isStatic(field.getModifiers())){
+                continue;
+            }
+            field.setAccessible(true);
+            try {
+                Object o = field.get(null);
+                String name = field.getName();
+                sb.append("\n"+name+"    : "+(o == null ? null : o.toString())+"");
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        sb.append("\n************* Crash Log Head ****************\n\n");
+        return sb.toString();
+    }
+
     /**
      * 判断文件是否存在，不存在则判断是否创建成功
      *
      * @param filePath 文件路径
      * @return {@code true}: 存在或创建成功<br>{@code false}: 不存在或创建失败
      */
-    private static boolean createOrExistsFile(String filePath) {
+    public static boolean createOrExistsFile(String filePath) {
         File file = new File(filePath);
         // 如果存在，是文件则返回true，是目录则返回false
         if (file.exists()) return file.isFile();
@@ -157,7 +213,7 @@ public final class CrashUtils implements UncaughtExceptionHandler {
      * @param file 文件
      * @return {@code true}: 存在或创建成功<br>{@code false}: 不存在或创建失败
      */
-    private static boolean createOrExistsDir(File file) {
+    public static boolean createOrExistsDir(File file) {
         // 如果存在，是目录则返回true，是文件则返回false，不存在则返回是否创建成功
         return file != null && (file.exists() ? file.isDirectory() : file.mkdirs());
     }

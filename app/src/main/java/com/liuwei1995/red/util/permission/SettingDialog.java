@@ -2,7 +2,6 @@ package com.liuwei1995.red.util.permission;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,6 +9,8 @@ import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
+
+import java.util.List;
 
 /**
  * 跳转权限设置界面
@@ -22,16 +23,18 @@ public class SettingDialog {
     private  AlertDialog.Builder mBuilder;
     private RationaleListener rationale;
     private View view;
+    private List<String> mDeniedDontRemindList;
 
-    public SettingDialog(@NonNull Context context,@NonNull RationaleListener rationale) {
-        this(context,rationale,null);
+    public SettingDialog(@NonNull Context context, @NonNull RationaleListener rationale,List<String> deniedDontRemindList) {
+        this(context,rationale,deniedDontRemindList,null);
     }
 
-    public SettingDialog(@NonNull Context context, @NonNull RationaleListener rationale, @LayoutRes int resource) {
-        this(context,rationale, LayoutInflater.from(context).inflate(resource,null));
+    public SettingDialog(@NonNull Context context, @NonNull RationaleListener rationale,List<String> deniedDontRemindList, @LayoutRes int resource) {
+        this(context,rationale,deniedDontRemindList, LayoutInflater.from(context).inflate(resource,null));
     }
 
-    public SettingDialog(@NonNull Context context, @NonNull RationaleListener rationale, View view) {
+    public SettingDialog(@NonNull Context context, @NonNull RationaleListener rationale,List<String> deniedDontRemindList, View view) {
+        this.mDeniedDontRemindList = deniedDontRemindList;
         this.mContext = context;
         this.rationale = rationale;
         this.view = view;
@@ -131,41 +134,34 @@ public class SettingDialog {
         });
     }
 
-    private PermissionActivity.PermissionListener permissionListener = new PermissionActivity.PermissionListener() {
+    private onRequestPermissionsResultCallback permissionListener = new onRequestPermissionsResultCallback() {
         @Override
         public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
            if(dialog != null && dialog.isShowing()){
                dialog.dismiss();
            }
-            if(rationale != null) {
-                rationale.settingDialogConfirmCallBack(rationale);
+            if(rationale != null){
+                rationale.settingDialogCallBack(requestCode,permissions);
             }
         }
     };
     /**
      * 确定
      */
-    public void confirm(){
-        PermissionActivity.setSettingPermissionListener(permissionListener);
-        Intent intent = new Intent(mContext, PermissionActivity.class);
-        intent.setAction(PermissionActivity.ACTION_SETTING);
-        intent.putExtra(PermissionActivity.KEY_PERMISSIONS_REQUESTCODE, 100);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        mContext.startActivity(intent);
-//
-//        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-//        Uri uri = Uri.fromParts("package", mContext.getPackageName(), null);
-//        intent.setData(uri);
-//        if(mContext instanceof Activity)
-//        ((Activity)mContext).startActivityForResult(intent, 200);
-//        else
-//            mContext.startActivity(intent);
+    public synchronized void confirm(){
+        if (mDeniedDontRemindList != null && mDeniedDontRemindList.size() > 0){
+            if (rationale != null)
+                rationale.confirm(permissionListener,mDeniedDontRemindList);
+        }else {
+            if(dialog != null && dialog.isShowing())
+                dialog.dismiss();
+        }
     }
 
     /**
      * 取消
      */
-    public void cancel(){
+    public synchronized void cancel(){
         if(dialog != null && dialog.isShowing())
             dialog.dismiss();
         if (rationale != null)

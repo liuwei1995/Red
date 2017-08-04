@@ -6,6 +6,12 @@
     <string name="service_QQ_name">设置QQ抢红包辅助服务</string>
     <string name="service_ofo_status">当前OFO辅助服务状态:</string>
     <string name="service_ofo_name">设置监听OFO辅助服务</string>
+
+    <string name="service_A_live_name">一直播辅助服务状态:</string>
+    <string name="service_A_live_status">设置监听一直播辅助服务</string>
+
+
+
     <string name="service_dingding_status">当前钉钉辅助服务状态:</string>
     <string name="service_dingding_name">设置钉钉抢红包辅助服务</string>
     <string name="Listening_to_the_notification_bar">监听通知栏状态</string>
@@ -13,6 +19,8 @@
     <string name="start_vpn">Start VPN</string>
     <string name="stop_vpn">Stop from Notification Bar</string>
     <string name="action_settings">Settings</string>
+
+    <string name="Open_after_XiaoKa">开启之后一直播可以自动发消息</string>
     <string name="Open_after_WeChat">开启之后微信无需手动抢红包</string>
     <string name="Open_after_QQ">开启之后QQ无需手动抢红包</string>
     <string name="Open_after_ofo">开启之后监听ofo的内容</string>
@@ -60,5 +68,7 @@
 
     <string name="refresh_interface">刷新界面</string>
     <string name="return_home">返回首页</string>
+    <string name="DesktopView">创建一直播辅助桌面</string>
+
 
 </resources>

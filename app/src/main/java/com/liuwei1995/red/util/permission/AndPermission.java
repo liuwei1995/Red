@@ -1,12 +1,15 @@
 package com.liuwei1995.red.util.permission;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.AppOpsManagerCompat;
 import android.support.v4.content.ContextCompat;
+
+import com.liuwei1995.red.util.permission.target.AppTarget;
 
 
 /**
@@ -46,7 +49,7 @@ public class AndPermission {
     public static
     @NonNull
     DefaultRequest with(@NonNull Activity activity) {
-        return new DefaultRequest(new AppTarget<Activity>(activity));
+        return new DefaultRequest(new AppTarget(activity));
     }
 
     /**
@@ -58,19 +61,23 @@ public class AndPermission {
     public static
     @NonNull
     DefaultRequest with(@NonNull android.support.v4.app.Fragment fragment) {
-        return new DefaultRequest(new AppTarget<>(fragment));
+        return new DefaultRequest(new AppTarget(fragment.getContext()));
     }
 
     /**
      * In the Activity.
      *
-     * @param fragment {@link android.app.Fragment}.
+     * @param fragment {@link Fragment}.
      * @return {@link Request}.
      */
     public static
     @NonNull
-    DefaultRequest with(@NonNull android.app.Fragment fragment) {
-        return new DefaultRequest(new AppTarget<>(fragment));
+    DefaultRequest with(@NonNull Fragment fragment) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return new DefaultRequest(new AppTarget(fragment.getContext()));
+        }else{
+            return new DefaultRequest(new AppTarget(fragment.getActivity()));
+        }
     }
 
     /**
@@ -81,8 +88,8 @@ public class AndPermission {
      */
     public static
     @NonNull
-    Request with(@NonNull Context context) {
-        return new DefaultRequest(new AppTarget<>(context));
+    DefaultRequest with(@NonNull Context context) {
+        return new DefaultRequest(new AppTarget(context));
     }
 
     private AndPermission() {

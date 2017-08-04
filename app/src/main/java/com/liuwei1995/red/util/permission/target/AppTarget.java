@@ -1,26 +1,22 @@
 package com.liuwei1995.red.util.permission.target;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
 
-/**
- * Created by liuwei on 2017/5/3
- */
 
 /**
- *
- * @param <T> <li>T  instanceof Context </li>
+ *Created by liuwei on 2017/5/3
+ *  <li>T  instanceof Context </li>
  *            <li>T  instanceof Activity</li>
  *            <li>T  instanceof android.support.v4.app.Fragment</li>
  *            <li>T  instanceof Fragment</li>
  */
-public class AppTarget<T> implements Target{
+public class AppTarget implements Target{
 
-    private T mContext;
+    private Context mContext;
 
     /**
      *
@@ -29,22 +25,12 @@ public class AppTarget<T> implements Target{
      *            <li>t  instanceof android.support.v4.app.Fragment</li>
      *            <li>t  instanceof Fragment</li>
      */
-    public AppTarget(T t) {
+    public AppTarget(Context t) {
         this.mContext = t;
     }
 
     public Context getContext() {
-        if (mContext instanceof Context)return (Context) mContext;
-        else if (mContext instanceof android.support.v4.app.Fragment)
-            return ((android.support.v4.app.Fragment)mContext).getContext();
-        else if (mContext instanceof Fragment)
-        {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                return ((Fragment)mContext).getContext();
-            }else
-            return ((Fragment)mContext).getActivity();
-        }
-        return null;
+        return mContext;
     }
 
     public boolean shouldShowRationalePermissions(@NonNull String... permissions) {
@@ -60,32 +46,14 @@ public class AppTarget<T> implements Target{
     }
 
     public void startActivity(Intent intent) {
-        if (mContext instanceof Context){
-            ((Context) mContext).startActivity(intent);
-        }
-        else if (mContext instanceof android.support.v4.app.Fragment)
-        {
-            ((android.support.v4.app.Fragment) mContext).startActivity(intent);
-        }
-        else if (mContext instanceof Fragment)
-        {
-            ((Fragment) mContext).startActivity(intent);
-        }
+        mContext.startActivity(intent);
     }
 
     public void startActivityForResult(Intent intent, int requestCode) {
         if (mContext instanceof Activity){
             ((Activity) mContext).startActivityForResult(intent,requestCode);
-        }
-        else if (mContext instanceof android.support.v4.app.Fragment)
-        {
-            ((android.support.v4.app.Fragment) mContext).startActivityForResult(intent,requestCode);
-        }
-        else if (mContext instanceof Fragment)
-        {
-            ((Fragment) mContext).startActivityForResult(intent,requestCode);
-        }else if (mContext instanceof Context){
-            ((Context) mContext).startActivity(intent);
+        }else{
+           mContext.startActivity(intent);
         }
     }
 }

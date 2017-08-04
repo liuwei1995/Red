@@ -145,6 +145,21 @@
                 android:name="android.accessibilityservice"
                 android:resource="@xml/wechat_accessibilityservice"/>
         </service>
+
+        <!-- 一直播 -->
+        <service
+            android:name=".service.XiaoKaAccessibilityService"
+            android:label="一直播自动发消息"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            >
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/xiaoka_accessibilityservice"/>
+        </service>
         <!-- QQ抢红包 -->
         <service
             android:name=".service.QQAccessibilityService"
@@ -207,6 +222,10 @@
             android:name=".service.OFOEntitySaveIntentService"
             android:exported="false">
         </service>
+        <service
+            android:name=".service.DesktopViewService"
+            android:exported="false">
+        </service>
 
         <activity
             android:name=".activity.LoginActivity"
@@ -242,6 +261,19 @@
                 <data android:scheme="https"/>
             </intent-filter>
         </activity>
+
+
+        <activity
+            android:name=".activity.AlerDesktopViewActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="false"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden">
+        </activity>
+
     </application>
 
 </manifest>
