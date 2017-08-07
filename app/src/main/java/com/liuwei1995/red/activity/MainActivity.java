@@ -108,9 +108,16 @@ public class MainActivity extends BaseActivity
 
     private synchronized void permissionDesktopView() {
         if (!FloatWindowPermissionUtils.checkFloatWindowPermission(this)) {
-            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                    Uri.parse("package:" + getPackageName()));
-            startActivityForResult(intent,10);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent,10);
+            }else {
+                Toast.makeText(this, "请手动去打开悬浮窗口权限", Toast.LENGTH_SHORT).show();
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+                    startActivity(intent);
+                }
+            }
         }else {
             initDesktopView();
         }

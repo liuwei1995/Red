@@ -21,6 +21,7 @@ public class AlerDesktopViewActivity extends Activity implements View.OnClickLis
 
     public static void startActivity(Context context) {
         Intent intent = new Intent(context,AlerDesktopViewActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         context.startActivity(intent);
     }
 

@@ -51,7 +51,9 @@ public abstract class XiaoKaPresenterImpl implements XiaoKaPresenter ,TaskHandle
     }
     @SuppressLint("NewApi")
     protected AccessibilityNodeInfo getRootInActiveWindow(){
+        if (mAccessibilityService != null)
         return mAccessibilityService.getRootInActiveWindow();
+        return null;
     }
 
     @CallSuper

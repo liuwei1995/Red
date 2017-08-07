@@ -4,7 +4,9 @@ import android.accessibilityservice.AccessibilityService;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
@@ -104,9 +106,20 @@ public void g(){
     }
     private String txt = null;
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     protected void start(String txt) {
         this.txt = txt;
+        AccessibilityNodeInfo rootInActiveWindow = getRootInActiveWindow();
+        if (rootInActiveWindow != null){
+            List<AccessibilityNodeInfo> accessibilityNodeInfosByViewId = rootInActiveWindow.findAccessibilityNodeInfosByViewId(XIAOKA_PACKAGENAME + ":id/edit_chat");
+            if (accessibilityNodeInfosByViewId != null && accessibilityNodeInfosByViewId.size() > 0){
+                boolean editText = findEditText(accessibilityNodeInfosByViewId.get(0), txt);
+                if (editText){
+                    LogUtils.d(editText);
+                }
+            }
+        }
     }
 
     @Override

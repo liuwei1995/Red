@@ -17,6 +17,10 @@ public class ApplyPermissionUtils {
         return intent != null && context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).size() > 0;
     }
 
+    public static void s(){
+//        android.os.Build.MANUFACTURER
+    }
+
     /**
      * 360权限申请
      */

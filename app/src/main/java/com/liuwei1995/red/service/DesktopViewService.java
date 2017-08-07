@@ -143,7 +143,9 @@ public class DesktopViewService extends Service implements View.OnTouchListener{
                                             XiaoKaServiceEnabled = true;
                                         }
                                     }
-                                    if (!XiaoKaServiceEnabled)return;
+                                    if (!XiaoKaServiceEnabled){
+                                        return;
+                                    }
                                     Button bt = (Button) v;
                                     if (bt.getText().toString().equals("开始")){
                                         bt.setText("暂停");
@@ -156,6 +158,8 @@ public class DesktopViewService extends Service implements View.OnTouchListener{
                                         btn_send_txt = "开始";
                                         sendBroadcast(new Intent(XiaoKaPresenter.ACTION_RECEIVER_SEND_PAUSE));
                                     }
+                                }else {
+
                                 }
                             }
                         }
