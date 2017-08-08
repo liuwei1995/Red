@@ -1,7 +1,9 @@
 package com.liuwei1995.red.util.permission;
 
 import android.support.annotation.NonNull;
-import android.util.LruCache;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by liuwei on 2017/7/25 10:44
@@ -9,78 +11,106 @@ import android.util.LruCache;
 
 public final class onRequestPermissionsResultCallbackUtils {
 
+//    private WeakReference<onRequestPermissionsResultCallback> PermissionListenerWeakReference;
+//    private WeakReference<onRequestPermissionsResultCallback> SettingPermissionListenerWeakReference;
 
-    private static final int MAX_SIZE = (int)(Runtime.getRuntime().maxMemory()/8);
-    private static final LruCache<String,onRequestPermissionsResultCallback> lru = new LruCache<>(MAX_SIZE);
-
+    private Map<String,onRequestPermissionsResultCallback> map = new HashMap<>();
 
     public static onRequestPermissionsResultCallbackUtils newInstance() {
-//        if (monRequestPermissionsResultCallbackUtils == null){
-//            synchronized (onRequestPermissionsResultCallbackUtils.class){
-//                if (monRequestPermissionsResultCallbackUtils == null)
-//                monRequestPermissionsResultCallbackUtils = new onRequestPermissionsResultCallbackUtils();
-//            }
-//        }
+        if (monRequestPermissionsResultCallbackUtils == null){
+            synchronized (onRequestPermissionsResultCallbackUtils.class){
+                if (monRequestPermissionsResultCallbackUtils == null)
+                monRequestPermissionsResultCallbackUtils = new onRequestPermissionsResultCallbackUtils();
+            }
+        }
         return monRequestPermissionsResultCallbackUtils;
     }
 
-    private static onRequestPermissionsResultCallbackUtils monRequestPermissionsResultCallbackUtils = new onRequestPermissionsResultCallbackUtils();
-
+    private static onRequestPermissionsResultCallbackUtils monRequestPermissionsResultCallbackUtils = null;
 
 
     private onRequestPermissionsResultCallbackUtils() {
+
     }
 
     public void putPermissionListener(onRequestPermissionsResultCallback onRequestPermissionsResultCallbackUtils){
-        synchronized (lru){
-            lru.put("PermissionListener",onRequestPermissionsResultCallbackUtils);
+        synchronized (onRequestPermissionsResultCallbackUtils.class){
+            map.put("putPermissionListener",onRequestPermissionsResultCallbackUtils);
+//            PermissionListenerWeakReference = new WeakReference<>(onRequestPermissionsResultCallbackUtils);
+//            onRequestPermissionsResultCallback onRequestPermissionsResultCallback = PermissionListenerWeakReference.get();
+//            LogUtils.d(onRequestPermissionsResultCallback);
         }
     }
-    public   onRequestPermissionsResultCallback getPermissionListener(){
-        synchronized (lru){
-            return lru.get("PermissionListener");
+
+    /**
+     * 内部调用
+     * @return  onRequestPermissionsResultCallback
+     */
+    public   onRequestPermissionsResultCallback getOtherPermissionListener(){
+        synchronized (onRequestPermissionsResultCallbackUtils.class){
+            return map.containsKey("putPermissionListener") ? map.remove("putPermissionListener") : null;
+//            if (PermissionListenerWeakReference != null){
+//                return PermissionListenerWeakReference.get();
+//            }
+//            return null;
         }
+    }
+
+    /**
+     * 提供给外部调用
+     * @return onRequestPermissionsResultCallback
+     */
+    public static onRequestPermissionsResultCallback getPermissionListener(){
+        return permissionListener;
     }
 
 
     public void putSettingPermissionListener(onRequestPermissionsResultCallback onRequestPermissionsResultCallbackUtils){
-        synchronized (lru){
-            lru.put("SettingPermissionListener",onRequestPermissionsResultCallbackUtils);
+        synchronized (onRequestPermissionsResultCallbackUtils.class){
+//            SettingPermissionListenerWeakReference = new WeakReference<>(onRequestPermissionsResultCallbackUtils);
+            map.put("putSettingPermissionListener",onRequestPermissionsResultCallbackUtils);
         }
     }
-    public  onRequestPermissionsResultCallback getSettingPermissionListener(){
-        synchronized (lru){
-            return lru.get("SettingPermissionListener");
+
+    /**
+     * 内部调用
+     * @return onRequestPermissionsResultCallback
+     */
+    private   onRequestPermissionsResultCallback getOtherSettingPermissionListener(){
+        synchronized (onRequestPermissionsResultCallbackUtils.class){
+            return map.containsKey("putSettingPermissionListener") ? map.remove("putSettingPermissionListener") : null;
+//            if (SettingPermissionListenerWeakReference != null){
+//                return SettingPermissionListenerWeakReference.get();
+//            }
+//            return null;
         }
     }
-    private static void removePermissionListener(){
-        synchronized (lru){
-            lru.remove("PermissionListener");
-        }
+
+    /***
+     * 提供给外面的调用
+     * @return
+     */
+    protected static onRequestPermissionsResultCallback getSettingPermissionListener(){
+        return settingPermissionListener;
     }
-    private static void removeSettingPermissionListener(){
-        synchronized (lru){
-            lru.remove("SettingPermissionListener");
-        }
-    }
-    public static onRequestPermissionsResultCallback PermissionListener = new onRequestPermissionsResultCallback() {
-        @Override
-        public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-            onRequestPermissionsResultCallback permissionListener = onRequestPermissionsResultCallbackUtils.newInstance().getPermissionListener();
-            if (permissionListener != null){
-                permissionListener.onRequestPermissionsResult(requestCode, permissions, grantResults);
-                removePermissionListener();
-            }
-        }
-    };
-    public  onRequestPermissionsResultCallback SettingPermissionListener = new onRequestPermissionsResultCallback() {
+
+    private static onRequestPermissionsResultCallback permissionListener = new onRequestPermissionsResultCallback() {
 
         @Override
         public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-            onRequestPermissionsResultCallback settingPermissionListener = onRequestPermissionsResultCallbackUtils.newInstance().getSettingPermissionListener();
+            onRequestPermissionsResultCallback permissionListener = onRequestPermissionsResultCallbackUtils.newInstance().getOtherPermissionListener();
+            if (permissionListener != null){
+                permissionListener.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            }
+        }
+    };
+    private static onRequestPermissionsResultCallback settingPermissionListener = new onRequestPermissionsResultCallback() {
+
+        @Override
+        public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+            onRequestPermissionsResultCallback settingPermissionListener = onRequestPermissionsResultCallbackUtils.newInstance().getOtherSettingPermissionListener();
             if (settingPermissionListener != null){
                 settingPermissionListener.onRequestPermissionsResult(requestCode, permissions, grantResults);
-                removeSettingPermissionListener();
             }
         }
     };

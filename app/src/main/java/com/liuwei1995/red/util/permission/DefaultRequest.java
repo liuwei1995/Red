@@ -108,7 +108,7 @@ public class DefaultRequest implements Request,onRequestPermissionsResultCallbac
         }
         return deniedList.toArray(new String[deniedList.size()]);
     }
-    public static int targetSdkVersion = -1;
+    public int targetSdkVersion = -1;
 
 
     @Override
@@ -147,6 +147,7 @@ public class DefaultRequest implements Request,onRequestPermissionsResultCallbac
             mCallback.settingDialogCallBack(mTarget.getContext(),deniedDontRemindList == null || deniedDontRemindList.length <= 0, deniedDontRemindList);
         }
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode,@NonNull String[] permissions, @NonNull int[] grantResults) {
