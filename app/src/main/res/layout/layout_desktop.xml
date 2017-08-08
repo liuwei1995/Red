@@ -3,9 +3,9 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:minWidth="300dp"
-              android:minHeight="150dp"
               android:background="@color/background_navigationbar"
+              android:minHeight="150dp"
+              android:minWidth="300dp"
               android:orientation="vertical">
 
 
@@ -20,10 +20,11 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="4dp"
+            android:background="@null"
             android:gravity="center"
             android:padding="5dp"
-            android:textColor="@color/text_color_red"
             android:text="请输入发送的文字"
+            android:textColor="@color/text_color_red"
             />
 
         <LinearLayout
@@ -33,28 +34,55 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingBottom="5dp"
-            android:paddingTop="5dp">
+            android:paddingTop="5dp"
+            android:weightSum="4">
 
             <!--发送-->
             <Button
                 android:id="@+id/btn_send"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="开始"/>
+                android:layout_weight="1"
+                android:background="@null"
+                android:text="开始"
+                android:textColor="@color/text_color_red"/>
 
             <Button
                 android:id="@+id/btn_close"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="关闭"/>
+                android:layout_weight="1"
+                android:background="@null"
+                android:text="关闭"
+                android:textColor="@color/text_color_red"/>
 
             <Button
                 android:id="@+id/btn_alter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="修改"/>
+                android:layout_weight="1"
+                android:background="@null"
+                android:text="修改"
+                android:textColor="@color/text_color_red"/>
+
+            <Button
+                android:id="@+id/btn_execute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:text="执行"
+                android:textColor="@color/text_color_red"/>
         </LinearLayout>
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:text="执行结果"
+        android:textColor="@color/text_color_red"/>
 
 </LinearLayout>

@@ -37,7 +37,7 @@ public abstract class XiaoKaPresenterImpl implements XiaoKaPresenter ,TaskHandle
 
     private static final String TAG = "XiaoKaPresenterImpl";
 
-    private AccessibilityService mAccessibilityService;
+    protected AccessibilityService mAccessibilityService;
 
     public XiaoKaPresenterImpl(@NonNull AccessibilityService mAccessibilityService) {
         this.mAccessibilityService = mAccessibilityService;
@@ -64,13 +64,16 @@ public abstract class XiaoKaPresenterImpl implements XiaoKaPresenter ,TaskHandle
         filter.addAction(close);
         filter.addAction(ACTION_RECEIVER_SEND_PAUSE);
         filter.addAction(ACTION_RECEIVER_SEND_START);
+        filter.addAction(ACTION_RECEIVER_EXECUTE);
         redReceiver = new RedReceiver();
         registerReceiver(redReceiver, filter);
         isOpen = true;
-        mHander.sendEmptyMessage(0);
+        mHander.sendEmptyMessage(START_FOREGROUND);
     }
 
     protected abstract void start(String txt);
+
+    protected abstract void execute(String txt);
 
     protected abstract void pause();
 
@@ -83,6 +86,11 @@ public abstract class XiaoKaPresenterImpl implements XiaoKaPresenter ,TaskHandle
                 String stringExtra = intent.getStringExtra(ACTION_RECEIVER_SEND_START_KEY);
                 if (!TextUtils.isEmpty(stringExtra)){
                     start(stringExtra);
+                }
+            }else if (ACTION_RECEIVER_EXECUTE.equals(intent.getAction())){
+                String stringExtra = intent.getStringExtra(ACTION_RECEIVER_EXECUTE_KEY);
+                if (!TextUtils.isEmpty(stringExtra)){
+                    execute(stringExtra);
                 }
             }else{
                 if (remoteViews != null)
@@ -97,16 +105,21 @@ public abstract class XiaoKaPresenterImpl implements XiaoKaPresenter ,TaskHandle
                         remoteViews.setViewVisibility(R.id.tv_open, View.VISIBLE);
                         remoteViews.setTextViewText(R.id.tv_Auxiliary_function, "一直播辅助功能已关闭");
                     }
-                mHander.sendEmptyMessage(0);
+                mHander.sendEmptyMessage(START_FOREGROUND);
             }
         }
 
     }
 
-    private Handler mHander = new TaskHandlerImpl<>(this);
+    public static final int START_FOREGROUND = 0;
 
+
+    protected Handler mHander = new TaskHandlerImpl<>(this);
+
+    @CallSuper
     @Override
     public void handleMessage(WeakReference<XiaoKaPresenterImpl> weakReference, Message msg) {
+        if (msg.what == START_FOREGROUND){
             if (notification == null) {
                 setSelfNotification();
             }
@@ -115,6 +128,13 @@ public abstract class XiaoKaPresenterImpl implements XiaoKaPresenter ,TaskHandle
             }
             notificationManager.notify(notificationId, notification);
             mAccessibilityService.startForeground(notificationId, notification);
+        }
+    }
+
+    protected void sendBroadcast(Intent intent){
+        if (mAccessibilityService != null && intent != null){
+            mAccessibilityService.sendBroadcast(intent);
+        }
     }
 
     private RedReceiver redReceiver;
@@ -127,6 +147,9 @@ public abstract class XiaoKaPresenterImpl implements XiaoKaPresenter ,TaskHandle
         }
         if (notification != null && notificationManager != null) {
             notificationManager.cancel(notificationId);
+        }
+        if (mHander != null){
+            mHander.removeCallbacksAndMessages(null);
         }
     }
 

@@ -24,11 +24,14 @@ import com.liuwei1995.red.service.util.xiaoka.presenter.XiaoKaPresenter;
 
 import java.util.List;
 
+import static com.liuwei1995.red.service.util.xiaoka.presenter.XiaoKaPresenter.ACTION_RECEIVER_SEND_START;
+import static com.liuwei1995.red.service.util.xiaoka.presenter.XiaoKaPresenter.ACTION_RECEIVER_SEND_START_KEY;
+
 /**
  * Created by liuwei on 2017/8/4 15:17
  */
 
-public class DesktopViewService extends Service implements View.OnTouchListener{
+public class DesktopViewService extends Service implements View.OnTouchListener,View.OnClickListener{
 
     public static void startService(Context context) {
        Intent intent = new Intent(context,DesktopViewService.class);
@@ -41,10 +44,108 @@ public class DesktopViewService extends Service implements View.OnTouchListener{
 
     public static final String ACTION_DESKTOP_VIEW_SERVICE_RECEIVER_UPDATE = "ACTION_DESKTOP_VIEW_SERVICE_RECEIVER_UPDATE";
 
+    /**更新执行结果*/
+    public static final String ACTION_DESKTOP_VIEW_SERVICE_RECEIVER_UPDATE_RESULT = "ACTION_DESKTOP_VIEW_SERVICE_RECEIVER_UPDATE_RESULT";
+
 
     public static final String TV_CONTENT_TXT_KEY = "TV_CONTENT_TXT_KEY";
 
+    public static final String TV_RESULT_TXT_KEY = "TV_RESULT_TXT_KEY";
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btn_send://开始
+                btnSend(v);
+                break;
+            case R.id.btn_close://关闭
+                btnClose(v);
+                break;
+            case R.id.btn_alter://修改
+                btnAlter(v);
+                break;
+            case R.id.btn_execute://执行
+                btnExecute(v);
+                break;
+
+            default:break;
+        }
+    }
+
+    public void btnSend(View v){
+        if (!TextUtils.isEmpty(tv_content.getText().toString().trim())){
+            synchronized (DesktopViewService.class){
+                if (!TextUtils.isEmpty(tv_content.getText().toString().trim())){
+                    AccessibilityManager accessibilityManager =(AccessibilityManager) getSystemService(Context.ACCESSIBILITY_SERVICE);
+                    List<AccessibilityServiceInfo> accessibilityServices = accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC);
+                    if(accessibilityServices != null) {
+                        boolean XiaoKaServiceEnabled = false;
+                        for (AccessibilityServiceInfo info : accessibilityServices) {
+                            if (info.getId().contains(XiaoKaAccessibilityService.class.getSimpleName())){
+                                XiaoKaServiceEnabled = true;
+                            }
+                        }
+                        if (!XiaoKaServiceEnabled){
+                            tv_result_txt = "辅助功能还没开启";
+                            updateDesktopView();
+                            return;
+                        }
+                        Button bt = (Button) v;
+                        if (bt.getText().toString().equals("开始")){
+                            btn_send_txt = "暂停";
+                            Intent intent = new Intent(ACTION_RECEIVER_SEND_START);
+                            intent.putExtra(ACTION_RECEIVER_SEND_START_KEY,tv_content.getText().toString().trim());
+                            sendBroadcast(intent);
+                        }else {
+                            btn_send_txt = "开始";
+                            sendBroadcast(new Intent(XiaoKaPresenter.ACTION_RECEIVER_SEND_PAUSE));
+                        }
+                        updateDesktopView();
+                    }else {
+                        tv_result_txt = "辅助功能还没开启";
+                        updateDesktopView();
+                    }
+                }
+            }
+        }
+    }
+    private void btnClose(View v) {
+        sendBroadcast(new Intent(XiaoKaPresenter.ACTION_RECEIVER_SEND_PAUSE));
+        hideDesktopView();
+    }
+    private void btnAlter(View v) {
+        AlerDesktopViewActivity.startActivity(v.getContext());
+    }
+    private void btnExecute(View v) {
+        if (!TextUtils.isEmpty(tv_content.getText().toString().trim())){
+            synchronized (DesktopViewService.class){
+                if (!TextUtils.isEmpty(tv_content.getText().toString().trim())){
+                    AccessibilityManager accessibilityManager =(AccessibilityManager) getSystemService(Context.ACCESSIBILITY_SERVICE);
+                    List<AccessibilityServiceInfo> accessibilityServices = accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC);
+                    if(accessibilityServices != null) {
+                        boolean XiaoKaServiceEnabled = false;
+                        for (AccessibilityServiceInfo info : accessibilityServices) {
+                            if (info.getId().contains(XiaoKaAccessibilityService.class.getSimpleName())){
+                                XiaoKaServiceEnabled = true;
+                                break;
+                            }
+                        }
+                        if (!XiaoKaServiceEnabled){
+                            tv_result_txt = "辅助功能还没开启";
+                            updateDesktopView();
+                            return;
+                        }
+                        Intent intent = new Intent(XiaoKaPresenter.ACTION_RECEIVER_EXECUTE);
+                        intent.putExtra(XiaoKaPresenter.ACTION_RECEIVER_EXECUTE_KEY,tv_content.getText().toString().trim());
+                        sendBroadcast(intent);
+                    }else {
+                        tv_result_txt = "辅助功能还没开启";
+                        updateDesktopView();
+                    }
+                }
+            }
+        }
+    }
 
     public class DesktopViewServiceReceiver extends BroadcastReceiver{
         @Override
@@ -56,7 +157,17 @@ public class DesktopViewService extends Service implements View.OnTouchListener{
             }else if (ACTION_DESKTOP_VIEW_SERVICE_RECEIVER_UPDATE.equals(intent.getAction())){
                 String stringExtra = intent.getStringExtra(TV_CONTENT_TXT_KEY);
                 if (!TextUtils.isEmpty(stringExtra)){
-                    update(stringExtra);
+                    tv_content_txt = stringExtra;
+                    updateDesktopView();
+                    Intent intent1 = new Intent(ACTION_RECEIVER_SEND_START);
+                    intent1.putExtra(ACTION_RECEIVER_SEND_START_KEY,tv_content_txt);
+                    sendBroadcast(intent1);
+                }
+            }else if (ACTION_DESKTOP_VIEW_SERVICE_RECEIVER_UPDATE_RESULT.equals(intent.getAction())){
+                String stringExtra = intent.getStringExtra(TV_RESULT_TXT_KEY);
+                if (!TextUtils.isEmpty(stringExtra)){
+                    tv_result_txt = stringExtra;
+                    updateDesktopView();
                 }
             }
         }
@@ -76,6 +187,7 @@ public class DesktopViewService extends Service implements View.OnTouchListener{
         filter.addAction(ACTION_DESKTOP_VIEW_SERVICE_RECEIVER_SHOW);
         filter.addAction(ACTION_DESKTOP_VIEW_SERVICE_RECEIVER_HIDE);
         filter.addAction(ACTION_DESKTOP_VIEW_SERVICE_RECEIVER_UPDATE);
+        filter.addAction(ACTION_DESKTOP_VIEW_SERVICE_RECEIVER_UPDATE_RESULT);
         mDesktopViewServiceReceiver = new DesktopViewServiceReceiver();
         registerReceiver(mDesktopViewServiceReceiver,filter);
     }
@@ -117,71 +229,33 @@ public class DesktopViewService extends Service implements View.OnTouchListener{
     private View desktopView;
 
     private Button btn_send;
+    private Button btn_execute;
+    private TextView tv_result;
     private Button btn_close;
     private Button btn_alter;
     private TextView tv_content;
-    private String tv_content_txt = "";
+    private String tv_content_txt = "点击修改改变发送内容";
     private String btn_send_txt = "开始";
+    private String tv_result_txt = "执行结果";
 
     public void initDesktopView(){
         if (desktopView == null){
             desktopView = LayoutInflater.from(this).inflate(R.layout.layout_desktop, null);
             tv_content = (TextView) desktopView.findViewById(R.id.tv_content);
-            btn_send = (Button) desktopView.findViewById(R.id.btn_send);
-            btn_send.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!TextUtils.isEmpty(tv_content.getText().toString().trim())){
-                        synchronized (DesktopViewService.class){
-                            if (!TextUtils.isEmpty(tv_content.getText().toString().trim())){
-                                AccessibilityManager accessibilityManager =(AccessibilityManager) getSystemService(Context.ACCESSIBILITY_SERVICE);
-                                List<AccessibilityServiceInfo> accessibilityServices = accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC);
-                                if(accessibilityServices != null) {
-                                    boolean XiaoKaServiceEnabled = false;
-                                    for (AccessibilityServiceInfo info : accessibilityServices) {
-                                        if (info.getId().contains(XiaoKaAccessibilityService.class.getSimpleName())){
-                                            XiaoKaServiceEnabled = true;
-                                        }
-                                    }
-                                    if (!XiaoKaServiceEnabled){
-                                        return;
-                                    }
-                                    Button bt = (Button) v;
-                                    if (bt.getText().toString().equals("开始")){
-                                        bt.setText("暂停");
-                                        btn_send_txt = "暂停";
-                                        Intent intent = new Intent(XiaoKaPresenter.ACTION_RECEIVER_SEND_START);
-                                        intent.putExtra(XiaoKaPresenter.ACTION_RECEIVER_SEND_START_KEY,tv_content.getText().toString().trim());
-                                        sendBroadcast(intent);
-                                    }else {
-                                        bt.setText("开始");
-                                        btn_send_txt = "开始";
-                                        sendBroadcast(new Intent(XiaoKaPresenter.ACTION_RECEIVER_SEND_PAUSE));
-                                    }
-                                }else {
 
-                                }
-                            }
-                        }
-                    }
-                }
-            });
+            tv_result = (TextView) desktopView.findViewById(R.id.tv_result);
+
+            btn_send = (Button) desktopView.findViewById(R.id.btn_send);
+            btn_send.setOnClickListener(this);
 
             btn_close = (Button) desktopView.findViewById(R.id.btn_close);
-            btn_close.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    sendBroadcast(new Intent(XiaoKaPresenter.ACTION_RECEIVER_SEND_PAUSE));
-                    hideDesktopView();
-                }
-            });
+            btn_close.setOnClickListener(this);
+
             btn_alter = (Button) desktopView.findViewById(R.id.btn_alter);
-            btn_alter.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AlerDesktopViewActivity.startActivity(v.getContext());
-                }
-            });
+            btn_alter.setOnClickListener(this);
+
+            btn_execute = (Button) desktopView.findViewById(R.id.btn_execute);
+            btn_execute.setOnClickListener(this);
 
             wm = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
             //设置TextView的属性
@@ -198,15 +272,23 @@ public class DesktopViewService extends Service implements View.OnTouchListener{
             desktopView.setOnTouchListener(this);
 
             wm.addView(desktopView, layoutParams);
-        }else {
+        } else {
             wm.removeView(desktopView);
             wm.addView(desktopView, layoutParams);
         }
+        updateDesktopView();
+    }
+
+
+    public void updateDesktopView(){
         if (tv_content != null){
             tv_content.setText(tv_content_txt);
         }
         if (btn_send != null){
             btn_send.setText(btn_send_txt);
+        }
+        if (tv_result != null){
+            tv_result.setText(tv_result_txt);
         }
     }
 
@@ -241,4 +323,6 @@ public class DesktopViewService extends Service implements View.OnTouchListener{
         }
         return false;
     }
+
+
 }

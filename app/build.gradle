@@ -18,6 +18,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        rootProject.ext.variantRelease = false //default  we are in debug mode, will be overriden on task execution
     }
     buildTypes {
         debug {
@@ -29,6 +30,15 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+//        release {
+//            minifyEnabled true
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            signingConfig signingConfigs.release
+//        }
+//        debug {
+//            signingConfig signingConfigs.release
+//        }
     }
 //    sourceSets { main { jni.srcDirs = ['src/main/jni', 'src/main/jni/'] } }
 }
@@ -39,6 +49,9 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
+//    添加基于物理的动画支持库
+//    compile 'com.android.support:support-dynamic-animation:25.3.1'
+
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:design:25.3.1'
