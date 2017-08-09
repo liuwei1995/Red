@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.CallSuper;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
@@ -38,18 +39,19 @@ import java.util.List;
 
 public class WechatPresenterImpl implements WechatPresenter ,TaskHandler<WechatPresenterImpl> {
 
-    public static String open = "MyAccessibilityService.open";
-    public static String close = "MyAccessibilityService.close";
-
     private static final String TAG = "WechatPresenterImpl";
 
-    protected AccessibilityService accessibilityService;
+    private final static String OPEN = "MyAccessibilityService.open";
+
+    private final static String CLOSE = "MyAccessibilityService.close";
+
+    private AccessibilityService accessibilityService;
 
     public WechatPresenterImpl(AccessibilityService accessibilityService) {
         this.accessibilityService = accessibilityService;
     }
 
-    private RedReceiver redReceiver;
+
     protected boolean isNotification = false;
 
 
@@ -66,6 +68,9 @@ public class WechatPresenterImpl implements WechatPresenter ,TaskHandler<WechatP
     public void onAccessibilityEvent(AccessibilityEvent event) {
 
     }
+
+    private RedReceiver redReceiver;
+
     @Override
     public void onDestroy() {
         if (redReceiver != null) {
@@ -81,15 +86,16 @@ public class WechatPresenterImpl implements WechatPresenter ,TaskHandler<WechatP
 
     }
 
-    private void unregisterReceiver(RedReceiver redReceiver) {
+    protected void unregisterReceiver(RedReceiver redReceiver) {
         accessibilityService.unregisterReceiver(redReceiver);
     }
 
+    @CallSuper
     @Override
     public void onServiceConnected() {
         IntentFilter filter = new IntentFilter();
-        filter.addAction(open);
-        filter.addAction(close);
+        filter.addAction(OPEN);
+        filter.addAction(CLOSE);
         redReceiver = new RedReceiver();
         registerReceiver(redReceiver, filter);
         isOpen = true;
@@ -169,12 +175,12 @@ public class WechatPresenterImpl implements WechatPresenter ,TaskHandler<WechatP
         @Override
         public void onReceive(Context context, Intent intent) {
             if (remoteViews != null)
-                if (intent.getAction().equals(open)) {//开
+                if (intent.getAction().equals(OPEN)) {//开
                     isOpen = true;
                     remoteViews.setViewVisibility(R.id.tv_close, View.VISIBLE);
                     remoteViews.setViewVisibility(R.id.tv_open, View.GONE);
                     remoteViews.setTextViewText(R.id.tv_Auxiliary_function, "微信红包辅助功能已开启");
-                } else if (intent.getAction().equals(close)) {//关
+                } else if (intent.getAction().equals(CLOSE)) {//关
                     isOpen = false;
                     remoteViews.setViewVisibility(R.id.tv_close, View.GONE);
                     remoteViews.setViewVisibility(R.id.tv_open, View.VISIBLE);
@@ -220,9 +226,9 @@ public class WechatPresenterImpl implements WechatPresenter ,TaskHandler<WechatP
         remoteViews.setImageViewResource(R.id.icon, R.mipmap.ic_launcher_round);
         remoteViews.setTextViewText(R.id.tv_Auxiliary_function, "微信红包辅助功能已开启");
         remoteViews.setOnClickPendingIntent(R.id.icon, pendingIntent);
-        PendingIntent broadcast_open = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent(open), PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent broadcast_open = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent(OPEN), PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.tv_open, broadcast_open);
-        PendingIntent broadcast_close = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent(close), PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent broadcast_close = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent(CLOSE), PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.tv_close, broadcast_close);
         notification = new NotificationCompat.Builder(getApplicationContext())
                 .setSmallIcon(R.mipmap.ic_launcher_round)

@@ -5,9 +5,18 @@ com.tencent.mm:id/bnr
 
 
 
-红包弹窗未拆   关闭按钮
+红包弹窗未拆   关闭按钮   ///   红包弹窗关闭按钮
 android.widget.ImageView
 com.tencent.mm:id/blh
 
 
+----------------------------------
+
+红包详情 放回按钮id
+android.widget.LinearLayout
+com.tencent.mm:id/h6
+
+红包详情 文字提示    TextView
+android.widget.TextView
+android:id/text1
 

@@ -1,37 +1,18 @@
 package com.liuwei1995.red.service.util.wechat.presenter.impl;
 
 import android.accessibilityservice.AccessibilityService;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.v7.app.NotificationCompat;
 import android.util.Log;
-import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
-import android.widget.RemoteViews;
-import android.widget.Toast;
 
-import com.liuwei1995.red.MainActivity1;
-import com.liuwei1995.red.R;
-import com.liuwei1995.red.service.util.wechat.presenter.WechatPresenter;
-
-import java.lang.reflect.Field;
 import java.util.List;
 
 /**
  * Created by liuwei on 2017/4/20
  */
 
-public class Wechat_6_5_10_PresenterImpl implements WechatPresenter {
+public class Wechat_6_5_10_PresenterImpl extends WechatPresenterImpl {
 
     private static final String TAG = Wechat_6_5_10_PresenterImpl.class.getSimpleName();
 
@@ -39,20 +20,19 @@ public class Wechat_6_5_10_PresenterImpl implements WechatPresenter {
     public static final String Close_button = "com.tencent.mm:id/bh8";
 
     /**红包弹窗关闭按钮*/
-    public static final String Close_button_red_popupwindow = "com.tencent.mm:id/bju";
+    public static final String Close_button_red_popupwindow = "com.tencent.mm:id/blh";
 
     /**
      * 红包控件id
      */
-    private static final String ID_OPEN_RED_ENVELOPE_CONTROL = "com.tencent.mm:id/bm4";
+    private static final String ID_OPEN_RED_ENVELOPE_CONTROL = "com.tencent.mm:id/bnr";
 
     /***红包详情返回按钮*/
-    public static final String return_LinearLayout_red_details = "com.tencent.mm:id/h3";
+    public static final String return_LinearLayout_red_details = "com.tencent.mm:id/h6";
 
-    private AccessibilityService accessibilityService;
 
     public Wechat_6_5_10_PresenterImpl(AccessibilityService accessibilityService) {
-        this.accessibilityService = accessibilityService;
+        super(accessibilityService);
     }
 
     private boolean mNeedUnpack;
@@ -67,20 +47,13 @@ public class Wechat_6_5_10_PresenterImpl implements WechatPresenter {
     private boolean IS_VIEW_SCROLLED = false;
     private boolean IS_RED_CLICK = false;
 
-    private RedReceiver redReceiver;
     private boolean isWECHAT_DETAIL = false;
     private boolean isChat = false;
-    private boolean isNotification = false;
 
     private boolean mLuckyMoneyPicked;
 
-    private NotificationManager notificationManager;
-    private Notification notification;
     private int id = 0;
 
-    public AccessibilityNodeInfo getRootInActiveWindow(){
-        return accessibilityService.getRootInActiveWindow();
-    }
     public void onAccessibilityEvent(AccessibilityEvent event) {
         if(!isOpen){
             return;
@@ -198,36 +171,10 @@ public class Wechat_6_5_10_PresenterImpl implements WechatPresenter {
                 break;
         }
     }
-    public void onDestroy() {
-        if (redReceiver != null) {
-            unregisterReceiver(redReceiver);
-        }
-        if (notification != null && notificationManager != null) {
-            notificationManager.cancel(id);
-        }
-    }
 
     @Override
     public void onInterrupt() {
 
-    }
-
-    private void unregisterReceiver(RedReceiver redReceiver) {
-        accessibilityService.unregisterReceiver(redReceiver);
-    }
-
-    public void onServiceConnected() {
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(open);
-        filter.addAction(close);
-        redReceiver = new RedReceiver();
-        registerReceiver(redReceiver, filter);
-        isOpen = true;
-        mHander.sendEmptyMessage(0);
-    }
-
-    private void registerReceiver(RedReceiver redReceiver, IntentFilter filter) {
-        accessibilityService.registerReceiver(redReceiver,filter);
     }
 
     private synchronized void perform() {
@@ -352,166 +299,5 @@ public class Wechat_6_5_10_PresenterImpl implements WechatPresenter {
         }
     }
 
-    /**
-     * 处理通知栏信息
-     * <p>
-     * 如果是微信红包的提示信息,则模拟点击
-     *
-     * @param event
-     */
-    private void handleNotification(AccessibilityEvent event) {
-        List<CharSequence> texts = event.getText();
-        if (!texts.isEmpty()) {
-            for (CharSequence text : texts) {
-                String content = text.toString();
-                Toast.makeText(accessibilityService.getApplicationContext(), content, Toast.LENGTH_SHORT).show();
-                //如果微信红包的提示信息,则模拟点击进入相应的聊天窗口
-                if (content.contains("[微信红包]")) {
-                    isNotification = true;
-                    String[] split = content.split(":");
-                    if (event.getParcelableData() != null && event.getParcelableData() instanceof Notification) {
-                        Notification notification = (Notification) event.getParcelableData();
-                        Bundle bundle = null;
-                        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                            // android 4.3
-                            try {
-                                Field field = Notification.class.getDeclaredField("extras");
-                                bundle = (Bundle) field.get(notification);
-                            } catch (NoSuchFieldException e) {
-                                e.printStackTrace();
-                            } catch (IllegalArgumentException e) {
-                                e.printStackTrace();
-                            } catch (IllegalAccessException e) {
-                                e.printStackTrace();
-                            }
-                        } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                            // android 4.3之后
-                            bundle = notification.extras;
-                        }
-                        if (bundle != null) {
-                            if (content.length() > (split[0] + ": [微信红包]").length()) {
-                                PendingIntent pendingIntent = notification.contentIntent;
-                                try {
-                                    pendingIntent.send();
-                                } catch (PendingIntent.CanceledException e) {
-                                    e.printStackTrace();
-                                }
-                            } else {
-                                Log.e(TAG, "handleNotification: 不是微信红包==============" + content);
-                            }
-                        }
 
-//                        PendingIntent pendingIntent = notification.contentIntent;
-//                        try {
-//                            pendingIntent.send();
-//                        } catch (PendingIntent.CanceledException e) {
-//                            e.printStackTrace();
-//                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public static String tencent = "com.tencent.mm";
-    private boolean isStart = false;
-
-
-    private boolean isOpen = false;
-
-    public class RedReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (remoteViews != null)
-                if (intent.getAction().equals(open)) {//开
-                    isOpen = true;
-                    remoteViews.setViewVisibility(R.id.tv_close, View.VISIBLE);
-                    remoteViews.setViewVisibility(R.id.tv_open, View.GONE);
-                    remoteViews.setTextViewText(R.id.tv_Auxiliary_function, "微信红包辅助功能已开启");
-                } else if (intent.getAction().equals(close)) {//关
-                    isOpen = false;
-                    remoteViews.setViewVisibility(R.id.tv_close, View.GONE);
-                    remoteViews.setViewVisibility(R.id.tv_open, View.VISIBLE);
-                    remoteViews.setTextViewText(R.id.tv_Auxiliary_function, "微信红包辅助功能已关闭");
-                }
-            mHander.sendEmptyMessage(0);
-        }
-
-    }
-
-    private Handler mHander = new Handler() {
-
-        public void handleMessage(android.os.Message msg) {
-            if (notification == null) {
-                setSelfNotification();
-            }
-            if (notificationManager == null) {
-                notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-            }
-            notificationManager.notify(id, notification);
-            accessibilityService.startForeground(id, notification);
-        }
-    };
-    public Context getApplicationContext(){
-        return accessibilityService.getApplicationContext();
-    }
-    public String getPackageName(){
-        return getApplicationContext().getPackageName();
-    }
-
-    static RemoteViews remoteViews;
-
-    //自定义通知
-    protected void setSelfNotification() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity1.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),
-                0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        remoteViews = new RemoteViews(getPackageName(), R.layout.remote_view);
-        remoteViews.setImageViewResource(R.id.icon, R.mipmap.ic_launcher_round);
-        remoteViews.setTextViewText(R.id.tv_Auxiliary_function, "微信红包辅助功能已开启");
-        remoteViews.setOnClickPendingIntent(R.id.icon, pendingIntent);
-        PendingIntent broadcast_open = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent(open), PendingIntent.FLAG_UPDATE_CURRENT);
-        remoteViews.setOnClickPendingIntent(R.id.tv_open, broadcast_open);
-        PendingIntent broadcast_close = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent(close), PendingIntent.FLAG_UPDATE_CURRENT);
-        remoteViews.setOnClickPendingIntent(R.id.tv_close, broadcast_close);
-        notification = new NotificationCompat.Builder(getApplicationContext())
-                .setSmallIcon(R.mipmap.ic_launcher_round)
-                .setContent(remoteViews)
-                .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.ic_launcher))
-                .setTicker("来了一条消息")
-                .setWhen(System.currentTimeMillis())
-                .setDefaults(Notification.DEFAULT_SOUND)
-//                .setContentIntent(pendingIntent)
-                .setAutoCancel(false)//false 自己维护通知的消失  true  点击后消失
-                .build();
-//        notification.flags |= Notification.FLAG_INSISTENT; // 一直进行，比如音乐一直播放，知道用户响应
-        notification.flags |= Notification.FLAG_ONGOING_EVENT;
-        notification.flags |= Notification.FLAG_NO_CLEAR;
-    }
-
-    @Override
-    public String toString() {
-        return "Wechat_6_5_7_Presenter{" +
-                "accessibilityService=" + accessibilityService +
-                ", mNeedUnpack=" + mNeedUnpack +
-                ", mNeedBack=" + mNeedBack +
-                ", mNeedDetaBack=" + mNeedDetaBack +
-                ", mUnpackNode=" + mUnpackNode +
-                ", IS_VIEW_SCROLLED=" + IS_VIEW_SCROLLED +
-                ", IS_RED_CLICK=" + IS_RED_CLICK +
-                ", redReceiver=" + redReceiver +
-                ", isWECHAT_DETAIL=" + isWECHAT_DETAIL +
-                ", isChat=" + isChat +
-                ", isNotification=" + isNotification +
-                ", mLuckyMoneyPicked=" + mLuckyMoneyPicked +
-                ", notificationManager=" + notificationManager +
-                ", notification=" + notification +
-                ", id=" + id +
-                ", isStart=" + isStart +
-                ", isOpen=" + isOpen +
-                ", mHander=" + mHander +
-                '}';
-    }
 }
