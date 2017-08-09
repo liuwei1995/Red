@@ -2,24 +2,22 @@ package com.liuwei1995.red.service.util.wechat;
 
 import android.view.accessibility.AccessibilityEvent;
 
-import com.liuwei1995.red.service.util.wechat.iview.WechatIView;
+import com.liuwei1995.red.service.util.wechat.presenter.WechatPresenter;
 
 /**
  * Created by liuwei on 2017/5/26 09:36
  */
 
-public class WechatPresenterHelper implements WechatIView {
+public class WechatPresenterHelper implements WechatPresenter {
 
-    public WechatIView wechatIView = null;
 
     public static  WechatPresenterHelper mWechatPresenterHelper;
 
-    public WechatIView getWechatIView() {
-        return wechatIView;
-    }
 
-    public void setWechatIView(WechatIView wechatIView) {
-        this.wechatIView = wechatIView;
+    private WechatPresenter mWechatPresenter;
+
+    public void setWechatIView(WechatPresenter mWechatPresenter) {
+        this.mWechatPresenter = mWechatPresenter;
     }
 
     public static WechatPresenterHelper newInstance() {
@@ -33,25 +31,25 @@ public class WechatPresenterHelper implements WechatIView {
     }
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        if (wechatIView != null)
-        wechatIView.onAccessibilityEvent(event);
+        if (mWechatPresenter != null)
+            mWechatPresenter.onAccessibilityEvent(event);
     }
 
     @Override
     public void onServiceConnected() {
-        if (wechatIView != null)
-        wechatIView.onServiceConnected();
+        if (mWechatPresenter != null)
+            mWechatPresenter.onServiceConnected();
     }
 
     @Override
     public void onDestroy() {
-        if (wechatIView != null)
-        wechatIView.onDestroy();
+        if (mWechatPresenter != null)
+            mWechatPresenter.onDestroy();
     }
 
     @Override
     public void onInterrupt() {
-        if (wechatIView != null)
-        wechatIView.onInterrupt();
+        if (mWechatPresenter != null)
+            mWechatPresenter.onInterrupt();
     }
 }

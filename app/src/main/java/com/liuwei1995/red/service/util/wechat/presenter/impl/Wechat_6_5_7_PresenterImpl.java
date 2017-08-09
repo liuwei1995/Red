@@ -1,4 +1,4 @@
-package com.liuwei1995.red.service.util.wechat.presenter;
+package com.liuwei1995.red.service.util.wechat.presenter.impl;
 
 import android.accessibilityservice.AccessibilityService;
 import android.app.Notification;
@@ -20,8 +20,10 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+
 import com.liuwei1995.red.MainActivity1;
 import com.liuwei1995.red.R;
+import com.liuwei1995.red.service.util.wechat.presenter.WechatPresenter;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -30,19 +32,13 @@ import java.util.List;
  * Created by liuwei on 2017/4/20
  */
 
-public class Wechat_6_5_8_Presenter_ceshi implements WechatPresenter {
+public class Wechat_6_5_7_PresenterImpl implements WechatPresenter {
 
-    private static final String TAG = Wechat_6_5_8_Presenter_ceshi.class.getSimpleName();
-
-    /**关闭按钮id*/
-    public static final String Close_button = "com.tencent.mm:id/bh8";
-
-    /**红包弹窗关闭按钮*/
-    public static final String Close_button_red_popupwindow = "com.tencent.mm:id/bju";
+    private static final String TAG = "Wechat_6_5_7_Presenter";
 
     private AccessibilityService accessibilityService;
 
-    public Wechat_6_5_8_Presenter_ceshi(AccessibilityService accessibilityService) {
+    public Wechat_6_5_7_PresenterImpl(AccessibilityService accessibilityService) {
         this.accessibilityService = accessibilityService;
     }
 
@@ -68,6 +64,7 @@ public class Wechat_6_5_8_Presenter_ceshi implements WechatPresenter {
 
     private boolean mLuckyMoneyPicked;
 
+//    private Map<String, Integer> data = new HashMap<>();
     private NotificationManager notificationManager;
     private Notification notification;
     private int id = 0;
@@ -76,6 +73,26 @@ public class Wechat_6_5_8_Presenter_ceshi implements WechatPresenter {
         return accessibilityService.getRootInActiveWindow();
     }
     public void onAccessibilityEvent(AccessibilityEvent event) {
+        /**
+         * 首页listview com.tencent.mm:id/bld
+         *
+         */
+        /**
+         * com.tencent.mm:id/a5c android.widget.LinearLayout
+         * com.tencent.mm:id/a6a android.widget.TextView 领取红包
+         */
+        /**
+         * android.widget.FrameLayout com.tencent.mm:id/a2h
+         * 聊天界面android.widget.ListView com.tencent.mm:id/a2i
+         */
+        /**
+         * android.widget.RelativeLayout com.tencent.mm:id/bh4
+         * 给你发了一个红包 com.tencent.mm:id/bh6  android.widget.TextView
+         */
+        /**
+         * 红包详情
+         * 恭喜发财，大吉大利 android.widget.TextView com.tencent.mm:id/bfu
+         */
         if(!isOpen){
             return;
         }
@@ -275,15 +292,19 @@ public class Wechat_6_5_8_Presenter_ceshi implements WechatPresenter {
             try {
                 Log.e(TAG, "perform:前 " + "IS_RED_CLICK:" + IS_RED_CLICK + "\tmNeedBack:" + mNeedBack + "\tIS_VIEW_SCROLLED:" + IS_VIEW_SCROLLED + "\tperformAction:" + b);
                 Thread.sleep(500);
-                AccessibilityNodeInfo rootInActiveWindow = getRootInActiveWindow();
-                if (rootInActiveWindow != null) {
-                    List<AccessibilityNodeInfo> accessibilityNodeInfosByViewId = rootInActiveWindow.findAccessibilityNodeInfosByViewId(Close_button);
-                    if (!accessibilityNodeInfosByViewId.isEmpty()) {
-                        for (int i = 0; i < accessibilityNodeInfosByViewId.size(); i++) {
-                            AccessibilityNodeInfo accessibilityNodeInfo = accessibilityNodeInfosByViewId.get(i);
-                            b = accessibilityNodeInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//                    com.tencent.mm:id/bh8   关闭按钮id
+                    AccessibilityNodeInfo rootInActiveWindow = getRootInActiveWindow();
+                    if (rootInActiveWindow != null) {
+                        List<AccessibilityNodeInfo> accessibilityNodeInfosByViewId = rootInActiveWindow.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/bh8");
+                        if (!accessibilityNodeInfosByViewId.isEmpty()) {
+                            for (int i = 0; i < accessibilityNodeInfosByViewId.size(); i++) {
+                                AccessibilityNodeInfo accessibilityNodeInfo = accessibilityNodeInfosByViewId.get(i);
+                                b = accessibilityNodeInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                            }
                         }
                     }
+//                    performGlobalAction(GLOBAL_ACTION_BACK);
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -294,11 +315,14 @@ public class Wechat_6_5_8_Presenter_ceshi implements WechatPresenter {
     }
 
     public void retrunJieMian() {
-        AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
+        AccessibilityNodeInfo nodeInfo = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            nodeInfo = getRootInActiveWindow();
+        }
         if (nodeInfo == null) return;
         List<AccessibilityNodeInfo> node2 = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            node2 = nodeInfo.findAccessibilityNodeInfosByViewId(Close_button_red_popupwindow);
+            node2 = nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/bjj");
         }
         if (node2 != null && !node2.isEmpty()) {
             mUnpackNode = node2;

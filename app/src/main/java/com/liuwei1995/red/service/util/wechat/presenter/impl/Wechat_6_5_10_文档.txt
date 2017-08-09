@@ -1,0 +1,13 @@
+
+红包开按钮
+android.widget.Button
+com.tencent.mm:id/bnr
+
+
+
+红包弹窗未拆   关闭按钮
+android.widget.ImageView
+com.tencent.mm:id/blh
+
+
+

@@ -1,4 +1,4 @@
-package com.liuwei1995.red.service.util.wechat.presenter;
+package com.liuwei1995.red.service.util.wechat.presenter.impl;
 
 import android.accessibilityservice.AccessibilityService;
 import android.app.Notification;
@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.liuwei1995.red.MainActivity1;
 import com.liuwei1995.red.R;
+import com.liuwei1995.red.service.util.wechat.presenter.WechatPresenter;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -30,9 +31,9 @@ import java.util.List;
  * Created by liuwei on 2017/4/20
  */
 
-public class Wechat_6_5_8_Presenter extends WechatPresenter {
+public class Wechat_6_5_8_PresenterImpl implements WechatPresenter {
 
-    private static final String TAG = Wechat_6_5_8_Presenter.class.getSimpleName();
+    private static final String TAG = Wechat_6_5_8_PresenterImpl.class.getSimpleName();
 
     /**关闭按钮id*/
     public static final String Close_button = "com.tencent.mm:id/bh8";
@@ -50,7 +51,7 @@ public class Wechat_6_5_8_Presenter extends WechatPresenter {
 
     private AccessibilityService accessibilityService;
 
-    public Wechat_6_5_8_Presenter(AccessibilityService accessibilityService) {
+    public Wechat_6_5_8_PresenterImpl(AccessibilityService accessibilityService) {
         this.accessibilityService = accessibilityService;
     }
 
