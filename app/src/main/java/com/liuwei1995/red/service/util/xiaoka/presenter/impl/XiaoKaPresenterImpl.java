@@ -6,10 +6,14 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.CallSuper;
@@ -225,5 +229,40 @@ public abstract class XiaoKaPresenterImpl implements XiaoKaPresenter ,TaskHandle
         notification.flags |= Notification.FLAG_NO_CLEAR;
     }
 
+    /**
+     * 给输入框设置值
+     * @param nodeInfo  控件的AccessibilityNodeInfo
+     * @param content 控件的值
+     * @return 是否成功
+     */
+    @CallSuper
+    protected synchronized boolean findEditText(AccessibilityNodeInfo nodeInfo, String content) {
+        try {
+            Bundle arguments = new Bundle();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                arguments.putBoolean(AccessibilityNodeInfo.ACTION_ARGUMENT_EXTEND_SELECTION_BOOLEAN,true);
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                arguments.putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_MOVEMENT_GRANULARITY_INT,AccessibilityNodeInfo.MOVEMENT_GRANULARITY_WORD);
+                nodeInfo.performAction(AccessibilityNodeInfo.ACTION_PREVIOUS_AT_MOVEMENT_GRANULARITY,arguments);
+            }
+            nodeInfo.performAction(AccessibilityNodeInfo.ACTION_FOCUS);
+            ClipData clip = ClipData.newPlainText("label", content);
+            ClipboardManager clipboardManager = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboardManager.setPrimaryClip(clip);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                nodeInfo.performAction(AccessibilityNodeInfo.ACTION_PASTE);
+//                nodeInfo.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT);
+            }else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2){
+                nodeInfo.performAction(AccessibilityNodeInfo.ACTION_PASTE);
+            }else {
+                return false;
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 }
