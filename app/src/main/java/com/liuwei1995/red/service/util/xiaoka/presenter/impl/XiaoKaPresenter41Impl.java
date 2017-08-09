@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
-import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
@@ -57,7 +56,7 @@ public class XiaoKaPresenter41Impl extends XiaoKaPresenterImpl{
     }
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        if(!isOpen || TextUtils.isEmpty(txt))return;
+        if(!isOpen || TextUtils.isEmpty(start_txt))return;
         AccessibilityNodeInfo source = event.getSource();
         switch (event.getEventType()){
             case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED:
@@ -122,39 +121,37 @@ public class XiaoKaPresenter41Impl extends XiaoKaPresenterImpl{
         super.onServiceConnected();
     }
 
-    private String txt = null;
+    private String start_txt = null;
     private String execute_txt = null;
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     protected void start(String txt) {
         if (TextUtils.isEmpty(txt))return;
         synchronized (XiaoKaPresenter41Impl.class){
-            this.txt = txt;
+            this.start_txt = txt;
             this.execute_txt = txt;
             if (mHander != null){
                 mHander.removeMessages(EXECUTE_MSG_WHAT);
             }
+            isExecute = false;
+            isStart = true;
             function();
         }
-//        AccessibilityNodeInfo rootInActiveWindow = getRootInActiveWindow();
-//        if (rootInActiveWindow != null){
-//            List<AccessibilityNodeInfo> accessibilityNodeInfosByViewId = rootInActiveWindow.findAccessibilityNodeInfosByViewId(XIAOKA_PACKAGENAME + ":id/edit_chat");
-//            if (accessibilityNodeInfosByViewId != null && accessibilityNodeInfosByViewId.size() > 0){
-//                Boolean editText = findEditText(accessibilityNodeInfosByViewId.get(0), txt);
-//                if (editText){
-//                    LogUtils.d(TAG,""+editText.toString()+"");
-//                }
-//            }
-//        }
     }
+
+    private boolean isExecute = false;
+    private boolean isStart = false;
 
     @Override
     protected void execute(String txt) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             this.execute_txt = txt;
             if (!TextUtils.isEmpty(execute_txt)) {
-                mHander.removeMessages(EXECUTE_MSG_WHAT);
+                isExecute = true;
+                isStart = false;
+                if (mHander != null){
+                    mHander.removeMessages(EXECUTE_MSG_WHAT);
+                }
                 AccessibilityNodeInfo rootInActiveWindow = getRootInActiveWindow();
                 if (rootInActiveWindow != null) {
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
@@ -184,27 +181,24 @@ public class XiaoKaPresenter41Impl extends XiaoKaPresenterImpl{
                 }
             }
         }
-//        this.execute_txt = txt;
-//        if (mHander != null){
-//            mHander.removeMessages(EXECUTE_MSG_WHAT);
-//        }
-//        function();
-//        AccessibilityNodeInfo rootInActiveWindow = getRootInActiveWindow();
-//        if (rootInActiveWindow != null){
-//            List<AccessibilityNodeInfo> accessibilityNodeInfosByViewId = rootInActiveWindow.findAccessibilityNodeInfosByViewId(XIAOKA_PACKAGENAME + ":id/edit_chat");
-//            if (accessibilityNodeInfosByViewId != null && accessibilityNodeInfosByViewId.size() > 0){
-//                Boolean editText = findEditText(accessibilityNodeInfosByViewId.get(0), txt);
-//                if (editText){
-//                    LogUtils.d(TAG,""+editText.toString()+"");
-//                }
-//            }
-//        }
+    }
+
+    @Override
+    protected void update(String txt) {
+        this.start_txt = txt;
+        this.execute_txt = txt;
+        if (TextUtils.isEmpty(txt))return;
+        if (isExecute){
+            execute(txt);
+        }else if (isStart){
+            start(txt);
+        }
     }
 
 
     @Override
     protected void pause() {
-        txt = null;
+        start_txt = null;
         this.execute_txt = null;
         mHander.removeMessages(EXECUTE_MSG_WHAT);
     }

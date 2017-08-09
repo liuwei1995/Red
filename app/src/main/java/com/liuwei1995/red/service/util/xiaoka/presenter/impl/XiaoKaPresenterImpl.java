@@ -64,6 +64,7 @@ public abstract class XiaoKaPresenterImpl implements XiaoKaPresenter ,TaskHandle
         filter.addAction(close);
         filter.addAction(ACTION_RECEIVER_SEND_PAUSE);
         filter.addAction(ACTION_RECEIVER_SEND_START);
+        filter.addAction(ACTION_RECEIVER_UPDATE);
         filter.addAction(ACTION_RECEIVER_EXECUTE);
         redReceiver = new RedReceiver();
         registerReceiver(redReceiver, filter);
@@ -74,6 +75,8 @@ public abstract class XiaoKaPresenterImpl implements XiaoKaPresenter ,TaskHandle
     protected abstract void start(String txt);
 
     protected abstract void execute(String txt);
+
+    protected abstract void update(String txt);
 
     protected abstract void pause();
 
@@ -87,12 +90,21 @@ public abstract class XiaoKaPresenterImpl implements XiaoKaPresenter ,TaskHandle
                 if (!TextUtils.isEmpty(stringExtra)){
                     start(stringExtra);
                 }
-            }else if (ACTION_RECEIVER_EXECUTE.equals(intent.getAction())){
+            }
+            else if (ACTION_RECEIVER_EXECUTE.equals(intent.getAction())){
                 String stringExtra = intent.getStringExtra(ACTION_RECEIVER_EXECUTE_KEY);
                 if (!TextUtils.isEmpty(stringExtra)){
                     execute(stringExtra);
                 }
-            }else{
+            }
+            else if (ACTION_RECEIVER_UPDATE.equals(intent.getAction())){
+                String stringExtra = intent.getStringExtra(ACTION_RECEIVER_UPDATE_KEY);
+                if (!TextUtils.isEmpty(stringExtra)){
+                    update(stringExtra);
+                }
+            }
+
+            else{
                 if (remoteViews != null)
                     if (intent.getAction().equals(open)) {//开
                         isOpen = true;

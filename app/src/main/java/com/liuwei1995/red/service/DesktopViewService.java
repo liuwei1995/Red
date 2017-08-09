@@ -24,9 +24,6 @@ import com.liuwei1995.red.service.util.xiaoka.presenter.XiaoKaPresenter;
 
 import java.util.List;
 
-import static com.liuwei1995.red.service.util.xiaoka.presenter.XiaoKaPresenter.ACTION_RECEIVER_SEND_START;
-import static com.liuwei1995.red.service.util.xiaoka.presenter.XiaoKaPresenter.ACTION_RECEIVER_SEND_START_KEY;
-
 /**
  * Created by liuwei on 2017/8/4 15:17
  */
@@ -93,8 +90,8 @@ public class DesktopViewService extends Service implements View.OnTouchListener,
                         Button bt = (Button) v;
                         if (bt.getText().toString().equals("开始")){
                             btn_send_txt = "暂停";
-                            Intent intent = new Intent(ACTION_RECEIVER_SEND_START);
-                            intent.putExtra(ACTION_RECEIVER_SEND_START_KEY,tv_content.getText().toString().trim());
+                            Intent intent = new Intent(XiaoKaPresenter.ACTION_RECEIVER_SEND_START);
+                            intent.putExtra(XiaoKaPresenter.ACTION_RECEIVER_SEND_START_KEY,tv_content.getText().toString().trim());
                             sendBroadcast(intent);
                         }else {
                             btn_send_txt = "开始";
@@ -159,8 +156,8 @@ public class DesktopViewService extends Service implements View.OnTouchListener,
                 if (!TextUtils.isEmpty(stringExtra)){
                     tv_content_txt = stringExtra;
                     updateDesktopView();
-                    Intent intent1 = new Intent(ACTION_RECEIVER_SEND_START);
-                    intent1.putExtra(ACTION_RECEIVER_SEND_START_KEY,tv_content_txt);
+                    Intent intent1 = new Intent(XiaoKaPresenter.ACTION_RECEIVER_UPDATE);
+                    intent1.putExtra(XiaoKaPresenter.ACTION_RECEIVER_UPDATE_KEY,tv_content_txt);
                     sendBroadcast(intent1);
                 }
             }else if (ACTION_DESKTOP_VIEW_SERVICE_RECEIVER_UPDATE_RESULT.equals(intent.getAction())){
