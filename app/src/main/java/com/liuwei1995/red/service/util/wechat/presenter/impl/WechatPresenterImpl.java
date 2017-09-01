@@ -71,6 +71,7 @@ public class WechatPresenterImpl implements WechatPresenter ,TaskHandler<WechatP
 
     private RedReceiver redReceiver;
 
+    @CallSuper
     @Override
     public void onDestroy() {
         if (redReceiver != null) {
@@ -79,6 +80,8 @@ public class WechatPresenterImpl implements WechatPresenter ,TaskHandler<WechatP
         if (notification != null && notificationManager != null) {
             notificationManager.cancel(id);
         }
+        if (mHander != null)
+        mHander.removeCallbacksAndMessages(null);
     }
 
     @Override
@@ -90,6 +93,8 @@ public class WechatPresenterImpl implements WechatPresenter ,TaskHandler<WechatP
         accessibilityService.unregisterReceiver(redReceiver);
     }
 
+    public static final int ZERO = 0;
+
     @CallSuper
     @Override
     public void onServiceConnected() {
@@ -99,7 +104,7 @@ public class WechatPresenterImpl implements WechatPresenter ,TaskHandler<WechatP
         redReceiver = new RedReceiver();
         registerReceiver(redReceiver, filter);
         isOpen = true;
-        mHander.sendEmptyMessage(0);
+        mHander.sendEmptyMessage(ZERO);
     }
 
     private void registerReceiver(RedReceiver redReceiver, IntentFilter filter) {
@@ -186,14 +191,14 @@ public class WechatPresenterImpl implements WechatPresenter ,TaskHandler<WechatP
                     remoteViews.setViewVisibility(R.id.tv_open, View.VISIBLE);
                     remoteViews.setTextViewText(R.id.tv_Auxiliary_function, "微信红包辅助功能已关闭");
                 }
-            mHander.sendEmptyMessage(0);
+            mHander.sendEmptyMessage(ZERO);
         }
 
     }
 
-    private Handler mHander = new TaskHandlerImpl<>(this);
+    public Handler mHander = new TaskHandlerImpl<>(this);
 
-
+    @CallSuper
     @Override
     public void handleMessage(WeakReference<WechatPresenterImpl> weakReference, Message msg) {
             if (notification == null) {

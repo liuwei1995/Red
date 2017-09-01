@@ -10,6 +10,7 @@ import android.view.accessibility.AccessibilityEvent;
 import com.liuwei1995.red.service.util.wechat.WechatPresenterHelper;
 import com.liuwei1995.red.service.util.wechat.presenter.WechatPresenter;
 import com.liuwei1995.red.service.util.wechat.presenter.impl.Wechat_6_5_10_PresenterImpl;
+import com.liuwei1995.red.service.util.wechat.presenter.impl.Wechat_6_5_13_PresenterImpl;
 import com.liuwei1995.red.service.util.wechat.presenter.impl.Wechat_6_5_7_PresenterImpl;
 import com.liuwei1995.red.service.util.wechat.presenter.impl.Wechat_6_5_8_PresenterImpl;
 
@@ -24,6 +25,8 @@ public class WeChatAccessibilityService extends AccessibilityService {
 
     public static final String versionName_6_5_10 = "6.5.10";
 
+    public static final String versionName_6_5_13 = "6.5.13";
+
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         WechatPresenterHelper.newInstance().onAccessibilityEvent(event);
@@ -37,12 +40,18 @@ public class WeChatAccessibilityService extends AccessibilityService {
             WechatPresenterHelper wechatPresenterHelper = WechatPresenterHelper.newInstance();
             if (versionName_6_5_7.equals(s)){
                 wechatPresenterHelper.setWechatIView(new Wechat_6_5_7_PresenterImpl(this));
-            }else if (versionName_6_5_8.equals(s)){
+            }
+            else if (versionName_6_5_8.equals(s)){
                 wechatPresenterHelper.setWechatIView(new Wechat_6_5_8_PresenterImpl(this));
-            }else if (versionName_6_5_10.equals(s)){
+            }
+            else if (versionName_6_5_10.equals(s)){
                 wechatPresenterHelper.setWechatIView(new Wechat_6_5_10_PresenterImpl(this));
-            }else {
-                wechatPresenterHelper.setWechatIView(new Wechat_6_5_10_PresenterImpl(this));
+            }
+            else if (versionName_6_5_13.equals(s)){
+                wechatPresenterHelper.setWechatIView(new Wechat_6_5_13_PresenterImpl(this));
+            }
+            else {
+                wechatPresenterHelper.setWechatIView(new Wechat_6_5_13_PresenterImpl(this));
             }
             WechatPresenterHelper.newInstance().onServiceConnected();
         }
