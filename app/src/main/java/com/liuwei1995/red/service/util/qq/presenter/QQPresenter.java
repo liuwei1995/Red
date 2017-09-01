@@ -1,14 +1,13 @@
 package com.liuwei1995.red.service.util.qq.presenter;
 
+import android.content.Context;
 import android.view.accessibility.AccessibilityEvent;
-
-import com.liuwei1995.red.service.util.qq.iview.QQIView;
 
 /**
  * Created by liuwei on 2017/4/20
  */
 
-public class QQPresenter implements QQIView {
+public interface QQPresenter {
 
     /**
      * android.widget.RelativeLayout com.tencent.mobileqq:id/name
@@ -34,44 +33,32 @@ public class QQPresenter implements QQIView {
     /**
      * QQ的包名
      */
-    public static final String QQ_PACKAGENAME = "com.tencent.mobileqq";
-
-    /**
-     * 聊天界面listview 包名
-     */
-    public static final String QQ_CHAT_INTERFACE_AbsListView = "android.widget.AbsListView";
+       String QQ_PACKAGENAME = "com.tencent.mobileqq";
 
 
-    /**
-     * 聊天界面listview id
-     */
-    public static final String QQ_CHAT_INTERFACE_LISTVIEW_ID = "com.tencent.mobileqq:id/listView1";
+
 
     /**
      * QQ主界面
      */
-    public static final String QQ_MAIN_INTERFACE = "com.tencent.mobileqq.activity.SplashActivity";
+       String QQ_MAIN_INTERFACE = "com.tencent.mobileqq.activity.SplashActivity";
 
-    public static String open = "MyAccessibilityService.open";
-    public static String close = "MyAccessibilityService.close";
+     static String OPEN = QQPresenter.class.getSimpleName()+".open";
 
-    @Override
-    public void onAccessibilityEvent(AccessibilityEvent event) {
+     static String CLOSE = QQPresenter.class.getSimpleName()+".close";
 
-    }
+     void onAccessibilityEvent(AccessibilityEvent event);
 
-    @Override
-    public void onServiceConnected() {
 
-    }
+     void onServiceConnected();
 
-    @Override
-    public void onDestroy() {
+     void onDestroy() ;
 
-    }
+     void onInterrupt() ;
 
-    @Override
-    public void onInterrupt() {
+    Context getApplicationContext();
 
-    }
+    String getPackageName();
+
+
 }
