@@ -175,44 +175,46 @@
                 android:resource="@xml/qq_accessibilityservice"/>
         </service>
 
-        <!-- OFO 内容监听 -->
-        <service
-            android:name=".service.OFOAccessibilityService"
-            android:label="OFO内容监听"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
-            >
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService"/>
-            </intent-filter>
+        <!--&lt;!&ndash; OFO 内容监听 &ndash;&gt;-->
+        <!--<service-->
+            <!--android:name=".service.OFOAccessibilityService"-->
+            <!--android:label="OFO内容监听"-->
+            <!--android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">-->
+            <!--&gt;-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.accessibilityservice.AccessibilityService"/>-->
+            <!--</intent-filter>-->
 
-            <meta-data
-                android:name="android.accessibilityservice"
-                android:resource="@xml/ofo_accessibilityservice"/>
-        </service>
+            <!--<meta-data-->
+                <!--android:name="android.accessibilityservice"-->
+                <!--android:resource="@xml/ofo_accessibilityservice"/>-->
+        <!--</service>-->
 
-        <!-- 钉钉抢红包 -->
-        <service
-            android:name=".service.DingDingAccessibilityService"
-            android:label="钉钉抢红包"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
-            >
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService"/>
-            </intent-filter>
+        <!--&lt;!&ndash; 钉钉抢红包 &ndash;&gt;-->
+        <!--<service-->
+            <!--android:name=".service.DingDingAccessibilityService"-->
+            <!--android:label="钉钉抢红包"-->
+            <!--android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">-->
+            <!--&gt;-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.accessibilityservice.AccessibilityService"/>-->
+            <!--</intent-filter>-->
 
-            <meta-data
-                android:name="android.accessibilityservice"
-                android:resource="@xml/ding_accessibilityservice"/>
-        </service>
-        <!-- 通知栏监听 -->
-        <service
-            android:name=".service.NotificationService"
-            android:label="通知栏监听"
-            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
-            <intent-filter>
-                <action android:name="android.service.notification.NotificationListenerService"/>
-            </intent-filter>
-        </service>
+            <!--<meta-data-->
+                <!--android:name="android.accessibilityservice"-->
+                <!--android:resource="@xml/ding_accessibilityservice"/>-->
+        <!--</service>-->
+        <!--&lt;!&ndash; 通知栏监听 &ndash;&gt;-->
+        <!--<service-->
+            <!--android:name=".service.NotificationService"-->
+            <!--android:label="通知栏监听"-->
+            <!--android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.service.notification.NotificationListenerService"/>-->
+            <!--</intent-filter>-->
+        <!--</service>-->
+
+
         <service
             android:name=".service.sensor.SensorService"
             android:enabled="true"

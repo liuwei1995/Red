@@ -68,6 +68,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:visibility="invisible"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/LinearLayout_layout_height"
                 android:orientation="horizontal"
@@ -121,6 +122,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/LinearLayout_layout_height"
+                android:visibility="invisible"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
@@ -204,6 +206,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/Button_layout_height"
                     android:layout_weight="1"
+                    android:visibility="invisible"
                     android:onClick="onButtonClicked"
                     android:text="@string/FloatWindow"/>
 
