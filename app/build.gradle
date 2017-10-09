@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    signingConfigs {
-        red {
-            keyAlias 'red'
-            keyPassword 'liuwei'
-            storeFile file('/home/linxins/桌面/red.jks')
-            storePassword 'liuwei'
-        }
-    }
+//    signingConfigs {
+//        red {
+//            keyAlias 'red'
+//            keyPassword 'liuwei'
+//            storeFile file('/home/linxins/桌面/red.jks')
+//            storePassword 'liuwei'
+//        }
+//    }
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
     defaultConfig {
@@ -20,26 +20,111 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         rootProject.ext.variantRelease = false //default  we are in debug mode, will be overriden on task execution
     }
-    buildTypes {
-        debug {
-            minifyEnabled false
-            debuggable true
-        }
 
+
+//    signingConfigs {
+//        release {
+//            storeFile file(STORE_FILE)
+//            storePassword KEYSTORE_PASSWORD
+//            keyAlias KEY_ALIAS
+//            keyPassword KEY_PASSWORD
+//        }
+//    }
+
+    signingConfigs {
         release {
+//            storeFile file("zhaoyaoHealthy.jks")//
+//            storePassword "liuwei"
+//            keyAlias "zhaoyaohealthy"
+//            keyPassword "liuwei"
+            storeFile file("inspiration.jks")
+            storePassword KEYSTORE_PASSWORD
+            keyAlias KEY_ALIAS
+            keyPassword KEY_PASSWORD
+        }
+    }
+
+    buildTypes {
+        release {
+// 开启混淆
+            minifyEnabled true
+//            收缩资源文件
+            shrinkResources true
+
+            // 对齐zip
+            zipAlignEnabled true
+            // 删除无用资源
+            shrinkResources false
+            // 是否debug
+            debuggable false
+//            // 命名后缀
+//            versionNameSuffix "_release"
+            // 签名
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        // 输出apk名称为koku_v1.0_2015-01-15_wandoujia.apk
+                        def fileName = "${defaultConfig.applicationId}_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
+                        output.outputFile = new File(outputFile.parent, fileName)
+                    }
+                }
+            }
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            zipAlignEnabled false
+            shrinkResources false
             minifyEnabled false
+            versionNameSuffix "_debug"
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-
-//        release {
-//            minifyEnabled true
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//            signingConfig signingConfigs.release
-//        }
-//        debug {
-//            signingConfig signingConfigs.release
-//        }
     }
+
+    productFlavors {
+
+        kuan {
+            manifestPlaceholders = [CHANNEL_VALUE: "kuan"]
+        }
+        xiaomi {
+            manifestPlaceholders = [CHANNEL_VALUE: "xiaomi"]
+        }
+        qh360 {
+            manifestPlaceholders = [CHANNEL_VALUE: "qh360"]
+        }
+        baidu {
+            manifestPlaceholders = [CHANNEL_VALUE: "baidu"]
+        }
+        wandoujia {
+            manifestPlaceholders = [CHANNEL_VALUE: "wandoujia"]
+        }
+        huawei {
+            manifestPlaceholders = [CHANNEL_VALUE: "huawei"]
+        }
+        tencent {
+            manifestPlaceholders = [CHANNEL_VALUE: "tencent"]
+        }
+    }
+    //针对很多渠道
+    productFlavors.all {
+        flavor -> flavor.manifestPlaceholders = [CHANNEL_VALUE: name]
+    }
+
+//    ----------------------------------------------------
+//app打包 - 进阶 分割apk
+    splits {
+        density {
+            enable true
+            exclude 'ldpi', 'mdpi'
+            compatibleScreens 'normal', 'large', 'xlarge'
+        }
+    }
+
 //    sourceSets { main { jni.srcDirs = ['src/main/jni', 'src/main/jni/'] } }
 }
 
@@ -58,4 +143,7 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.7.0'
     compile files('libs/universal-image-loader-1.9.5.jar')
 //    compile files('libs/core-3.2.1.jar')
+}
+def releaseTime() {
+    return new Date().format("yyyy-MM-dd HH-mm-ss", TimeZone.getTimeZone("GMT+8"))
 }
