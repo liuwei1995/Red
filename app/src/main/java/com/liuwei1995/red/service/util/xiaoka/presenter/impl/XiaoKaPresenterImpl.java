@@ -25,8 +25,8 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.RemoteViews;
 
-import com.liuwei1995.red.MainActivity1;
 import com.liuwei1995.red.R;
+import com.liuwei1995.red.activity.MainActivity;
 import com.liuwei1995.red.handler.TaskHandler;
 import com.liuwei1995.red.handler.TaskHandlerImpl;
 import com.liuwei1995.red.service.util.xiaoka.presenter.XiaoKaPresenter;
@@ -202,7 +202,7 @@ public abstract class XiaoKaPresenterImpl implements XiaoKaPresenter ,TaskHandle
 
     //自定义通知
     private void setSelfNotification() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity1.class);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),
                 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);

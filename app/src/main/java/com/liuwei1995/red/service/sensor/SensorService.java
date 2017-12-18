@@ -12,7 +12,7 @@ import android.os.IBinder;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
-import com.liuwei1995.red.MainActivity1;
+import com.liuwei1995.red.activity.MainActivity;
 
 
 public class SensorService extends Service implements SensorEventListener {
@@ -29,7 +29,7 @@ public class SensorService extends Service implements SensorEventListener {
     private  Sensor  mStepDetector;
     /**系统服务*/
     private SensorManager mSensorManager;
-    private Intent intent = new Intent(MainActivity1.ACTION_SensorServiceReceiver_CHANGE);
+    private Intent intent = new Intent(MainActivity.ACTION_SensorServiceReceiver_CHANGE);
     @Override
     public void onCreate() {
         super.onCreate();

@@ -145,5 +145,6 @@ dependencies {
 //    compile files('libs/core-3.2.1.jar')
 }
 def releaseTime() {
-    return new Date().format("yyyy-MM-dd HH-mm-ss", TimeZone.getTimeZone("GMT+8"))
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("GMT+8"))
+//    return new Date().format("yyyy-MM-dd HH-mm-ss", TimeZone.getTimeZone("GMT+8"))
 }

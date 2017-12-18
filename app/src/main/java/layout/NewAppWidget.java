@@ -8,8 +8,8 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
-import com.liuwei1995.red.MainActivity1;
 import com.liuwei1995.red.R;
+import com.liuwei1995.red.activity.MainActivity;
 
 /**
  * Implementation of App Widget functionality.
@@ -47,7 +47,7 @@ public class NewAppWidget extends AppWidgetProvider {
 
 
 
-        Intent fullIntent=new Intent(context,MainActivity1.class);
+        Intent fullIntent=new Intent(context,MainActivity.class);
 //        若要传递数据，则使用intent.putExtra()方法
 
         PendingIntent Pfullintent=PendingIntent.getActivity(context, 0, fullIntent,PendingIntent.FLAG_CANCEL_CURRENT);
