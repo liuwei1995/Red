@@ -18,24 +18,24 @@ public class TableHelper {
 	private static final String TAG = "AHibernate";
 
 	public static <T> void createTablesByClasses(SQLiteDatabase db,
-			Class<?>[] clazzs) {
+												 Class<?>[] clazzs) {
 		for (Class<?> clazz : clazzs)
 			createTable(db, clazz);
 	}
 
 	public static <T> void dropTablesByClasses(SQLiteDatabase db,
-			Class<?>[] clazzs) {
+											   Class<?>[] clazzs) {
 		for (Class<?> clazz : clazzs)
 			dropTable(db, clazz);
 	}
 	/**
-		  CREATE TABLE COMPANY(
-		   ID INT PRIMARY KEY     NOT NULL,
-		   NAME           TEXT    NOT NULL,
-		   AGE            INT     NOT NULL,
-		   ADDRESS        CHAR(50),
-		   SALARY         REAL
-		);
+	 CREATE TABLE COMPANY(
+	 ID INT PRIMARY KEY     NOT NULL,
+	 NAME           TEXT    NOT NULL,
+	 AGE            INT     NOT NULL,
+	 ADDRESS        CHAR(50),
+	 SALARY         REAL
+	 );
 	 * @param db
 	 * @param clazz
 	 */
@@ -172,7 +172,7 @@ public class TableHelper {
 		return list;
 	}
 	/**
-	 * 
+	 *
 	 * @param db
 	 * @param tableName 表名
 	 * @param columnName 列名

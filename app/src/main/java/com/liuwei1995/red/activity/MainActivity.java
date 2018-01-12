@@ -42,7 +42,6 @@ import com.liuwei1995.red.service.QQAccessibilityService;
 import com.liuwei1995.red.service.WeChatAccessibilityService;
 import com.liuwei1995.red.service.XiaoKaAccessibilityService;
 import com.liuwei1995.red.service.sensor.SensorService;
-import com.liuwei1995.red.service.util.ofo.presenter.OFOPresenter;
 import com.liuwei1995.red.service.util.qq.presenter.QQPresenter;
 import com.liuwei1995.red.service.util.wechat.presenter.WechatPresenter;
 import com.liuwei1995.red.util.FloatWindowPermissionUtils;
@@ -56,7 +55,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import static com.liuwei1995.red.BaseApplication.OFO_map;
 import static com.liuwei1995.red.BaseApplication.QQ_map;
 import static com.liuwei1995.red.BaseApplication.WeChat_map;
 
@@ -252,8 +250,8 @@ public class MainActivity extends BaseActivity
         String qqAppVersionName = AppUtils.getAppVersionName(this, QQPresenter.QQ_PACKAGENAME);
         htmlLinkText =  setHtmlLinkText(htmlLinkText,"QQ",QQ_map,qqAppVersionName);
 
-        String ofoAppVersionName = AppUtils.getAppVersionName(this, OFOPresenter.OFO_PACKAGENAME);
-        htmlLinkText =  setHtmlLinkText(htmlLinkText,"OFO",OFO_map,ofoAppVersionName);
+//        String ofoAppVersionName = AppUtils.getAppVersionName(this, OFOPresenter.OFO_PACKAGENAME);
+//        htmlLinkText =  setHtmlLinkText(htmlLinkText,"OFO",OFO_map,ofoAppVersionName);
 
         htmlLinkText += "</li>";
         tv_content.setText(Html.fromHtml(htmlLinkText));
@@ -278,7 +276,7 @@ public class MainActivity extends BaseActivity
     private String setHtmlLinkText(String htmlLinkText, String appName, Map<String, AppEntity> map, String ofoAppVersionName) {
         htmlLinkText += "<p> 你当前的"+appName+"版本号为："+ofoAppVersionName+"</p>";
         if(map.get(ofoAppVersionName) != null){
-            htmlLinkText += "<p>下面的OFO版本也支持可点击下载</p>";
+            htmlLinkText += "<p>下面的微信版本也支持可点击下载</p>";
         }else{
             htmlLinkText += "<p>现在只能支持下面的"+appName+"版本可点击下载</p>";
         }
