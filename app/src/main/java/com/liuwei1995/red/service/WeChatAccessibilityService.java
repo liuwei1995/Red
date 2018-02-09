@@ -16,6 +16,7 @@ import com.liuwei1995.red.service.util.wechat.presenter.impl.Wechat_6_5_23_Prese
 import com.liuwei1995.red.service.util.wechat.presenter.impl.Wechat_6_5_7_PresenterImpl;
 import com.liuwei1995.red.service.util.wechat.presenter.impl.Wechat_6_5_8_PresenterImpl;
 import com.liuwei1995.red.service.util.wechat.presenter.impl.Wechat_6_6_1_PresenterImpl;
+import com.liuwei1995.red.service.util.wechat.presenter.impl.Wechat_6_6_2_PresenterImpl;
 
 
 public class WeChatAccessibilityService extends AccessibilityService {
@@ -35,6 +36,8 @@ public class WeChatAccessibilityService extends AccessibilityService {
     public static final String versionName_6_5_23 = "6.5.23";
 
     public static final String versionName_6_6_1 = "6.6.1";
+
+    public static final String versionName_6_6_2 = "6.6.2";
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -68,8 +71,11 @@ public class WeChatAccessibilityService extends AccessibilityService {
             else if (versionName_6_6_1.equals(s)){
                 wechatPresenterHelper.setWechatIView(new Wechat_6_6_1_PresenterImpl(this));
             }
+            else if (versionName_6_6_2.equals(s)){
+                wechatPresenterHelper.setWechatIView(new Wechat_6_6_2_PresenterImpl(this));
+            }
             else {
-                wechatPresenterHelper.setWechatIView(new Wechat_6_6_1_PresenterImpl(this));
+                wechatPresenterHelper.setWechatIView(new Wechat_6_6_2_PresenterImpl(this));
             }
             WechatPresenterHelper.newInstance().onServiceConnected();
         }

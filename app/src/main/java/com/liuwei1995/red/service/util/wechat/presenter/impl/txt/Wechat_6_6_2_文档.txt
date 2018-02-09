@@ -1,0 +1,28 @@
+
+红包开按钮
+android.widget.Button
+-> com.tencent.mm:id/brt
+->com.tencent.mm:id/bx4
+->com.tencent.mm:id/c2i
+->com.tencent.mm:id/c4j
+
+
+红包弹窗未拆   关闭按钮   ///   红包弹窗关闭按钮
+android.widget.ImageView
+->com.tencent.mm:id/bph
+->com.tencent.mm:id/bus
+->com.tencent.mm:id/c07
+->com.tencent.mm:id/c28
+
+
+----------------------------------
+
+红包详情 放回按钮id
+android.widget.LinearLayout
+->com.tencent.mm:id/hf
+->com.tencent.mm:id/hi
+->com.tencent.mm:id/ho
+->com.tencent.mm:id/hx
+
+
+
