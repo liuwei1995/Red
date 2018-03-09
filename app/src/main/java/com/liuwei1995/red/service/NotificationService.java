@@ -2,10 +2,12 @@ package com.liuwei1995.red.service;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.os.Build;
 import android.os.Bundle;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -15,6 +17,7 @@ import java.lang.reflect.Field;
  * Created by liuwei on 2017/4/20
  */
 
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 @SuppressLint("OverrideAbstract")
 public class NotificationService extends NotificationListenerService {
 
@@ -34,16 +37,43 @@ public class NotificationService extends NotificationListenerService {
         super.onNotificationPosted(sbn, rankingMap);
     }
 
+
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         String packageName = sbn.getPackageName();
-        if(WECHAT_PACKAGENAME.equals(packageName)){
+        if(WECHAT_PACKAGENAME.equals(packageName)) {
             Notification n = sbn.getNotification();
-
             // 标题和时间
             String title = "";
             if (n.tickerText != null) {
                 title = n.tickerText.toString();
+            }
+            if (title.contains(": [微信红包]")) {
+                try {
+                    n.contentIntent.send();
+                } catch (PendingIntent.CanceledException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void onNotificationPosted2(StatusBarNotification sbn) {
+        String packageName = sbn.getPackageName();
+        if(WECHAT_PACKAGENAME.equals(packageName)){
+            Notification n = sbn.getNotification();
+            // 标题和时间
+            String title = "";
+            if (n.tickerText != null) {
+                title = n.tickerText.toString();
+            }
+            if (title.contains(": [微信红包]")){
+                try {
+                    n.contentIntent.send();
+                    return;
+                } catch (PendingIntent.CanceledException e) {
+                    e.printStackTrace();
+                }
             }
             long when = n.when;
             // 其它的信息存在一个bundle中，此bundle在android4.3及之前是私有的，需要通过反射来获取；android4.3之后可以直接获取
@@ -88,7 +118,7 @@ public class NotificationService extends NotificationListenerService {
         }
 
     }
-
+//E/NotificationService: notify msg: title=爸: [微信红包]恭喜发财，大吉大利 ,when=1518708103029 ,contentTitle=爸 ,contentText=[2条]爸: [微信红包]恭喜发财，大吉大利 ,contentSubtext=
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
         String packageName = sbn.getPackageName();
